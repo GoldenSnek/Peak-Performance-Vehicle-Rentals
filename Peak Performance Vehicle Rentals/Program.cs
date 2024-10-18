@@ -55,13 +55,14 @@ namespace Peak_Performance_Vehicle_Rentals
 
 
             //Succesful Login
-            if (ValidUser) {
+            if (ValidUser)
+            {
 
 
-                Console.WriteLine("hello world");
+                Console.WriteLine("hello world!");
                 //rest of the program
-            
-            
+
+
             }
 
         }
