@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
 
-//change filepath for different devices
+//To-Do List:
+//1. change filepath for different devices (fixed 10/19/24)
 
 namespace Peak_Performance_Vehicle_Rentals
 {
@@ -16,7 +17,6 @@ namespace Peak_Performance_Vehicle_Rentals
         //create a base directory for storing the data
         private string baseDirectory;
         public string BaseDirectory { get { return baseDirectory; } set { baseDirectory = value; } }
-
         public FilePathManager()
         {
             BaseDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Peak Performance Vehicle Rentals");
@@ -29,21 +29,16 @@ namespace Peak_Performance_Vehicle_Rentals
                 StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt");
             }
         }
-
         //for creating individual user files
         public string GetUserFilePath(string username)
         {
             return BaseDirectory + $"\\UserData\\{username}.txt";
         }
-
-
-        /*
+        //for creating individual vehicle files
         public string GetVehicleFilePath(string vehiclename)
         {
             return baseDirectory + $"\\VehicleData\\{vehiclename}.txt");
         }
-        */
-
     }
 
     public class UserFile : FilePathManager //class for managing each individual user
@@ -65,6 +60,11 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
+        public void UpdateUserFile() //update details of the user
+        {
+
+        }
+
         public void DeleteUserFile() //delete user file
         {
 
@@ -73,6 +73,18 @@ namespace Peak_Performance_Vehicle_Rentals
 
     public class VehicleFile : FilePathManager //class for managing each individual vehicle
     {
+
+        public void UpdatevehicleFile() //update details of the user
+        {
+
+        }
+
+        public void DeleteVehicleFile() //delete user file
+        {
+
+        }
+
+
     }
     
 }

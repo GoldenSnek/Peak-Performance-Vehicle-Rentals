@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
 
-//
+//To-Do List:
+//1. pina noah style nga dili enter number, but rather arrow keys ra [optional]
 
 namespace Peak_Performance_Vehicle_Rentals
 {

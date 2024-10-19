@@ -2,10 +2,12 @@
 using System.IO;
 
 //Notes for self:
-//1. User Data file path may vary depending on device used
+//Date Started: 10/18/24
+//1. User Data file path may vary depending on device used (fixed 10/19/24)
 
 //To-Do List:
-//1.
+//1. Program Proper, after maka login
+//2. passwords should be hidden or protected sa txt file.
 
 
 namespace Peak_Performance_Vehicle_Rentals
