@@ -2,13 +2,13 @@
 using System.IO;
 
 //To-Do List:
-//1.
+//1. create separate files for each user
 
 namespace Peak_Performance_Vehicle_Rentals
 {
     internal class Choice
     {
-        public static int LoginRegisterChoice() //choice method 1?: login or register
+        public static int LoginRegisterChoice() //choice method 1: login and register
         {
             bool success = false;
             int choice = 1;

@@ -15,8 +15,7 @@ namespace Peak_Performance_Vehicle_Rentals
         static void Main(string[] args)
         {
             //variable declarations
-
-
+            FilePathManager file = new FilePathManager();
 
             //Register-Login
             bool LRrunning = true;
@@ -27,7 +26,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 switch (LRchoice)
                 {
                     case 1:
-                        ValidUser = Login.UserLogin();
+                        ValidUser = Login.UserLogin(file);
                         if (ValidUser)
                         {
                             Console.WriteLine("Login Successful!");
@@ -41,7 +40,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         break;
 
                     case 2:
-                        Register.UserRegister();
+                        Register.UserRegister(file);
                         break;
 
                     default:

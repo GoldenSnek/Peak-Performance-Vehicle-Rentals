@@ -5,9 +5,9 @@ using System.IO;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class Login : User
+    internal class Login : Program
     {
-        public static bool UserLogin() //MAIN method for login
+        public static bool UserLogin(FilePathManager file) //MAIN method for login
         {
             string username;
             do
@@ -29,7 +29,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
             // Check if the credentials are valid
             bool isValidUser = false;
-            using (StreamReader reader = new StreamReader(FilePath))
+            using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -48,7 +48,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
     internal class Register : User
     {
-        public static void UserRegister() //MAIN method for register
+        public static void UserRegister(FilePathManager file) //MAIN METHOD for register
         {
             string username;
             bool DuplicateUser = true;
@@ -56,7 +56,7 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 Console.Write("Enter username: ");
                 username = Console.ReadLine();
-                DuplicateUser = UserExists(username);
+                DuplicateUser = UserExists(username, file);
                 if (DuplicateUser)
                 {
                     Console.WriteLine("Username already exists. Please choose a different one.");
@@ -74,19 +74,25 @@ namespace Peak_Performance_Vehicle_Rentals
                     Console.WriteLine("Please do not leave the password empty");
             } while (password == "");
 
-            // Save username and password to the text file
-            using (StreamWriter writer = new StreamWriter(FilePath, true))
+            //save username and password to the user text file
+            using (StreamWriter writer = new StreamWriter(file.BaseDirectory + "\\Users.txt", true))
             {
                 writer.WriteLine($"{username},{password}");
             }
 
+            //create an individual user file
+            UserFile user = new UserFile();
+            user.CreateUserFile(username, password);
+
+
+
             Console.WriteLine("Registration successful!");
         }
 
-        public static bool UserExists(string username) //method to check for duplicate user
+        public static bool UserExists(string username, FilePathManager file) //method to check for duplicate user
         {
             bool DuplicateUser = false;
-            using (StreamReader reader = new StreamReader(FilePath))
+            using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
