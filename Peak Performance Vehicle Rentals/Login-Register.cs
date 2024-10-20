@@ -6,9 +6,9 @@ using System.IO;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class Login : Program
+    internal class Login
     {
-        public static bool UserLogin(FilePathManager file) //MAIN method for login
+        public static string UserLogin(FilePathManager file) //MAIN method for login
         {
             string username;
             do
@@ -43,11 +43,14 @@ namespace Peak_Performance_Vehicle_Rentals
                     }
                 }
             }
-            return isValidUser;
+            if (isValidUser)
+                return username;
+            else
+                return "";
         }
     }
 
-    internal class Register : User
+    internal class Register
     {
         public static void UserRegister(FilePathManager file) //MAIN METHOD for register
         {
@@ -84,8 +87,6 @@ namespace Peak_Performance_Vehicle_Rentals
             //create an individual user file
             UserFile user = new UserFile();
             user.CreateUserFile(username, password);
-
-
 
             Console.WriteLine("Registration successful!");
         }

@@ -4,10 +4,13 @@ using System.IO;
 //Notes for self:
 //Date Started: 10/18/24
 //1. User Data file path may vary depending on device used (fixed 10/19/24)
+//2. Started creating main menu 10/20/24
+//3. Viewing and adding cars (unifnished)
 
 //To-Do List:
 //1. Program Proper, after maka login
 //2. passwords should be hidden or protected sa txt file.
+//3. Main menu should have an option to go back to login ang register screen
 
 
 namespace Peak_Performance_Vehicle_Rentals
@@ -18,18 +21,18 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             //variable declarations
             FilePathManager file = new FilePathManager();
+            string username = "";
 
-            //Register-Login
-            bool LRrunning = true;
-            bool ValidUser = false;
+            //Login Register
+            bool LRrunning = true; //LR = LoginRegister
             do
             {
                 int LRchoice = Choice.LoginRegisterChoice();
                 switch (LRchoice)
                 {
                     case 1:
-                        ValidUser = Login.UserLogin(file);
-                        if (ValidUser)
+                        username = Login.UserLogin(file);
+                        if (username != "")
                         {
                             Console.WriteLine("Login Successful!");
                             LRrunning = false;
@@ -50,22 +53,65 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             } while (LRrunning);
 
-
-
-
-
-
-            //Succesful Login
-            if (ValidUser)
+            //Main Menu
+            if (username != "")
             {
+                Console.WriteLine($"Welcome user: {username}");
+                bool MMrunning = true;
+                do
+                {
+                    int MMchoice = Choice.MainMenuChoice();
+                    switch (MMchoice)
+                    {
+                        case 1:
+                            Console.WriteLine("case 1 view vehicles");
+                            ViewVehicles.ViewRentalVehicles();
+                            break;
 
+                        case 2:
+                            Console.WriteLine("case 2 view rental");
+                            break;
 
-                Console.WriteLine("hello world!");
-                //rest of the program
+                        case 3:
+                            Console.WriteLine("case 3 manage vehicles");
+                            bool MVrunning = true;
+                            do
+                            {
+                                int MVchoice = Choice.ManageVehiclesChoice();
+                                switch (MVchoice)
+                                {
+                                    case 1:
+                                        ManageVehicles.AddVehicle(username);
+                                        break;
 
+                                    case 2:
+                                        ManageVehicles.UpdateVehicle(username);
+                                        break;
 
+                                    case 3:
+                                        ManageVehicles.DeleteVehicle(username);
+                                        break;
+
+                                    case 0:
+                                        MVrunning = false;
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            } while (MVrunning);
+
+                            break;
+
+                        case 4:
+                            Console.WriteLine("case 4 help");
+                            break;
+
+                        default:
+                            break;
+                    }
+                } while (MMrunning);
             }
-
         }
     }
 }
