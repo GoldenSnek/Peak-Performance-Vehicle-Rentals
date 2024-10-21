@@ -16,7 +16,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
             Console.WriteLine("(1) Login");
             Console.WriteLine("(2) Register");
-            Console.WriteLine("(Esc) (0) Exit");
+            Console.WriteLine("(0) Exit");
             do
             {
                 Console.Write("Enter Choice: ");
@@ -32,12 +32,12 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
 
                 success = int.TryParse(key.KeyChar.ToString(), out choice);
-                if (!success || choice < 1 || choice > 2)
+                if (!success || choice < 0 || choice > 2)
                 {
-                    Console.WriteLine("\nPlease press (1) (2) (Esc) keys only!");
+                    Console.WriteLine("\nPlease press (1) (2) (0) (Esc) keys only!");
                 }
 
-            } while (!success || choice < 1 || choice > 2);
+            } while (!success || choice < 0 || choice > 2);
 
             Console.WriteLine("");
 
@@ -122,7 +122,7 @@ namespace Peak_Performance_Vehicle_Rentals
             return choice;
         }
 
-        public static int ViewVehiclesChoice(string[] files) //choice method ?: view a specific vehicles
+        public static int ViewAllVehiclesChoice(string[] files) //choice method ?: view a specific vehicles
         {
             bool success = false;
             int choice = 1;

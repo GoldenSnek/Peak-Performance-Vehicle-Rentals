@@ -19,7 +19,7 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         static void Main(string[] args)
         {
-            do
+            do //entire program
             {
                 //variable declarations
                 FilePathManager file = new FilePathManager();
@@ -50,6 +50,13 @@ namespace Peak_Performance_Vehicle_Rentals
                             Register.UserRegister(file);
                             break;
 
+                        case 0:
+                            Console.Clear();
+                            Console.WriteLine("Thank you for using the program!");
+                            Console.WriteLine("Now exiting program...");
+                            System.Environment.Exit(0);
+                            break;
+
                         default:
                             break;
                     }
@@ -67,7 +74,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         {
                             case 1:
                                 Console.WriteLine("");
-                                ViewVehicles.ViewRentalVehicles();
+                                ViewVehicles.ViewRentalVehicles(file);
                                 break;
 
                             case 2:
@@ -91,7 +98,7 @@ namespace Peak_Performance_Vehicle_Rentals
                                             break;
 
                                         case 3:
-                                            ManageVehicles.DeleteVehicle(username);
+                                            ManageVehicles.DeleteVehicle(username, file);
                                             break;
 
                                         case 0:

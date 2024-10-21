@@ -34,7 +34,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt");
             }
         }
-        //for creating individual user files
+        //for creating individual user/vehicle files
         public string GetUserFilePath(string username)
         {
             return BaseDirectory + $"\\UserData\\{username}.txt";
@@ -101,31 +101,14 @@ namespace Peak_Performance_Vehicle_Rentals
 
         }
 
-        public void DeleteVehicleFile(string username) //delete vehicle file
+        public void DeleteVehicleFile(string username, FilePathManager file) //delete vehicle file
         {
             bool DVrunning = true;
             do
             {
-                int ctr = 0;
+                int ctr = Inventory.ViewOwnedVehicles(username, file);
                 string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
-
-                //display the names of the text files
-                Console.WriteLine("Select a vehicle to see its details: ");
-                for (int i = 0; i < files.Length; i++)
-                {
-                    //get the file name without extension
-                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
-
-                    //split the name and get the vehicle name (second part)
-                    string[] parts = fileName.Split('-');
-
-                    if (parts[1] == username)
-                    {
-                        Console.WriteLine($"({i + 1}) {parts[0]}"); //show only the vehicle name
-                        ctr++;
-                    }
-                }
-
+                
                 //choose from owned vehicles
                 string vehiclename="";
                 int DVchoice;
@@ -153,7 +136,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         if (File.Exists(filePath))
                         {
                             File.Delete(filePath);
-                            Console.WriteLine("Car deleted!");
+                            Console.WriteLine("Vehicle deleted from the available rentable vehicles!");
                         }
                     }
                 }
@@ -162,28 +145,15 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (DVrunning);
            
         }
-        public void DisplayVehicleFile() //display all available vehicles
+        public void DisplayVehicleFile() //choose from all available vehicles
         {
             bool DVrunning = true;
             do
             {
                 string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
 
-                //display the names of the text files
-                Console.WriteLine("Select a vehicle to see its details: ");
-                for (int i = 0; i < files.Length; i++)
-                {
-                    //get the file name without extension
-                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
-
-                    //split the name and get the vehicle name (second part)
-                    string[] parts = fileName.Split('-');
-
-                    Console.WriteLine($"({i + 1}) {parts[0]}"); //show only the vehicle name
-                }
-
                 int DVchoice;
-                DVchoice = Choice.ViewVehiclesChoice(files);
+                DVchoice = Choice.ViewAllVehiclesChoice(files);
                 for (int i = 0; i < files.Length; i++)
                 {
                     if (DVchoice == i + 1)
@@ -195,7 +165,6 @@ namespace Peak_Performance_Vehicle_Rentals
                 if (DVchoice == 0)
                     DVrunning = false;
             } while (DVrunning);
-
 
         }
 

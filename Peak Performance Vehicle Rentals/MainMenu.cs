@@ -5,9 +5,10 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class ViewVehicles
     {
-        public static void ViewRentalVehicles()
+        public static void ViewRentalVehicles(FilePathManager file)
         {
             VehicleFile vehicle = new VehicleFile();
+            Inventory.ViewAllVehicles(file);
             vehicle.DisplayVehicleFile();
         }
     }
@@ -43,19 +44,13 @@ namespace Peak_Performance_Vehicle_Rentals
 
         }
 
-        public static void DeleteVehicle(string username)
+        public static void DeleteVehicle(string username, FilePathManager file)
         {
-            string vehiclename;
 
             //Delete vehicle file
             VehicleFile vehicle = new VehicleFile();
-            vehicle.DeleteVehicleFile(username);
-
+            vehicle.DeleteVehicleFile(username, file);
         }
     }
-
-
-
-
 
 }
