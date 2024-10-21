@@ -46,19 +46,10 @@ namespace Peak_Performance_Vehicle_Rentals
         public static void DeleteVehicle(string username)
         {
             string vehiclename;
-            do
-            {
-                Console.Write("Enter Vehicle Name: ");
-                vehiclename = Console.ReadLine();
-                if (vehiclename == "")
-                    Console.WriteLine("Please do not leave the Vehicle Name empty");
-            } while (vehiclename == "");
 
-            //create a new vehicle file
+            //Delete vehicle file
             VehicleFile vehicle = new VehicleFile();
-            vehicle.DeleteVehicleFile(username, vehiclename);
-
-            Console.WriteLine("Car deleted!");
+            vehicle.DeleteVehicleFile(username);
 
         }
     }

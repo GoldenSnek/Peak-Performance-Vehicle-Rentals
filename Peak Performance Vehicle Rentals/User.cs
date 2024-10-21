@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 //To-Do List:
 //1. change filepath for different devices (fixed 10/19/24)
 //2. duplicate vehicle names should be allowed, duplicate files will have vehiclename[1], [2], [3]... [n]
 //3. added vehicles should be linked to the user, only the user can delete their own vehicles
+//4. added vehicle deletion (unfinished 10/21/24) (super dirty code that must be revised)
 
 namespace Peak_Performance_Vehicle_Rentals
 {
@@ -40,7 +42,7 @@ namespace Peak_Performance_Vehicle_Rentals
         //for creating individual vehicle files
         public string GetVehicleFilePath(string username, string vehiclename)
         {
-            return BaseDirectory + $"\\VehicleData\\{username}-{vehiclename}.txt";
+            return BaseDirectory + $"\\VehicleData\\{vehiclename}-{username}.txt";
         }
     }
 
@@ -99,16 +101,68 @@ namespace Peak_Performance_Vehicle_Rentals
 
         }
 
-        public void DeleteVehicleFile(string username, string vehiclename) //delete vehicle file
+        public void DeleteVehicleFile(string username) //delete vehicle file
         {
-            string filePath = file.GetVehicleFilePath(username, vehiclename);
+            bool DVrunning = true;
+            do
+            {
+                int ctr = 0;
+                string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
 
-            if (File.Exists(filePath))
-                File.Delete(filePath);
-            else
-                Console.WriteLine("You do not own this vehicle!");
+                //display the names of the text files
+                Console.WriteLine("Select a vehicle to see its details: ");
+                for (int i = 0; i < files.Length; i++)
+                {
+                    //get the file name without extension
+                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
+
+                    //split the name and get the vehicle name (second part)
+                    string[] parts = fileName.Split('-');
+
+                    if (parts[1] == username)
+                    {
+                        Console.WriteLine($"({i + 1}) {parts[0]}"); //show only the vehicle name
+                        ctr++;
+                    }
+                }
+
+                //choose from owned vehicles
+                string vehiclename="";
+                int DVchoice;
+                DVchoice = Choice.ViewOwnedVehiclesChoice(ctr);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    //get the file name without extension
+                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
+
+                    //split the name and get the vehicle name (second part)
+                    string[] parts = fileName.Split('-');
+
+                    if (i + 1 == DVchoice)
+                    {
+                        vehiclename = parts[0];
+                    }
+                }
+
+                //delete the file
+                string filePath = file.GetVehicleFilePath(username, vehiclename);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (DVchoice == i + 1)
+                    {
+                        if (File.Exists(filePath))
+                        {
+                            File.Delete(filePath);
+                            Console.WriteLine("Car deleted!");
+                        }
+                    }
+                }
+                if (DVchoice == 0)
+                    DVrunning = false;
+            } while (DVrunning);
+           
         }
-        public void DisplayVehicleFile() //display available vehicles
+        public void DisplayVehicleFile() //display all available vehicles
         {
             bool DVrunning = true;
             do
@@ -125,7 +179,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     //split the name and get the vehicle name (second part)
                     string[] parts = fileName.Split('-');
 
-                    Console.WriteLine($"({i + 1}) {parts[1]}"); //show only the vehicle name
+                    Console.WriteLine($"({i + 1}) {parts[0]}"); //show only the vehicle name
                 }
 
                 int DVchoice;
@@ -142,8 +196,8 @@ namespace Peak_Performance_Vehicle_Rentals
                     DVrunning = false;
             } while (DVrunning);
 
+
         }
 
     }
-    
 }

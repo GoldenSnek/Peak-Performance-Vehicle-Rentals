@@ -19,99 +19,105 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         static void Main(string[] args)
         {
-            //variable declarations
-            FilePathManager file = new FilePathManager();
-            string username = "";
-
-            //Login Register
-            bool LRrunning = true; //LR = LoginRegister
             do
             {
-                int LRchoice = Choice.LoginRegisterChoice();
-                switch (LRchoice)
-                {
-                    case 1:
-                        username = Login.UserLogin(file);
-                        if (username != "")
-                        {
-                            Console.WriteLine("Login Successful!");
-                            LRrunning = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid credentials!");
-                            LRrunning = true;
-                        }
-                        break;
+                //variable declarations
+                FilePathManager file = new FilePathManager();
+                string username = "";
 
-                    case 2:
-                        Register.UserRegister(file);
-                        break;
-
-                    default:
-                        break;
-                }
-            } while (LRrunning);
-
-            //Main Menu
-            if (username != "")
-            {
-                Console.WriteLine($"Welcome user: {username}");
-                bool MMrunning = true;
+                //Login Register
+                bool LRrunning = true; //LR = LoginRegister
                 do
                 {
-                    int MMchoice = Choice.MainMenuChoice();
-                    switch (MMchoice)
+                    int LRchoice = Choice.LoginRegisterChoice();
+                    switch (LRchoice)
                     {
                         case 1:
-                            Console.WriteLine("case 1 view vehicles");
-                            ViewVehicles.ViewRentalVehicles();
+                            username = Login.UserLogin(file);
+                            if (username != "")
+                            {
+                                Console.WriteLine("Login Successful!\n");
+                                LRrunning = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid credentials!\n");
+                                LRrunning = true;
+                            }
                             break;
 
                         case 2:
-                            Console.WriteLine("case 2 view rental");
-                            break;
-
-                        case 3:
-                            Console.WriteLine("case 3 manage vehicles");
-                            bool MVrunning = true;
-                            do
-                            {
-                                int MVchoice = Choice.ManageVehiclesChoice();
-                                switch (MVchoice)
-                                {
-                                    case 1:
-                                        ManageVehicles.AddVehicle(username);
-                                        break;
-
-                                    case 2:
-                                        ManageVehicles.UpdateVehicle(username);
-                                        break;
-
-                                    case 3:
-                                        ManageVehicles.DeleteVehicle(username);
-                                        break;
-
-                                    case 0:
-                                        MVrunning = false;
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-                            } while (MVrunning);
-
-                            break;
-
-                        case 4:
-                            Console.WriteLine("case 4 help");
+                            Register.UserRegister(file);
                             break;
 
                         default:
                             break;
                     }
-                } while (MMrunning);
-            }
+                } while (LRrunning);
+
+                //Main Menu
+                if (username != "")
+                {
+                    Console.WriteLine($"Welcome user: {username}");
+                    bool MMrunning = true;
+                    do
+                    {
+                        int MMchoice = Choice.MainMenuChoice();
+                        switch (MMchoice)
+                        {
+                            case 1:
+                                Console.WriteLine("");
+                                ViewVehicles.ViewRentalVehicles();
+                                break;
+
+                            case 2:
+                                Console.WriteLine("");
+                                break;
+
+                            case 3:
+                                Console.WriteLine("");
+                                bool MVrunning = true;
+                                do
+                                {
+                                    int MVchoice = Choice.ManageVehiclesChoice();
+                                    switch (MVchoice)
+                                    {
+                                        case 1:
+                                            ManageVehicles.AddVehicle(username);
+                                            break;
+
+                                        case 2:
+                                            ManageVehicles.UpdateVehicle(username);
+                                            break;
+
+                                        case 3:
+                                            ManageVehicles.DeleteVehicle(username);
+                                            break;
+
+                                        case 0:
+                                            MVrunning = false;
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                } while (MVrunning);
+
+                                break;
+
+                            case 4:
+                                Console.WriteLine("");
+                                break;
+
+                            case 0:
+                                MMrunning = false;
+                                break;
+                            default:
+                                break;
+                        }
+                    } while (MMrunning);
+                }
+            } while (true);
         }
     }
 }
