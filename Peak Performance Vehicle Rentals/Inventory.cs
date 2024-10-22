@@ -33,7 +33,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
 
             //display the names of the text files
-            Console.WriteLine("Select a vehicle which you want to remove from the rentable vehicles: ");
+            Console.WriteLine("Select a vehicle that you own which you want to remove from the rentable vehicles: ");
             for (int i = 0; i < files.Length; i++)
             {
                 //get the file name without extension
@@ -42,7 +42,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 //split the name and get the vehicle name (second part)
                 string[] parts = fileName.Split('-');
 
-                if (parts[1] == username)
+                if (parts[3] == username)
                 {
                     Console.WriteLine($"({i + 1}) {parts[0]}"); //show only the vehicle name
                     ctr++;

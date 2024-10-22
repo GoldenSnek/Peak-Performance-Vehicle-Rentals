@@ -40,9 +40,9 @@ namespace Peak_Performance_Vehicle_Rentals
             return BaseDirectory + $"\\UserData\\{username}.txt";
         }
         //for creating individual vehicle files
-        public string GetVehicleFilePath(string username, string vehiclename)
+        public string GetVehicleFilePath(string model, string type, string username)
         {
-            return BaseDirectory + $"\\VehicleData\\{vehiclename}-{username}.txt";
+            return BaseDirectory + $"\\VehicleData\\{model}-{type}-{username}.txt";
         }
     }
 
@@ -80,9 +80,11 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         private FilePathManager file = new FilePathManager();
 
-        public void CreateVehicleFile(string username, string vehiclename) //create vehicle file
+        public void CreateVehicleFile(string username, string[] details) //create vehicle file
         {
-            string filePath = file.GetVehicleFilePath(username, vehiclename);
+            string filePath = file.GetVehicleFilePath(details[2], details[0], username); // 2 model, 0 type
+
+            string[] type = details[0].Split("-");
 
             // Check if the file already exists
             if (!File.Exists(filePath))
@@ -90,13 +92,23 @@ namespace Peak_Performance_Vehicle_Rentals
                 // Create the file and write the vehicle name
                 using (var writer = new StreamWriter(filePath))
                 {
-                    writer.WriteLine($"Vehicle Owner: {username}");
-                    writer.WriteLine($"Vehicle Name: {vehiclename}");
+                    writer.WriteLine($"Owner: {username}");
+                    writer.WriteLine($"Vehicle Type: {type[0]} ({type[1]})");
+                    writer.WriteLine($"Brand: {details[1]}");
+                    writer.WriteLine($"Model: {details[2]}");
+                    writer.WriteLine($"Year: {details[3]}");
+                    writer.WriteLine($"License Plate: {details[4]}");
+                    writer.WriteLine($"Color: {details[5]}");
+                    writer.WriteLine($"Fuel Type: {details[6]}");
+                    writer.WriteLine($"Seating Capacity: {details[7]}");
+                    writer.WriteLine($"Mileage: {details[8]} km");
+                    writer.WriteLine($"Rental Price: {details[9]}");
+                    writer.WriteLine($"Status: {details[10]}");
                 }
             }
         }
 
-        public void UpdateVehicleFile() //update details of the vehicle
+        public void UpdateVehicleFile(string username) //update details of the vehicle
         {
 
         }
@@ -110,9 +122,12 @@ namespace Peak_Performance_Vehicle_Rentals
                 string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
                 
                 //choose from owned vehicles
-                string vehiclename="";
+                string model = "";
+                string type = "";
                 int DVchoice;
                 DVchoice = Choice.ViewOwnedVehiclesChoice(ctr);
+
+                //delete the file
                 for (int i = 0; i < files.Length; i++)
                 {
                     //get the file name without extension
@@ -123,12 +138,11 @@ namespace Peak_Performance_Vehicle_Rentals
 
                     if (i + 1 == DVchoice)
                     {
-                        vehiclename = parts[0];
+                        model = parts[0];
+                        type = $"{parts[1]}-{parts[2]}";
                     }
                 }
-
-                //delete the file
-                string filePath = file.GetVehicleFilePath(username, vehiclename);
+                string filePath = file.GetVehicleFilePath(model, type, username);
                 for (int i = 0; i < files.Length; i++)
                 {
                     if (DVchoice == i + 1)
