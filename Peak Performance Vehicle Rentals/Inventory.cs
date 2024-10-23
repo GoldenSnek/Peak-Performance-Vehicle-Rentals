@@ -9,22 +9,26 @@ namespace Peak_Performance_Vehicle_Rentals
     internal class Inventory
     {
 
-        public static void ViewAllVehicles(FilePathManager file)
+        public static string[] ViewAllVehicles(FilePathManager file)
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
+            string[] vehicles = new string[files.Length+1];   
 
             //display the names of the text files
-            Console.WriteLine("Select a vehicle to see its details: ");
             for (int i = 0; i < files.Length; i++)
             {
                 //get the file name without extension
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
 
-                //split the name and get the vehicle name (second part)
+                //split the name and get the vehicle name (first part a.k.a. index 0)
                 string[] parts = fileName.Split('-');
 
-                Console.WriteLine($"({i + 1}) {parts[0]}"); //show only the vehicle name
+                vehicles[i] = parts[0];
+
             }
+
+            vehicles[files.Length] = "Go back to Main Menu";
+            return vehicles;
         }
 
         public static int ViewOwnedVehicles(string username, FilePathManager file) //returns how many cars the user has

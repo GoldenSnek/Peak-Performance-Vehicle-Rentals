@@ -12,11 +12,6 @@ using System.Runtime.CompilerServices;
 namespace Peak_Performance_Vehicle_Rentals
 {
 
-    public class User
-    {
-
-    }
-
     public class FilePathManager
     {
         //create a base directory for storing the data
@@ -159,26 +154,17 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (DVrunning);
            
         }
-        public void DisplayVehicleFile() //choose from all available vehicles
+        public void DisplayVehicleFile(int DVchoice) //choose from all available vehicles
         {
-            bool DVrunning = true;
-            do
+            string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
+            for (int i = 0; i < files.Length; i++)
             {
-                string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
-
-                int DVchoice;
-                DVchoice = Choice.ViewAllVehiclesChoice(files);
-                for (int i = 0; i < files.Length; i++)
+                if (DVchoice == i)
                 {
-                    if (DVchoice == i + 1)
-                    {
-                        Console.WriteLine("\nVehicle Details:");
-                        Console.WriteLine(File.ReadAllText(files[i]));
-                    }
+                    Console.WriteLine("\nVehicle Details:");
+                    Console.WriteLine(File.ReadAllText(files[i]));
                 }
-                if (DVchoice == 0)
-                    DVrunning = false;
-            } while (DVrunning);
+            }
 
         }
 

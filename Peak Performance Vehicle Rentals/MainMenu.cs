@@ -3,15 +3,29 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.Marshalling;
 
+//To-Do List
+//1. [top priority] Edit vehicle details (ugma or kung kanusa naay time)
+//2. View Rental History
+//3. Add user details when displaying vehicle details
+//4. Add rental process and application (final part og ang pinakalisod nga part before ko mo proceed sa pa chuychuy sa UI)
+
 namespace Peak_Performance_Vehicle_Rentals
 {
     internal class ViewVehicles
     {
         public static void ViewRentalVehicles(FilePathManager file)
         {
-            VehicleFile vehicle = new VehicleFile();
-            Inventory.ViewAllVehicles(file);
-            vehicle.DisplayVehicleFile();
+            int choice;
+            do
+            {
+                choice = Choice.ViewAllVehiclesChoice(file);
+                if (choice != Inventory.ViewAllVehicles(file).Length - 1)
+                {
+                    VehicleFile vehicle = new VehicleFile();
+                    vehicle.DisplayVehicleFile(choice);
+                    UserInterface.WaitForKey();
+                }
+            } while (choice != Inventory.ViewAllVehicles(file).Length-1);
         }
     }
 
