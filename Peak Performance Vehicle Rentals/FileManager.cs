@@ -11,13 +11,11 @@ using System.Runtime.CompilerServices;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-
-    public class FilePathManager
+    internal class FilePathManager
     {
-        //create a base directory for storing the data
         private string baseDirectory;
         public string BaseDirectory { get { return baseDirectory; } set { baseDirectory = value; } }
-        public FilePathManager()
+        public FilePathManager() //create a base directory for storing the data
         {
             BaseDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Peak Performance Vehicle Rentals");
             Directory.CreateDirectory(BaseDirectory);
@@ -25,37 +23,33 @@ namespace Peak_Performance_Vehicle_Rentals
             Directory.CreateDirectory(BaseDirectory + "\\VehicleData");
             if (!File.Exists(BaseDirectory + "\\Users.txt"))
             {
-                // Create the file and write the username and password
                 StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt");
             }
         }
-        //for creating individual user/vehicle files
-        public string GetUserFilePath(string username)
+        public string GetUserFilePath(string username) //for accessing user filepath
         {
             return BaseDirectory + $"\\UserData\\{username}.txt";
         }
-        //for creating individual vehicle files
-        public string GetVehicleFilePath(string model, string type, string username)
+        public string GetVehicleFilePath(string model, string type, string username) //for accessing vehicle filepath
         {
             return BaseDirectory + $"\\VehicleData\\{model}-{type}-{username}.txt";
         }
     }
-
-    public class UserFile : FilePathManager //class for managing each individual user
+    internal class UserFile : FilePathManager //class for managing each individual user
     {
-        private FilePathManager file = new FilePathManager();
-        public void CreateUserFile(string username, string password) //create user file
+        public void CreateUserFile(string username) //create user file
         {
-            string filePath = file.GetUserFilePath(username);
+            string filePath = GetUserFilePath(username);
 
-            // Check if the file already exists
-            if (!File.Exists(filePath))
+            if (!File.Exists(filePath)) //check if the file already exists
             {
-                // Create the file and write the username and password
-                using (var writer = new StreamWriter(filePath))
+                using (var writer = new StreamWriter(filePath)) // Create the file and write the username and password
                 {
                     writer.WriteLine($"Username: {username}");
-                    writer.WriteLine($"Password: {password}");
+                    writer.WriteLine($"Email Address: ");
+                    writer.WriteLine($"Date of Birth (MM/DD/YY): ");
+                    writer.WriteLine($"Adress: ");
+                    writer.WriteLine($"Account creation date: ");
                 }
             }
         }
@@ -71,13 +65,12 @@ namespace Peak_Performance_Vehicle_Rentals
         }
     }
 
-    public class VehicleFile : FilePathManager //class for managing each individual vehicle
+    internal class VehicleFile : FilePathManager //class for managing each individual vehicle
     {
-        private FilePathManager file = new FilePathManager();
 
         public void CreateVehicleFile(string username, string[] details) //create vehicle file
         {
-            string filePath = file.GetVehicleFilePath(details[2], details[0], username); // 2 model, 0 type
+            string filePath = GetVehicleFilePath(details[2], details[0], username); // 2 model, 0 type
 
             string[] type = details[0].Split("-");
 
@@ -108,51 +101,40 @@ namespace Peak_Performance_Vehicle_Rentals
 
         }
 
-        public void DeleteVehicleFile(string username, FilePathManager file) //delete vehicle file
+        public void DeleteVehicleFile(string username, FilePathManager file, int choice) //delete vehicle file
         {
-            bool DVrunning = true;
-            do
-            {
-                int ctr = Inventory.ViewOwnedVehicles(username, file);
-                string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
+            
+            string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
                 
-                //choose from owned vehicles
-                string model = "";
-                string type = "";
-                int DVchoice;
-                DVchoice = Choice.ViewOwnedVehiclesChoice(ctr);
+            //choose from owned vehicles
+            string model = "";
+            string type = "";
+            int ctr = 0;
 
-                //delete the file
-                for (int i = 0; i < files.Length; i++)
+            //delete the file
+            for (int i= 0; i < files.Length; i++)
+            {
+                //get the file name without extension
+                string fileName = Path.GetFileNameWithoutExtension(files[i]);
+
+                //split the name and get the vehicle name (second part)
+                string[] parts = fileName.Split('-');
+                if (parts[3] == username)
+                    ctr++;
+                if (ctr == choice+1)
                 {
-                    //get the file name without extension
-                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
-
-                    //split the name and get the vehicle name (second part)
-                    string[] parts = fileName.Split('-');
-
-                    if (i + 1 == DVchoice)
-                    {
-                        model = parts[0];
-                        type = $"{parts[1]}-{parts[2]}";
-                    }
+                    model = parts[0];
+                    type = $"{parts[1]}-{parts[2]}";
+                    break;
                 }
-                string filePath = file.GetVehicleFilePath(model, type, username);
-                for (int i = 0; i < files.Length; i++)
-                {
-                    if (DVchoice == i + 1)
-                    {
-                        if (File.Exists(filePath))
-                        {
-                            File.Delete(filePath);
-                            Console.WriteLine("Vehicle deleted from the available rentable vehicles!");
-                        }
-                    }
-                }
-                if (DVchoice == 0)
-                    DVrunning = false;
-            } while (DVrunning);
-           
+            }
+            string filePath = file.GetVehicleFilePath(model, type, username);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                Console.WriteLine("Car has been deleted from the inventory!");
+                Thread.Sleep(1000);
+            }
         }
         public void DisplayVehicleFile(int DVchoice) //choose from all available vehicles
         {

@@ -31,29 +31,41 @@ namespace Peak_Performance_Vehicle_Rentals
             return vehicles;
         }
 
-        public static int ViewOwnedVehicles(string username, FilePathManager file) //returns how many cars the user has
+        public static string[] ViewOwnedVehicles(string username, FilePathManager file) //returns the cars cars the user has
         {
-            int ctr = 0;
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
+            int length = 0;
 
-            //display the names of the text files
-            Console.WriteLine("Select a vehicle that you own which you want to remove from the rentable vehicles: ");
-            for (int i = 0; i < files.Length; i++)
+            for (int i = 0; i < files.Length; i++) //identify size
             {
                 //get the file name without extension
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
-
-                //split the name and get the vehicle name (second part)
+                //split the name and match the username
                 string[] parts = fileName.Split('-');
 
                 if (parts[3] == username)
                 {
-                    Console.WriteLine($"({i + 1}) {parts[0]}"); //show only the vehicle name
-                    ctr++;
+                    length++;
                 }
             }
 
-            return ctr;
+            string[] vehicles = new string[length+1]; //identify vehicles
+            int ctr = 0;
+            for (int i = 0; i < files.Length; i++)
+            {
+                //get the file name without extension
+                string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                //split the name and match the username
+                string[] parts = fileName.Split('-');
+
+                if (parts[3] == username)
+                {
+                    vehicles[ctr++] = parts[0];
+                }
+            }
+
+            vehicles[length] = "Go back to Main Menu";
+            return vehicles;
         }
 
     }

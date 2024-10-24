@@ -99,19 +99,19 @@ namespace Peak_Performance_Vehicle_Rentals
                                     int MVchoice = Choice.ManageVehiclesChoice();
                                     switch (MVchoice)
                                     {
-                                        case 1:
+                                        case 0:
                                             ManageVehicles.AddVehicle(username);
                                             break;
 
-                                        case 2:
+                                        case 1:
                                             ManageVehicles.UpdateVehicle(username);
                                             break;
 
-                                        case 3:
+                                        case 2:
                                             ManageVehicles.DeleteVehicle(username, file);
                                             break;
 
-                                        case 0:
+                                        case 3:
                                             MVrunning = false;
                                             break;
 

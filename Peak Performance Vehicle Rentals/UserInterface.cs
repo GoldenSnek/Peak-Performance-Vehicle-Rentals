@@ -18,9 +18,8 @@ namespace Peak_Performance_Vehicle_Rentals
             this.options = options;
             this.choice = 0;
         }
-        public int RunUserInterface() //main method
+        public int RunUserInterface() //MAIN METHOD for running the interface, returns int
         {
-
             ConsoleKey keyPressed;
             do
             {
@@ -48,6 +47,35 @@ namespace Peak_Performance_Vehicle_Rentals
             return choice;
         }
 
+        public string RunUserInterfaceString() //MAIN METHOD for running the interface, returns string
+        {
+            ConsoleKey keyPressed;
+            do
+            {
+                Console.Clear();
+                DisplayOptions();
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                keyPressed = keyInfo.Key;
+
+                if (keyPressed == ConsoleKey.UpArrow)
+                {
+                    choice--;
+                    if (choice == -1)
+                        choice = options.Length - 1;
+                }
+                if (keyPressed == ConsoleKey.DownArrow)
+                {
+                    choice++;
+                    if (choice == options.Length)
+                        choice = 0;
+                }
+
+            } while (keyPressed != ConsoleKey.Enter);
+
+            return options[choice];
+        }
+
         public void DisplayOptions() //method supporting RunUseInterface
         {
             Console.WriteLine(prompt);
@@ -70,11 +98,15 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
 
                 Console.WriteLine($"{style[0]} {currentOption} {style[1]}");
+                Console.WriteLine(choice);
                 
             }
             Console.ResetColor();
         }
 
+        //abstract void WaitForKKey()
+        //{
+        //}
         public static void WaitForKeyLR() //extra method
         {
             Console.Write("Press any key to return to Login Screen");
@@ -96,11 +128,5 @@ namespace Peak_Performance_Vehicle_Rentals
                 //do nothing
             }
         }
-
-
-
-
-
-
     }
 }

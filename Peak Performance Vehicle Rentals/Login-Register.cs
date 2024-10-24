@@ -2,13 +2,13 @@
 using System.IO;
 
 //To-Do List:
-//1. pina noah style nga dili enter number, but rather arrow keys ra [optional]
+//1.dili enter number, but rather arrow keys ra [optional] (done 10/23/24)
 
 namespace Peak_Performance_Vehicle_Rentals
 {
     internal class Login
     {
-        public static string UserLogin(FilePathManager file) //MAIN method for login
+        public static string UserLogin(FilePathManager file) //MAIN METHOD for login
         {
             string username;
             do
@@ -16,7 +16,10 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.Write("Enter username: ");
                 username = Console.ReadLine();
                 if (username == "")
+                {
                     Console.WriteLine("Please do not leave the username empty");
+                    Thread.Sleep(1000);
+                }
             } while (username == "");
 
             string password;
@@ -25,7 +28,10 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.Write("Enter password: ");
                 password = Console.ReadLine();
                 if (password == "")
+                {
                     Console.WriteLine("Please do not leave the password empty");
+                    Thread.Sleep(1000);
+                }
             } while (password == "");
 
             // Check if the credentials are valid
@@ -63,10 +69,13 @@ namespace Peak_Performance_Vehicle_Rentals
                 DuplicateUser = UserExists(username, file);
                 if (DuplicateUser)
                 {
-                    Console.WriteLine("Username already exists. Please choose a different one.");
+                    Console.WriteLine("Username already exists. Please choose a different one."); Thread.Sleep(1000);
                 }
                 if (username == "")
+                {
                     Console.WriteLine("Please do not leave the username empty");
+                    Thread.Sleep(1000);
+                }
             } while (DuplicateUser || username == "");
 
             string password;
@@ -75,7 +84,10 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.Write("Enter password: ");
                 password = Console.ReadLine();
                 if (password == "")
+                {
                     Console.WriteLine("Please do not leave the password empty");
+                    Thread.Sleep(1000);
+                }
             } while (password == "");
 
             //save username and password to the user text file
@@ -86,9 +98,9 @@ namespace Peak_Performance_Vehicle_Rentals
 
             //create an individual user file
             UserFile user = new UserFile();
-            user.CreateUserFile(username, password);
+            user.CreateUserFile(username);
 
-            Console.WriteLine("Registration successful!");
+            Console.WriteLine("Registration successful!"); Thread.Sleep(1000);
         }
 
         public static bool UserExists(string username, FilePathManager file) //method to check for duplicate user

@@ -138,14 +138,14 @@ namespace Peak_Performance_Vehicle_Rentals
             int price;
             do
             {
-                Console.Write("Enter rental rate of the vehicle in Php/hr (minimum should be 100 Php/hr): ");
+                Console.Write("Enter rental rate of the vehicle in Php/hr (minimum should be 100 Php/hr and max 100,000 Php/hr): ");
                 details[9] = Console.ReadLine();
 
                 success = int.TryParse(details[9], out price);
 
-                if (!success || price < 100)
-                    Console.WriteLine("Please enter a rate higher than 1001!");
-            } while (!success || mileage < 100);
+                if (!success || price < 100 || price > 100000)
+                    Console.WriteLine("Please enter a rate between 100 Php/hr and 100,000 Php/hr!");
+            } while (!success || mileage < 100 || price > 100000);
             //status
             details[10] = Choice.VehicleStatusChoice();
 
@@ -170,8 +170,9 @@ namespace Peak_Performance_Vehicle_Rentals
         {
 
             //Delete vehicle file
+            int choice = Choice.ViewOwnedVehiclesChoice(username, file);
             VehicleFile vehicle = new VehicleFile();
-            vehicle.DeleteVehicleFile(username, file);
+            vehicle.DeleteVehicleFile(username, file, choice);
         }
     }
 
