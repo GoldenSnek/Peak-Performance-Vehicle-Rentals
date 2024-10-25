@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class Login
+    internal class Login : Program
     {
         public static string UserLogin(FilePathManager file) //MAIN METHOD for login
         {
@@ -56,7 +56,7 @@ namespace Peak_Performance_Vehicle_Rentals
         }
     }
 
-    internal class Register
+    internal class Register : Program
     {
         public static void UserRegister(FilePathManager file) //MAIN METHOD for register
         {

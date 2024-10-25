@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class FilePathManager
+    public class FilePathManager
     {
         private string baseDirectory;
         public string BaseDirectory { get { return baseDirectory; } set { baseDirectory = value; } }
@@ -61,6 +61,19 @@ namespace Peak_Performance_Vehicle_Rentals
 
         public void DeleteUserFile() //delete user file
         {
+
+        }
+        public void DisplayUserFile(int DVchoice) //display details of user
+        {
+            string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (DVchoice == i)
+                {
+                    Console.WriteLine("\nVehicle Details:");
+                    Console.WriteLine(File.ReadAllText(files[i]));
+                }
+            }
 
         }
     }
@@ -136,7 +149,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 Thread.Sleep(1000);
             }
         }
-        public void DisplayVehicleFile(int DVchoice) //choose from all available vehicles
+        public void DisplayVehicleFile(int DVchoice) //display details of vehicles
         {
             string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", "*.txt");
             for (int i = 0; i < files.Length; i++)

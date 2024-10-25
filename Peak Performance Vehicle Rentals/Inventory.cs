@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class Inventory
+    internal class Inventory : IInventoryManagement
     {
-
-        public static string[] ViewAllVehicles(FilePathManager file)
+        public string[] ViewVehicles(FilePathManager file) //return all cars in inventory
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
             string[] vehicles = new string[files.Length+1];   
@@ -24,14 +23,13 @@ namespace Peak_Performance_Vehicle_Rentals
                 string[] parts = fileName.Split('-');
 
                 vehicles[i] = parts[0];
-
             }
 
             vehicles[files.Length] = "Go back to Main Menu";
             return vehicles;
         }
 
-        public static string[] ViewOwnedVehicles(string username, FilePathManager file) //returns the cars cars the user has
+        public string[] ViewVehicles(string username, FilePathManager file) //overload method that returns the cars that are linked to the user
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
             int length = 0;

@@ -27,13 +27,14 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 //variable declarations
                 FilePathManager file = new FilePathManager();
+                Choice choice = new Choice();
                 string username = "";
 
                 //Login Register
                 bool LRrunning = true; //LR = LoginRegister
                 do
                 {
-                    int LRchoice = Choice.LoginRegisterChoice();
+                    int LRchoice = choice.LoginRegisterChoice();
                     switch (LRchoice)
                     {
                         case 0:
@@ -59,7 +60,8 @@ namespace Peak_Performance_Vehicle_Rentals
                         case 2:
                             Console.WriteLine("This is my Final Project for CPE261!");
                             Console.WriteLine("Program created by: John Michael A. Nave");
-                            UserInterface.WaitForKeyLR();
+                            UserInterface UI = new UserInterface("Press any key to return to Login Screen");
+                            UI.WaitForKey();
                             break;
 
                         case 3:
@@ -80,7 +82,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     bool MMrunning = true;
                     do
                     {
-                        int MMchoice = Choice.MainMenuChoice();
+                        int MMchoice = choice.MainMenuChoice();
                         switch (MMchoice)
                         {
                             case 0:
@@ -97,7 +99,7 @@ namespace Peak_Performance_Vehicle_Rentals
                                 bool MVrunning = true;
                                 do
                                 {
-                                    int MVchoice = Choice.ManageVehiclesChoice();
+                                    int MVchoice = choice.ManageVehiclesChoice();
                                     switch (MVchoice)
                                     {
                                         case 0:

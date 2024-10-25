@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class UserInterface
+    internal class UserInterface : IUserInterface
     {
         private int choice;
         private string[] options;
         private string prompt;
 
+        public UserInterface(string prompt)
+        {
+            this.prompt = prompt;
+        }
         public UserInterface(string prompt, string[] options)
         {
             this.prompt = prompt;
@@ -49,30 +53,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
         public string RunUserInterfaceString() //MAIN METHOD for running the interface, returns string
         {
-            ConsoleKey keyPressed;
-            do
-            {
-                Console.Clear();
-                DisplayOptions();
-
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-                keyPressed = keyInfo.Key;
-
-                if (keyPressed == ConsoleKey.UpArrow)
-                {
-                    choice--;
-                    if (choice == -1)
-                        choice = options.Length - 1;
-                }
-                if (keyPressed == ConsoleKey.DownArrow)
-                {
-                    choice++;
-                    if (choice == options.Length)
-                        choice = 0;
-                }
-
-            } while (keyPressed != ConsoleKey.Enter);
-
+            RunUserInterface();
             return options[choice];
         }
 
@@ -98,28 +79,16 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
 
                 Console.WriteLine($"{style[0]} {currentOption} {style[1]}");
-                Console.WriteLine(choice);
                 
             }
             Console.ResetColor();
         }
-
-        //abstract void WaitForKKey()
-        //{
-        //}
-        public static void WaitForKeyLR() //extra method
+        public void WaitForKey() //extra method
         {
-            Console.Write("Press any key to return to Login Screen");
+            Console.Write(prompt);
             Console.ReadKey(true);
         }
-        public static void WaitForKey() //extra method
-        {
-            Console.Write("Press any key once you are finished reading the details");
-            Console.ReadKey(true);
-        }
-
-
-        public static void WaitForSpecificKey() //extra method
+        public void WaitForSpecificKey() //extra method
         {
             Console.Write("Press any [specific key] to [do this and that]");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);

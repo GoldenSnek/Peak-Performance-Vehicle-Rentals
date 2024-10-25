@@ -16,16 +16,19 @@ namespace Peak_Performance_Vehicle_Rentals
         public static void ViewRentalVehicles(FilePathManager file)
         {
             int choice;
+            Choice choose = new Choice();
+            Inventory inventory = new Inventory();
             do
             {
-                choice = Choice.ViewAllVehiclesChoice(file);
-                if (choice != Inventory.ViewAllVehicles(file).Length - 1)
+                choice = choose.ViewAllVehiclesChoice(file);
+                if (choice != inventory.ViewVehicles(file).Length - 1)
                 {
                     VehicleFile vehicle = new VehicleFile();
                     vehicle.DisplayVehicleFile(choice);
-                    UserInterface.WaitForKey();
+                    UserInterface UI = new UserInterface("Press any key if you are done reading the details");
+                    UI.WaitForKey();
                 }
-            } while (choice != Inventory.ViewAllVehicles(file).Length-1);
+            } while (choice != inventory.ViewVehicles(file).Length-1);
         }
     }
 
@@ -40,9 +43,10 @@ namespace Peak_Performance_Vehicle_Rentals
 
             bool success = false;
             string[] details = new string[11];
+            Choice choose = new Choice();
 
             //type
-            details[0] = Choice.VehicleTypeChoice();
+            details[0] = choose.VehicleTypeChoice();
             //brand
             do
             {
@@ -92,7 +96,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     Console.WriteLine("Please enter a proper color!");
             } while (success || details[5] == "");
             //fuel
-            details[6] = Choice.VehicleFuelChoice();
+            details[6] = choose.VehicleFuelChoice();
             //seating capacity
             string[] parts = details[0].Split("-");
             int seats;
@@ -147,7 +151,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     Console.WriteLine("Please enter a rate between 100 Php/hr and 100,000 Php/hr!");
             } while (!success || mileage < 100 || price > 100000);
             //status
-            details[10] = Choice.VehicleStatusChoice();
+            details[10] = choose.VehicleStatusChoice();
 
             //create a new vehicle file
             VehicleFile vehicle = new VehicleFile();
@@ -170,10 +174,10 @@ namespace Peak_Performance_Vehicle_Rentals
         {
 
             //Delete vehicle file
-            int choice = Choice.ViewOwnedVehiclesChoice(username, file);
+            Choice choose = new Choice();
+            int choice = choose.ViewOwnedVehiclesChoice(username, file);
             VehicleFile vehicle = new VehicleFile();
             vehicle.DeleteVehicleFile(username, file, choice);
         }
     }
-
 }
