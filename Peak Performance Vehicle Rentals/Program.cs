@@ -9,6 +9,7 @@ using System.Threading;
 //3. Viewing and adding cars (unifnished)
 //4. unya raman unta ang pachuychuy pero na inspire ko ni noah so ako gi una HAHAHAH (incomplete pa 10/23/24)
 //5. Annoying bug 10/24/24
+//6. Day 9 (10/26/24) - No changes made
 
 //To-Do List:
 //1. Program Proper, after maka login
