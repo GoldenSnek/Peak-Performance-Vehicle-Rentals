@@ -77,7 +77,6 @@ namespace Peak_Performance_Vehicle_Rentals
                     style[1] = "  ";
                     Console.ForegroundColor = ConsoleColor.White;
                 }
-
                 Console.WriteLine($"{style[0]} {currentOption} {style[1]}");
                 
             }

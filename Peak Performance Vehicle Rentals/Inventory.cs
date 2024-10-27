@@ -11,7 +11,8 @@ namespace Peak_Performance_Vehicle_Rentals
         public string[] ViewVehicles(FilePathManager file) //return all cars in inventory
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
-            string[] vehicles = new string[files.Length+1];   
+            string[] vehicles = new string[files.Length + 1];
+            string brand = "";
 
             //display the names of the text files
             for (int i = 0; i < files.Length; i++)
@@ -22,7 +23,19 @@ namespace Peak_Performance_Vehicle_Rentals
                 //split the name and get the vehicle name (first part a.k.a. index 0)
                 string[] parts = fileName.Split('-');
 
-                vehicles[i] = parts[0];
+                string line;
+                using (var reader = new StreamReader(files[i])) //find the brand
+                {
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("Brand:"))
+                        {
+                            string[] brandparts = line.Split(": ");
+                            brand = brandparts[1];
+                        }
+                    }
+                }
+                vehicles[i] = $"{brand} {parts[0]}";
             }
 
             vehicles[files.Length] = "Go back to Main Menu";
@@ -33,6 +46,7 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
             int length = 0;
+            string brand = "";
 
             for (int i = 0; i < files.Length; i++) //identify size
             {
@@ -47,7 +61,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             }
 
-            string[] vehicles = new string[length+1]; //identify vehicles
+            string[] vehicles = new string[length + 1]; //identify vehicles
             int ctr = 0;
             for (int i = 0; i < files.Length; i++)
             {
@@ -58,7 +72,19 @@ namespace Peak_Performance_Vehicle_Rentals
 
                 if (parts[3] == username)
                 {
-                    vehicles[ctr++] = parts[0];
+                    string line;
+                    using (var reader = new StreamReader(files[i])) //find the brand
+                    {
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (line.StartsWith("Brand:"))
+                            {
+                                string[] brandparts = line.Split(": ");
+                                brand = brandparts[1];
+                            }
+                        }
+                    }
+                    vehicles[ctr++] = $"{brand} {parts[0]}";
                 }
             }
 
@@ -66,5 +92,42 @@ namespace Peak_Performance_Vehicle_Rentals
             return vehicles;
         }
 
+        public string[] ViewVehicleDetails(string username, FilePathManager file, int choice)
+        {
+            string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", $"*{username}.txt");
+            int index = 0;
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (i == choice)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            string[] details = new string[9]; //identify details of specific vehicle
+            if (index < files.Length)
+            {
+                for (int i = 0; i < details.Length; i++) //start at 4 to skip changing the important details
+                {
+                    string line;
+                    using (var reader = new StreamReader(files[index]))
+                    {
+                        int ctr = 0;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (ctr == i + 4)
+                                details[i] = line;
+                            ctr++;
+                        }
+                    }
+                }
+                details[8] = "Go back to Main Menu";
+            }
+            else
+                details[0] = "";
+            return details;
+        }
     }
 }

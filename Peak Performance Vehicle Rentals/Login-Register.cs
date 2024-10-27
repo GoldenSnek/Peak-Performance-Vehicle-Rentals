@@ -6,9 +6,9 @@ using System.IO;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class Login : Program
+    internal class LoginRegister : ILoginRegister
     {
-        public static string UserLogin(FilePathManager file) //MAIN METHOD for login
+        public string UserLogin(FilePathManager file) //MAIN METHOD for login
         {
             string username;
             do
@@ -54,11 +54,8 @@ namespace Peak_Performance_Vehicle_Rentals
             else
                 return "";
         }
-    }
 
-    internal class Register : Program
-    {
-        public static void UserRegister(FilePathManager file) //MAIN METHOD for register
+        public void UserRegister(FilePathManager file) //MAIN METHOD for register
         {
             string username;
             bool DuplicateUser = true;
@@ -103,7 +100,7 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.WriteLine("Registration successful!"); Thread.Sleep(1000);
         }
 
-        public static bool UserExists(string username, FilePathManager file) //method to check for duplicate user
+        public static bool UserExists(string username, FilePathManager file) //method to check for duplicate user, used for register
         {
             bool DuplicateUser = false;
             using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))

@@ -20,7 +20,7 @@ using System.Threading;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -33,13 +33,14 @@ namespace Peak_Performance_Vehicle_Rentals
 
                 //Login Register
                 bool LRrunning = true; //LR = LoginRegister
+                LoginRegister LR = new LoginRegister();  
                 do
                 {
                     int LRchoice = choice.LoginRegisterChoice();
                     switch (LRchoice)
                     {
                         case 0:
-                            username = Login.UserLogin(file);
+                            username = LR.UserLogin(file);
                             if (username != "")
                             {
                                 Console.WriteLine("Login Successful!\n");
@@ -55,13 +56,13 @@ namespace Peak_Performance_Vehicle_Rentals
                             break;
 
                         case 1:
-                            Register.UserRegister(file);
+                            LR.UserRegister(file);
                             break;
 
                         case 2:
                             Console.WriteLine("This is my Final Project for CPE261!");
                             Console.WriteLine("Program created by: John Michael A. Nave");
-                            UserInterface UI = new UserInterface("Press any key to return to Login Screen");
+                            UserInterface UI = new UserInterface("Press any key to return to the Login and Register screen");
                             UI.WaitForKey();
                             break;
 
@@ -83,20 +84,18 @@ namespace Peak_Performance_Vehicle_Rentals
                     bool MMrunning = true;
                     do
                     {
+                        VehicleManager MV = new VehicleManager();
                         int MMchoice = choice.MainMenuChoice();
                         switch (MMchoice)
                         {
                             case 0:
-                                Console.WriteLine("");
-                                ViewVehicles.ViewRentalVehicles(file);
+                                MV.ViewRentalVehicles(file);
                                 break;
 
                             case 1:
-                                Console.WriteLine("");
                                 break;
 
                             case 2:
-                                Console.WriteLine("");
                                 bool MVrunning = true;
                                 do
                                 {
@@ -104,15 +103,15 @@ namespace Peak_Performance_Vehicle_Rentals
                                     switch (MVchoice)
                                     {
                                         case 0:
-                                            ManageVehicles.AddVehicle(username);
+                                            MV.AddVehicle(username);
                                             break;
 
                                         case 1:
-                                            ManageVehicles.UpdateVehicle(username);
+                                            MV.UpdateVehicle(username, file);
                                             break;
 
                                         case 2:
-                                            ManageVehicles.DeleteVehicle(username, file);
+                                            MV.DeleteVehicle(username, file);
                                             break;
 
                                         case 3:
@@ -127,7 +126,7 @@ namespace Peak_Performance_Vehicle_Rentals
                                 break;
 
                             case 3:
-                                Console.WriteLine("help");
+                                Console.WriteLine("help"); //placeholder
                                 break;
 
                             case 4:

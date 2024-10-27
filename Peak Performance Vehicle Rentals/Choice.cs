@@ -3,7 +3,7 @@ using System.IO;
 
 //To-Do List:
 //1. create separate files for each user (done 10/19/24)
-//2. change choices pina noah style nga mag arrow keys ka
+//2. change choices pina nga mag arrow keys ka (done)
 
 namespace Peak_Performance_Vehicle_Rentals
 {
@@ -52,12 +52,31 @@ namespace Peak_Performance_Vehicle_Rentals
 
         public int ManageVehiclesChoice() //choice method ?: manage vehicles
         {
-            string prompt = "Select a vehicle that you want to view the details";
+            string prompt = "Manage Vehicles";
             string[] options = { "Add your own rentable vehicle", "Update vehicles", "Delete vehicles", "Go back to main menu" };
 
             UserInterface MV = new UserInterface(prompt, options);
             int choice = MV.RunUserInterface();
             return choice;
+        }
+        public string UpdateVehiclesDetailsChoice(string username, FilePathManager file, int choice) //choice method ?: view all vehicles
+        {
+            Inventory inventory = new Inventory();
+            string prompt = "Select a detail that you want to change";
+            string[] options = inventory.ViewVehicleDetails(username, file, choice);
+            if (options[0] != "")
+            {
+                UserInterface VAV = new UserInterface(prompt, options);
+                string detailchoice = VAV.RunUserInterfaceString();
+                if (detailchoice != "Go back to Main Menu")
+                {
+                    string[] detailchoicepart = detailchoice.Split(": ");
+                    return detailchoicepart[0];
+                }
+                else return "";
+            }
+            else
+                return "";
         }
 
         public string VehicleTypeChoice() //choice method ?: view owned vehicles
@@ -70,7 +89,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
             if (choiceVT == 0)
             {
-                prompt = "Choose Car type: ";
+                prompt = "Choose Car type";
                 string[] optionVTCar = { "Sedan", "SUV", "Coupe", "Convertible", "Hatchback", "Minivan", "Pickup Truck", "Limousine", "Sports Car", "Luxury Car" };
 
                 UserInterface VTCar = new UserInterface(prompt, optionVTCar);
