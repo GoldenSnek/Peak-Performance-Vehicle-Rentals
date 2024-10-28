@@ -63,6 +63,13 @@ namespace Peak_Performance_Vehicle_Rentals
     }
 
     //Choice
+    public abstract class AbstractChoice
+    {
+        private string prompt;
+        private string[] options;
+        public string Prompt { get { return prompt; } set { prompt = value; } }
+        public string[] Options { get { return options; } set { options = value; } }
+    }
     public interface IChoice
     {
         public int LoginRegisterChoice();
