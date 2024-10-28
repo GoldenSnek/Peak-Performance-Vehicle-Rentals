@@ -6,23 +6,19 @@ using System.Threading.Tasks;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class UserInterface : IUserInterface
+    internal class UserInterface : AbstractUserInterface
     {
-        private int choice;
-        private string[] options;
-        private string prompt;
-
         public UserInterface(string prompt)
         {
-            this.prompt = prompt;
+            Prompt = prompt;
         }
         public UserInterface(string prompt, string[] options)
         {
-            this.prompt = prompt;
-            this.options = options;
-            this.choice = 0;
+            Prompt = prompt;
+            Options = options;
+            Choice = 0;
         }
-        public int RunUserInterface() //MAIN METHOD for running the interface, returns int
+        public override int RunUserInterface() //MAIN METHOD for running the interface, returns int
         {
             ConsoleKey keyPressed;
             do
@@ -35,37 +31,37 @@ namespace Peak_Performance_Vehicle_Rentals
 
                 if (keyPressed == ConsoleKey.UpArrow)
                 {
-                    choice--;
-                    if (choice == -1)
-                        choice = options.Length - 1;
+                    Choice--;
+                    if (Choice == -1)
+                        Choice = Options.Length - 1;
                 }
                 if (keyPressed == ConsoleKey.DownArrow)
                 {
-                    choice++;
-                    if (choice == options.Length)
-                        choice = 0;
+                    Choice++;
+                    if (Choice == Options.Length)
+                        Choice = 0;
                 }
 
             } while (keyPressed != ConsoleKey.Enter);
 
-            return choice;
+            return Choice;
         }
 
-        public string RunUserInterfaceString() //MAIN METHOD for running the interface, returns string
+        public override string RunUserInterfaceString() //MAIN METHOD for running the interface, returns string
         {
             RunUserInterface();
-            return options[choice];
+            return Options[Choice];
         }
 
-        public void DisplayOptions() //method supporting RunUseInterface
+        public override void DisplayOptions() //method supporting RunUseInterface
         {
-            Console.WriteLine(prompt);
-            for (int i = 0; i < options.Length; i++)
+            Console.WriteLine(Prompt);
+            for (int i = 0; i < Options.Length; i++)
             {
-                string currentOption = options[i];
+                string currentOption = Options[i];
                 string[] style = new string[2];
 
-                if (i == choice)
+                if (i == Choice)
                 {
                     style[0] = "<<";
                     style[1] = ">>";
@@ -82,12 +78,12 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             Console.ResetColor();
         }
-        public void WaitForKey() //extra method
+        public override void WaitForKey() //extra method
         {
-            Console.Write(prompt);
+            Console.Write(Prompt);
             Console.ReadKey(true);
         }
-        public void WaitForSpecificKey() //extra method
+        public override void WaitForSpecificKey() //extra method
         {
             Console.Write("Press any [specific key] to [do this and that]");
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);

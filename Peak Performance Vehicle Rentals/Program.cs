@@ -7,7 +7,7 @@ using System.Threading;
 //1. User Data file path may vary depending on device used (fixed 10/19/24)
 //2. Started creating main menu 10/20/24
 //3. Viewing and adding cars (unifnished)
-//4. unya raman unta ang pachuychuy pero na inspire ko ni noah so ako gi una HAHAHAH (incomplete pa 10/23/24)
+//4. unya ra ang pachuychuy
 //5. Annoying bug 10/24/24
 //6. Day 9 (10/26/24) - No changes has been made today
 
@@ -17,6 +17,10 @@ using System.Threading;
 //3. Main menu should have an option to go back to login ang register screen
 //4. passwords should be ******
 
+//FINISH THIS WEEK ASAP
+//5. Edit User Details
+//6. Delete User File (and also the vehicle files with the same username)
+//7. Rent a vehicle and the vehicle rented will be removed from the "view all rental vehicles" and be moved to "rental details"
 
 namespace Peak_Performance_Vehicle_Rentals
 {
@@ -85,6 +89,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     do
                     {
                         VehicleManager MV = new VehicleManager();
+                        UserManager UR = new UserManager();
                         int MMchoice = choice.MainMenuChoice();
                         switch (MMchoice)
                         {
@@ -126,7 +131,32 @@ namespace Peak_Performance_Vehicle_Rentals
                                 break;
 
                             case 3:
-                                Console.WriteLine("help"); //placeholder
+                                bool MUrunning = true;
+                                do
+                                {
+                                    int MUchoice = choice.ManageUserChoice();
+                                    switch (MUchoice)
+                                    {
+                                        case 0:
+                                            UR.ViewUserDetails(username, file);
+                                            break;
+
+                                        case 1:
+                                            Console.WriteLine("placeholder 1");
+                                            break;
+
+                                        case 2:
+                                            Console.WriteLine("placeholder 2");
+                                            break;
+
+                                        case 3:
+                                            MUrunning = false;
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                } while (MUrunning);
                                 break;
 
                             case 4:

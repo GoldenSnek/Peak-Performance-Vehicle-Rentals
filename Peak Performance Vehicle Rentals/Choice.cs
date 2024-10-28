@@ -9,11 +9,15 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class Choice: IChoice
     {
-        //internal override string prompt{ get { return value; } set { this.prompt = value; } }
+        private string prompt;
+        private string[] options;
+        public string Prompt { get { return prompt; } set { prompt = value; } }
+        public string[] Options { get { return options; } set { options = value; } }
+
         public int LoginRegisterChoice() //choice method 1: login and register
         {
-            string prompt = "Welcome to the program";
-            string[] options = {"Login", "Register", "About", "Exit"};
+            Prompt = "Welcome to the program";
+            Options = new string[] {"Login", "Register", "About", "Exit"};
 
             UserInterface LR = new UserInterface(prompt, options);
             int choice = LR.RunUserInterface();
@@ -22,8 +26,8 @@ namespace Peak_Performance_Vehicle_Rentals
 
         public int MainMenuChoice() //choice method 2: main menu
         {
-            string prompt = "MAIN MENU";
-            string[] options = { "View rentable vehicles", "View rental details", "Manage vehicles", "Help", "Logout", "Exit Program" };
+            Prompt = "MAIN MENU";
+            Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
 
             UserInterface MM = new UserInterface(prompt, options);
             int choice = MM.RunUserInterface();
@@ -32,8 +36,8 @@ namespace Peak_Performance_Vehicle_Rentals
         public int ViewAllVehiclesChoice(FilePathManager file) //choice method ?: view all vehicles
         {
             Inventory inventory = new Inventory();
-            string prompt = "Select a vehicle that you want to view the details";
-            string[] options = inventory.ViewVehicles(file);
+            Prompt = "Select a vehicle that you want to view the details";
+            Options = inventory.ViewVehicles(file);
 
             UserInterface VAV = new UserInterface(prompt, options);
             int choice = VAV.RunUserInterface();
@@ -42,28 +46,27 @@ namespace Peak_Performance_Vehicle_Rentals
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file) //choice method ?: view owned vehicles
         {
             Inventory inventory = new Inventory();
-            string prompt = "Select a vehicle that you want to manage";
-            string[] options = inventory.ViewVehicles(username, file);
+            Prompt = "Select a vehicle that you want to manage";
+            Options = inventory.ViewVehicles(username, file);
 
             UserInterface VOV = new UserInterface(prompt, options);
             int choice = VOV.RunUserInterface();
             return choice;
         }
-
         public int ManageVehiclesChoice() //choice method ?: manage vehicles
         {
-            string prompt = "Manage Vehicles";
-            string[] options = { "Add your own rentable vehicle", "Update vehicles", "Delete vehicles", "Go back to main menu" };
+            Prompt = "Manage Vehicles";
+            Options = new string[] { "Add your own rentable vehicle", "Update vehicles", "Delete vehicles", "Go back to main menu" };
 
             UserInterface MV = new UserInterface(prompt, options);
             int choice = MV.RunUserInterface();
             return choice;
         }
-        public string UpdateVehiclesDetailsChoice(string username, FilePathManager file, int choice) //choice method ?: view all vehicles
+        public string UpdateVehicleDetailsChoice(string username, FilePathManager file, int choice) //choice method ?: view all vehicles
         {
             Inventory inventory = new Inventory();
-            string prompt = "Select a detail that you want to change";
-            string[] options = inventory.ViewVehicleDetails(username, file, choice);
+            Prompt = "Select a detail that you want to change";
+            Options = inventory.ViewVehicleDetails(username, file, choice);
             if (options[0] != "")
             {
                 UserInterface VAV = new UserInterface(prompt, options);
@@ -78,18 +81,17 @@ namespace Peak_Performance_Vehicle_Rentals
             else
                 return "";
         }
-
         public string VehicleTypeChoice() //choice method ?: view owned vehicles
         {
-            string prompt = "Choose vehicle type";
-            string[] options = { "Car", "Motorcycle" };
+            Prompt = "Choose vehicle type";
+            Options = new string[] { "Car", "Motorcycle" };
 
             UserInterface VT = new UserInterface(prompt, options);
             int choiceVT = VT.RunUserInterface();
 
             if (choiceVT == 0)
             {
-                prompt = "Choose Car type";
+                Prompt = "Choose Car type";
                 string[] optionVTCar = { "Sedan", "SUV", "Coupe", "Convertible", "Hatchback", "Minivan", "Pickup Truck", "Limousine", "Sports Car", "Luxury Car" };
 
                 UserInterface VTCar = new UserInterface(prompt, optionVTCar);
@@ -98,7 +100,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             else if (choiceVT == 1)
             {
-                prompt = "Choose Motorcycle type: ";
+                Prompt = "Choose Motorcycle type: ";
                 string[] optionVTMotorcycle = { "Underbone", "Scooter", "Naked", "Motocross", "Cafe Racer", "Chopper", "Tourer", "Sports Bike" };
 
                 UserInterface VTMotorcycle = new UserInterface(prompt, optionVTMotorcycle);
@@ -108,23 +110,30 @@ namespace Peak_Performance_Vehicle_Rentals
             else
                 return "";
         }
-
         public string VehicleFuelChoice() //choice method ?: view owned vehicles
         {
-            string prompt = "Choose fuel type";
-            string[] options = { "Gasoline", "Diesel", "Electric", "Hybrid", "Hydrogen" };
+            Prompt = "Choose fuel type";
+            Options = new string[] { "Gasoline", "Diesel", "Electric", "Hybrid", "Hydrogen" };
 
             UserInterface VF = new UserInterface(prompt, options);
             return VF.RunUserInterfaceString();
         }
-
         public string VehicleStatusChoice() //choice method ?: view owned vehicles
         {
-            string prompt = "Choose vehicle status";
-            string[] options = { "Available", "In Maintenance", "Reserved"};
+            Prompt = "Choose vehicle status";
+            Options = new string[] { "Available", "In Maintenance", "Reserved" };
 
             UserInterface VS = new UserInterface(prompt, options);
             return VS.RunUserInterfaceString();
+        }
+        public int ManageUserChoice() //choice method 2: main menu
+        {
+            Prompt = "User Management";
+            Options = new string[] { "View account details", "Update account details", "Delete account", "Go back to main menu" };
+
+            UserInterface MM = new UserInterface(prompt, options);
+            int choice = MM.RunUserInterface();
+            return choice;
         }
     }
 }

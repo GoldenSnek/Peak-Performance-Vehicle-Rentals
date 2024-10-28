@@ -35,7 +35,7 @@ namespace Peak_Performance_Vehicle_Rentals
         {
 
             bool success = false;
-            string[] details = new string[11];
+            string[] details = new string[12];
             Choice choose = new Choice();
 
             //type
@@ -56,58 +56,64 @@ namespace Peak_Performance_Vehicle_Rentals
             details[7] = VehicleSeatingCapacity();
             //mileage
             details[8] = VehicleMileage();
+            //location
+            details[9] = VehicleLocation();
             //rental price
-            details[9] = VehiclePrice();
+            details[10] = VehiclePrice();
             //status
-            details[10] = choose.VehicleStatusChoice();
+            details[11] = choose.VehicleStatusChoice();
 
             //create a new vehicle file
             VehicleFile vehicle = new VehicleFile();
             vehicle.CreateVehicleFile(username, details);
 
-            Console.WriteLine("New car added!"); Thread.Sleep(1000);
+            Console.WriteLine("New vehicle has been added!"); Thread.Sleep(1000);
         }
 
-        //finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later
         public void UpdateVehicle(string username, FilePathManager file)
         {
             //Update vehicle file
             int choice;
+            string detailchoice = "";
             string newdetail = "";
             Choice choose = new Choice();
             Inventory inventory = new Inventory();
             do {
                 choice = choose.ViewOwnedVehiclesChoice(username, file);
-                if (choice != inventory.ViewVehicles(username, file).Length - 1)
+                do
                 {
-                    string detailchoice = choose.UpdateVehiclesDetailsChoice(username, file, choice);
-
-                    if (detailchoice == "Year")
-                        newdetail = VehicleYear();
-                    if (detailchoice == "License Plate")
-                        newdetail = VehicleLicensePlate();
-                    if (detailchoice == "Color")
-                        newdetail = VehicleColor();
-                    if (detailchoice == "Fuel Type")
-                        newdetail = choose.VehicleFuelChoice();
-                    if (detailchoice == "Seating Capacity")
-                        newdetail = VehicleSeatingCapacity();
-                    if (detailchoice == "Mileage")
-                        newdetail = VehicleMileage();
-                    if (detailchoice == "Rental Price")
-                        newdetail = VehiclePrice();
-                    if (detailchoice == "Status")
-                        newdetail = choose.VehicleStatusChoice();
-                    if (detailchoice != "")
+                    if (choice != inventory.ViewVehicles(username, file).Length - 1)
                     {
-                        VehicleFile vehicle = new VehicleFile();
-                        vehicle.UpdateVehicleFile(username, file, choice, detailchoice, newdetail);
+                        detailchoice = choose.UpdateVehicleDetailsChoice(username, file, choice);
+
+                        if (detailchoice == "Year")
+                            newdetail = VehicleYear();
+                        if (detailchoice == "License Plate")
+                            newdetail = VehicleLicensePlate();
+                        if (detailchoice == "Color")
+                            newdetail = VehicleColor();
+                        if (detailchoice == "Fuel Type")
+                            newdetail = choose.VehicleFuelChoice();
+                        if (detailchoice == "Seating Capacity")
+                            newdetail = VehicleSeatingCapacity();
+                        if (detailchoice == "Mileage")
+                            newdetail = VehicleMileage();
+                        if (detailchoice == "Pickup and Drop-off Location")
+                            newdetail = VehicleLocation();
+                        if (detailchoice == "Rental Price")
+                            newdetail = VehiclePrice();
+                        if (detailchoice == "Status")
+                            newdetail = choose.VehicleStatusChoice();
+                        if (detailchoice != "")
+                        {
+                            VehicleFile vehicle = new VehicleFile();
+                            vehicle.UpdateVehicleFile(username, file, choice, detailchoice, newdetail);
+                        }
                     }
-                }
+                } while (detailchoice != "");
             } while (choice != inventory.ViewVehicles(username, file).Length - 1);
         }
-        //finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later finish later
-
+        
         public void DeleteVehicle(string username, FilePathManager file)
         {
 
@@ -223,7 +229,19 @@ namespace Peak_Performance_Vehicle_Rentals
                 if (!success || tempmileage < 0)
                     Console.WriteLine("Please enter a realistic mileage!");
             } while (!success || tempmileage < 0);
-            return mileage;
+            return mileage + " km";
+        }
+        public string VehicleLocation()
+        {
+            string location;
+            do
+            {
+                Console.Write("Enter vehicle pickup/drop-off location: ");
+                location = Console.ReadLine();
+                if (location == "")
+                    Console.WriteLine("Please do not leave the vehicle location empty");
+            } while (location == "");
+            return location;
         }
         public string VehiclePrice()
         {
@@ -232,15 +250,31 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
-                Console.Write("Enter rental rate of the vehicle in Php/hr (minimum should be 100 Php/hr and max 100,000 Php/hr): ");
+                Console.Write("Enter rental rate of the vehicle in PHP/hr (minimum should be 100 Php/hr and max 100,000 Php/hr): ");
                 price = Console.ReadLine();
 
                 success = int.TryParse(price, out tempprice);
 
                 if (!success || tempprice < 100 || tempprice > 100000)
-                    Console.WriteLine("Please enter a rate between 100 Php/hr and 100,000 Php/hr!");
+                    Console.WriteLine("Please enter a rate between 100 PHP/hr and 100,000 Php/hr!");
             } while (!success || tempprice < 100 || tempprice > 100000);
-            return price;
+            return price + " PHP/hr";
         }
+    }
+
+    internal class UserManager : UserDetailManager, IUserManagement
+    {
+        public void ViewUserDetails(string username, FilePathManager file)
+        {
+            UserFile user = new UserFile();
+            user.DisplayUserFile(username);
+            UserInterface UI = new UserInterface("Press any key if you are done reading the details");
+            UI.WaitForKey();
+        }
+    }
+
+    internal class UserDetailManager : IUserDetailManagement
+    {
+        //add soon
     }
 }

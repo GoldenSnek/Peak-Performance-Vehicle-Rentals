@@ -10,19 +10,30 @@ using System.Threading.Tasks;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    public interface IUserInterface
+    //User Interface
+    public abstract class AbstractUserInterface
     {
-        public int RunUserInterface();
-        public string RunUserInterfaceString();
-        public void DisplayOptions();
-        public void WaitForKey();
-        public void WaitForSpecificKey();
+        private int choice;
+        private string[] options;
+        private string prompt;
+        public int Choice { get; set; }
+        public string[] Options { get; set; }
+        public string Prompt { get; set; }
+        abstract public int RunUserInterface();
+        abstract public string RunUserInterfaceString();
+        abstract public void DisplayOptions();
+        abstract public void WaitForKey();
+        abstract public void WaitForSpecificKey();
     }
+
+    //Login Register
     public interface ILoginRegister
     {
         public string UserLogin(FilePathManager file);
         public void UserRegister(FilePathManager file);
     }
+
+    //MAIN MENU
     public interface IVehicleManagement
     {
         public void ViewRentalVehicles(FilePathManager file);
@@ -39,8 +50,19 @@ namespace Peak_Performance_Vehicle_Rentals
         public string VehicleColor();
         public string VehicleSeatingCapacity();
         public string VehicleMileage();
+        public string VehicleLocation();
         public string VehiclePrice();
     }
+    public interface IUserManagement
+    {
+        public void ViewUserDetails(string username, FilePathManager file);
+    }
+    public interface IUserDetailManagement
+    {
+        //add soon
+    }
+
+    //Choice
     public interface IChoice
     {
         public int LoginRegisterChoice();
@@ -48,20 +70,25 @@ namespace Peak_Performance_Vehicle_Rentals
         public int ViewAllVehiclesChoice(FilePathManager file);
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file);
         public int ManageVehiclesChoice();
+        public string UpdateVehicleDetailsChoice(string username, FilePathManager file, int choice);
         public string VehicleTypeChoice();
         public string VehicleFuelChoice();
         public string VehicleStatusChoice();
     }
+
+    //Inventory
     public interface IInventoryManagement
     {
         public string[] ViewVehicles(FilePathManager file);
     }
+
+    //FileManager
     public interface IUserFileManagement
     {
         public void CreateUserFile(string username);
         public void UpdateUserFile();
         public void DeleteUserFile();
-        public void DisplayUserFile(int DVchoice);
+        public void DisplayUserFile(string username);
     }
     public interface IVehicleFileManagement
     {
