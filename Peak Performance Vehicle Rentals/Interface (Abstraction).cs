@@ -93,14 +93,14 @@ namespace Peak_Performance_Vehicle_Rentals
     public interface IUserFileManagement
     {
         public void CreateUserFile(string username);
-        public void UpdateUserFile();
-        public void DeleteUserFile();
+        public void UpdateUserFile(string username, string detailchoice, string newdetail);
+        public void DeleteUserFile(string username);
         public void DisplayUserFile(string username);
     }
     public interface IVehicleFileManagement
     {
         public void CreateVehicleFile(string username, string[] details);
-        public void UpdateVehicleFile(string username, FilePathManager file, int choice, string detailchoice, string newdetail);
+        public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail);
         public void DeleteVehicleFile(string username, FilePathManager file, int choice);
         public void DisplayVehicleFile(int DVchoice);
     }

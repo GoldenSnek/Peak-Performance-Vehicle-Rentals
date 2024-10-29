@@ -107,7 +107,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         if (detailchoice != "")
                         {
                             VehicleFile vehicle = new VehicleFile();
-                            vehicle.UpdateVehicleFile(username, file, choice, detailchoice, newdetail);
+                            vehicle.UpdateVehicleFile(username, choice, detailchoice, newdetail);
                         }
                     }
                 } while (detailchoice != "");
@@ -271,10 +271,98 @@ namespace Peak_Performance_Vehicle_Rentals
             UserInterface UI = new UserInterface("Press any key if you are done reading the details");
             UI.WaitForKey();
         }
+        public void UpdateUser(string username, FilePathManager file)
+        {
+            //Update vehicle file
+            string detailchoice = "";
+            string newdetail = "";
+            Choice choose = new Choice();
+            do
+            {
+                detailchoice = choose.UpdateUserDetailsChoice(username, file);
+
+                if (detailchoice == "Email Address")
+                    newdetail = UserEmail();
+                if (detailchoice == "Date of Birth (MM/DD/YY)")
+                    newdetail = UserBirth();
+                if (detailchoice == "Address")
+                    newdetail = UserAddress();
+                if (detailchoice != "")
+                {
+                    UserFile user = new UserFile();
+                    user.UpdateUserFile(username, detailchoice, newdetail);
+                }
+            } while (detailchoice != "");
+        }
+        public bool DeleteUser(string username, FilePathManager file)
+        {
+            //Update vehicle file
+            int choice;
+            Choice choose = new Choice();
+            choice = choose.DeleteUserChoice(username, file);
+
+            if (choice == 0)
+            {
+                UserFile user = new UserFile();
+                user.DeleteUserFile(username);
+                return false;
+            }
+            else
+                return true;
+        }
     }
 
     internal class UserDetailManager : IUserDetailManagement
     {
-        //add soon
+        public string UserEmail()
+        {
+            string email;
+            do
+            {
+                Console.Write("Enter your email address: ");
+                email = Console.ReadLine();
+                if (email == "")
+                    Console.WriteLine("Please do not leave the email address empty!");
+            } while (email == "");
+            return email;
+        }
+        public string UserBirth()
+        {
+            string[] details = new string[3];
+            do
+            {
+                Console.Write("Year: ");
+                details[0] = Console.ReadLine();
+                if (details[0] == "")
+                    Console.WriteLine("Please enter a proper year");
+            } while (details[0] == "");
+            do
+            {
+                Console.Write("Month: ");
+                details[1] = Console.ReadLine();
+                if (details[1] == "")
+                    Console.WriteLine("Please enter a proper month");
+            } while (details[1] == "");
+            do
+            {
+                Console.Write("Day: ");
+                details[2] = Console.ReadLine();
+                if (details[2] == "")
+                    Console.WriteLine("Please enter a proper day");
+            } while (details[2] == "");
+            return $"{details[1]}/{details[2]}/{details[0]}";
+        }
+        public string UserAddress()
+        {
+            string address;
+            do
+            {
+                Console.Write("Enter your home address: ");
+                address = Console.ReadLine();
+                if (address == "")
+                    Console.WriteLine("Please do not leave the address empty!");
+            } while (address == "");
+            return address;
+        }
     }
 }

@@ -9,7 +9,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.Program">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
@@ -30,7 +30,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.UserInterface">
-    <Position X="0.5" Y="3" Width="1.5" />
+    <Position X="0.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAgAAAAAAABAAAAABAAAIAAAAEAAAAA=</HashCode>
       <FileName>UserInterface.cs</FileName>
@@ -100,7 +100,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.AbstractUserInterface" Collapsed="true">
-    <Position X="0.5" Y="2" Width="1.5" />
+    <Position X="0.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEAAAAAAAAAAAAgAIAAAACBIAAAADAAAIAAAAEBAAAA=</HashCode>
       <FileName>Interface (Abstraction).cs</FileName>

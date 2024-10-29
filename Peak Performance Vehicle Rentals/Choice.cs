@@ -131,5 +131,28 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = MM.RunUserInterface();
             return choice;
         }
+        public string UpdateUserDetailsChoice(string username, FilePathManager file) //choice method ?: view all vehicles
+        {
+            Inventory inventory = new Inventory();
+            Prompt = "Select a detail that you want to change";
+            Options = inventory.ViewUserDetails(username, file);
+            UserInterface UD = new UserInterface(Prompt, Options);
+            string detailchoice = UD.RunUserInterfaceString();
+            if (detailchoice != "Go back to Main Menu")
+            {
+                string[] detailchoicepart = detailchoice.Split(": ");
+                return detailchoicepart[0];
+            }
+            else return "";
+        }
+        public int DeleteUserChoice(string username, FilePathManager file) //choice method ?: view all vehicles
+        {
+            Inventory inventory = new Inventory();
+            Prompt = "Are you sure that you want to delete your account? This will also remove all vehicles owned by you.";
+            Options = new string[] { "I AM SURE IN DELETING MY ACCOUNT", "Go back to main menu" };
+            UserInterface DU = new UserInterface(Prompt, Options);
+            int choice = DU.RunUserInterface();
+            return choice;
+        }
     }
 }

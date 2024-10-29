@@ -129,5 +129,27 @@ namespace Peak_Performance_Vehicle_Rentals
                 details[0] = "";
             return details;
         }
+        public string[] ViewUserDetails(string username, FilePathManager file)
+        {
+            string directory = file.BaseDirectory + $"\\UserData\\{username}.txt";
+
+            string[] details = new string[4]; //identify details of user
+            for (int i = 0; i < details.Length-1; i++)
+            {
+                string line;
+                using (var reader = new StreamReader(directory))
+                {
+                    int ctr = 0;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (ctr == i + 1)
+                            details[i] = line;
+                        ctr++;
+                    }
+                }
+            }
+            details[3] = "Go back to Main Menu";
+            return details;
+        }
     }
 }

@@ -41,27 +41,96 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string filePath = GetUserFilePath(username);
 
+            //get current date and time for account creation
+            string accountCreationDate = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            string[] creation = accountCreationDate.Split(' ');
+
             if (!File.Exists(filePath)) //check if the file already exists
             {
                 using (var writer = new StreamWriter(filePath)) // Create the file and write the username and password
                 {
                     writer.WriteLine($"Username: {username}");
-                    writer.WriteLine($"Email Address: ");
-                    writer.WriteLine($"Date of Birth (MM/DD/YY): ");
-                    writer.WriteLine($"Address: ");
-                    writer.WriteLine($"Account creation date: ");
+                    writer.WriteLine($"Email Address: -no data-");
+                    writer.WriteLine($"Date of Birth (MM/DD/YY): -no data-");
+                    writer.WriteLine($"Address: -no data-");
+                    writer.WriteLine($"Account creation date: {creation[0]}");
                 }
             }
         }
 
-        public void UpdateUserFile() //update details of the user
+        public void UpdateUserFile(string username, string detailchoice, string newdetail) //update details of the user
         {
+            string filePath = GetUserFilePath(username);
+            string tempPath = BaseDirectory + "\\Temp.txt";
 
+            using (StreamReader reader = new StreamReader(filePath))
+            using (StreamWriter writer = new StreamWriter(tempPath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    // Check if the current line starts with the search line
+                    if (line.StartsWith(detailchoice))
+                    {
+                        writer.WriteLine($"{detailchoice}: {newdetail}"); // Write the new line to the temp file
+                    }
+                    else
+                    {
+                        writer.WriteLine(line); // Write the original line to the temp file
+                    }
+                }
+            }
+
+            //replace the original file with the updated temp file
+            File.Delete(filePath); //delete the original file
+            File.Move(tempPath, filePath);
+            File.Delete(tempPath);
+
+            Console.WriteLine("User details has been successfuly updated!"); Thread.Sleep(1000);
         }
 
-        public void DeleteUserFile() //delete user file
+        public void DeleteUserFile(string username) //delete user file
         {
+            string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*{username}.txt");
+            string filePath = BaseDirectory + "\\Users.txt";
+            string tempPath = BaseDirectory + "\\Temp.txt";
 
+            //delete the user line from the main user file
+            using (StreamReader reader = new StreamReader(filePath))
+            using (StreamWriter writer = new StreamWriter(tempPath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    // Check if the current line starts with the search line
+                    if (!line.StartsWith(username))
+                    {
+                        writer.WriteLine(line); // Write the original line to the temp file
+                    }
+                }
+            }
+
+            //replace the original file with the updated temp file
+            File.Delete(filePath); //delete the original file
+            File.Move(tempPath, filePath);
+            File.Delete(tempPath);
+
+            //delete the actual user file and details
+            if (File.Exists(GetUserFilePath(username)))
+            {
+                File.Delete(GetUserFilePath(username));
+            }
+
+            //delete all the vehicles of the user
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (File.Exists(files[i]))
+                {
+                    File.Delete(files[i]);
+                }
+            }
+            Console.WriteLine("User Account has been successfully deleted!"); Thread.Sleep(1000);
+            Console.WriteLine("Returning to login screen..."); Thread.Sleep(1000);
         }
         public void DisplayUserFile(string username) //display details of user
         {
@@ -103,10 +172,10 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void UpdateVehicleFile(string username, FilePathManager file, int choice, string detailchoice, string newdetail) //update details of the vehicle
+        public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail) //update details of the vehicle
         {
-            string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", $"*{username}.txt");
-            string tempPath = file.BaseDirectory + "\\Temp.txt";
+            string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", $"*{username}.txt");
+            string tempPath = BaseDirectory + "\\Temp.txt";
 
             using (StreamReader reader = new StreamReader(files[choice]))
             using (StreamWriter writer = new StreamWriter(tempPath))

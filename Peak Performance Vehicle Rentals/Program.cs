@@ -22,6 +22,14 @@ using System.Threading;
 //6. Delete User File (and also the vehicle files with the same username)
 //7. Rent a vehicle and the vehicle rented will be removed from the "view all rental vehicles" and be moved to "rental details"
 
+//Sir Semblante suggestions
+//1. Reciept
+//2. Include User details in vehicle display
+//3. Improve UI
+//4. Rental rates should be per hour, days, weeks
+//5. Try Catch error blocks
+//6. passwords are hidden ***********
+
 namespace Peak_Performance_Vehicle_Rentals
 {
     public class Program
@@ -142,11 +150,13 @@ namespace Peak_Performance_Vehicle_Rentals
                                             break;
 
                                         case 1:
-                                            Console.WriteLine("placeholder 1");
+                                            UR.UpdateUser(username, file);
                                             break;
 
                                         case 2:
-                                            Console.WriteLine("placeholder 2");
+                                            MUrunning = UR.DeleteUser(username, file);
+                                            if (MUrunning == false)
+                                                MMrunning = false;
                                             break;
 
                                         case 3:
