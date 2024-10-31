@@ -8,21 +8,47 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class Inventory : IInventoryManagement
     {
-        public string[] ViewVehicles(FilePathManager file) //return all cars in inventory
+        public string[] ViewVehicles(FilePathManager file) //MAIN METHOD 1 (overload 1), view all vehicles
         {
-            string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", "*.txt");
             string[] vehicles = new string[files.Length + 1];
             string brand = "";
 
             //display the names of the text files
             for (int i = 0; i < files.Length; i++)
             {
-                //get the file name without extension
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
 
-                //split the name and get the vehicle name (first part a.k.a. index 0)
-                string[] parts = fileName.Split('-');
+                string line;
+                using (var reader = new StreamReader(files[i])) //find the brand to be included in the display
+                {
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("Brand:"))
+                        {
+                            string[] brandparts = line.Split(": ");
+                            brand = brandparts[1];
+                        }
+                    }
+                }
+                vehicles[i] = $"{brand} {parts[0]}";
+            }
 
+            vehicles[files.Length] = "Go back to Main Menu";
+            return vehicles;
+        }
+
+        public string[] ViewVehicles(string username, FilePathManager file) //MAIN METHOD 1 (overload 2), view owned vehicles
+        {
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*{username}.txt");
+            string brand = "";
+            string[] vehicles = new string[files.Length + 1]; //identify vehicles
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
                 string line;
                 using (var reader = new StreamReader(files[i])) //find the brand
                 {
@@ -42,57 +68,7 @@ namespace Peak_Performance_Vehicle_Rentals
             return vehicles;
         }
 
-        public string[] ViewVehicles(string username, FilePathManager file) //overload method that returns the cars that are linked to the user
-        {
-            string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", "*.txt");
-            int length = 0;
-            string brand = "";
-
-            for (int i = 0; i < files.Length; i++) //identify size
-            {
-                //get the file name without extension
-                string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                //split the name and match the username
-                string[] parts = fileName.Split('-');
-
-                if (parts[3] == username)
-                {
-                    length++;
-                }
-            }
-
-            string[] vehicles = new string[length + 1]; //identify vehicles
-            int ctr = 0;
-            for (int i = 0; i < files.Length; i++)
-            {
-                //get the file name without extension
-                string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                //split the name and match the username
-                string[] parts = fileName.Split('-');
-
-                if (parts[3] == username)
-                {
-                    string line;
-                    using (var reader = new StreamReader(files[i])) //find the brand
-                    {
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            if (line.StartsWith("Brand:"))
-                            {
-                                string[] brandparts = line.Split(": ");
-                                brand = brandparts[1];
-                            }
-                        }
-                    }
-                    vehicles[ctr++] = $"{brand} {parts[0]}";
-                }
-            }
-
-            vehicles[length] = "Go back to Main Menu";
-            return vehicles;
-        }
-
-        public string[] ViewVehicleDetails(string username, FilePathManager file, int choice)
+        public string[] ViewVehicleDetails(string username, FilePathManager file, int choice) //MAIN METHOD 2, view vehicle details
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", $"*{username}.txt");
             int index = 0;
@@ -129,7 +105,8 @@ namespace Peak_Performance_Vehicle_Rentals
                 details[0] = "";
             return details;
         }
-        public string[] ViewUserDetails(string username, FilePathManager file)
+
+        public string[] ViewUserDetails(string username, FilePathManager file) //MAIN METHOD 3, view user details
         {
             string directory = file.BaseDirectory + $"\\UserData\\{username}.txt";
 

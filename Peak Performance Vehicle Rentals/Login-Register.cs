@@ -6,33 +6,30 @@ using System.IO;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class LoginRegister : ILoginRegister
+    internal class LoginRegister : LoginRegisterBase, ILoginRegister
     {
         public string UserLogin(FilePathManager file) //MAIN METHOD for login
         {
-            string username;
             do
             {
                 Console.Write("Enter username: ");
-                username = Console.ReadLine();
-                if (username == "")
+                Username = Console.ReadLine();
+                if (Username == "")
                 {
                     Console.WriteLine("Please do not leave the username empty");
                     Thread.Sleep(1000);
                 }
-            } while (username == "");
-
-            string password;
+            } while (Username == "");
             do
             {
                 Console.Write("Enter password: ");
-                password = Console.ReadLine();
-                if (password == "")
+                Password = Console.ReadLine();
+                if (Password == "")
                 {
                     Console.WriteLine("Please do not leave the password empty");
                     Thread.Sleep(1000);
                 }
-            } while (password == "");
+            } while (Password == "");
 
             // Check if the credentials are valid
             bool isValidUser = false;
@@ -41,8 +38,8 @@ namespace Peak_Performance_Vehicle_Rentals
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    string[] parts = line.Split(','); //parts[0] is username, parts[1] is [password]
-                    if (parts[0] == username && parts[1] == password)
+                    string[] parts = line.Split(','); //parts[0] is username, parts[1] is password
+                    if (parts[0] == Username && parts[1] == Password)
                     {
                         isValidUser = true;
                         break;
@@ -50,30 +47,28 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             }
             if (isValidUser)
-                return username;
+                return Username;
             else
                 return "";
         }
 
         public void UserRegister(FilePathManager file) //MAIN METHOD for register
         {
-            string username;
             bool DuplicateUser = true;
             do
             {
                 Console.Write("Enter username: ");
-                username = Console.ReadLine();
-                DuplicateUser = UserExists(username, file);
+                Username = Console.ReadLine();
+                DuplicateUser = UserExists(Username, file);
                 if (DuplicateUser)
                 {
                     Console.WriteLine("Username already exists. Please choose a different one."); Thread.Sleep(1000);
                 }
-                if (username == "")
+                if (Username == "")
                 {
-                    Console.WriteLine("Please do not leave the username empty");
-                    Thread.Sleep(1000);
+                    Console.WriteLine("Please do not leave the username empty"); Thread.Sleep(1000);
                 }
-            } while (DuplicateUser || username == "");
+            } while (DuplicateUser || Username == "");
 
             string password;
             do
@@ -82,25 +77,22 @@ namespace Peak_Performance_Vehicle_Rentals
                 password = Console.ReadLine();
                 if (password == "")
                 {
-                    Console.WriteLine("Please do not leave the password empty");
-                    Thread.Sleep(1000);
+                    Console.WriteLine("Please do not leave the password empty"); Thread.Sleep(1000);
                 }
             } while (password == "");
 
-            //save username and password to the user text file
-            using (StreamWriter writer = new StreamWriter(file.BaseDirectory + "\\Users.txt", true))
+            using (StreamWriter writer = new StreamWriter(file.BaseDirectory + "\\Users.txt", true)) //save username and password to the user text file
             {
-                writer.WriteLine($"{username},{password}");
+                writer.WriteLine($"{Username},{password}");
             }
 
-            //create an individual user file
             UserFile user = new UserFile();
-            user.CreateUserFile(username);
+            user.CreateUserFile(Username); //create an individual user file
 
             Console.WriteLine("Registration successful!"); Thread.Sleep(1000);
         }
 
-        public static bool UserExists(string username, FilePathManager file) //method to check for duplicate user, used for register
+        public static bool UserExists(string Username, FilePathManager file) //SUPPORTING METHOD for UserRegister, check for duplicate user
         {
             bool DuplicateUser = false;
             using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))
@@ -109,7 +101,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] parts = line.Split(','); //parts[0] is username
-                    if (parts[0] == username)
+                    if (parts[0] == Username)
                     {
                         DuplicateUser = true;
                         break;

@@ -9,8 +9,7 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class Choice: AbstractChoice, IChoice
     {
-
-        public int LoginRegisterChoice() //choice method 1: login and register
+        public int LoginRegisterChoice() //CHOICE METHOD 1: login and register
         {
             Prompt = "Welcome to the program";
             Options = new string[] {"Login", "Register", "About", "Exit"};
@@ -19,8 +18,7 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = LR.RunUserInterface();
             return choice;
         }
-
-        public int MainMenuChoice() //choice method 2: main menu
+        public int MainMenuChoice() //CHOICE METHOD 2: main menu
         {
             Prompt = "MAIN MENU";
             Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
@@ -29,7 +27,7 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = MM.RunUserInterface();
             return choice;
         }
-        public int ViewAllVehiclesChoice(FilePathManager file) //choice method ?: view all vehicles
+        public int ViewAllVehiclesChoice(FilePathManager file) //CHOICE METHOD 3: view all vehicles
         {
             Inventory inventory = new Inventory();
             Prompt = "Select a vehicle that you want to view the details";
@@ -39,7 +37,7 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = VAV.RunUserInterface();
             return choice;
         }
-        public int ViewOwnedVehiclesChoice(string username, FilePathManager file) //choice method ?: view owned vehicles
+        public int ViewOwnedVehiclesChoice(string username, FilePathManager file) //CHOICE METHOD 4: view owned vehicles
         {
             Inventory inventory = new Inventory();
             Prompt = "Select a vehicle that you want to manage";
@@ -49,7 +47,7 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = VOV.RunUserInterface();
             return choice;
         }
-        public int ManageVehiclesChoice() //choice method ?: manage vehicles
+        public int ManageVehiclesChoice() //CHOICE METHOD 5: manage vehicles
         {
             Prompt = "Manage Vehicles";
             Options = new string[] { "Add your own rentable vehicle", "Update vehicles", "Delete vehicles", "Go back to main menu" };
@@ -58,7 +56,7 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = MV.RunUserInterface();
             return choice;
         }
-        public string UpdateVehicleDetailsChoice(string username, FilePathManager file, int choice) //choice method ?: view all vehicles
+        public string UpdateVehicleDetailsChoice(string username, FilePathManager file, int choice) //CHOICE METHOD 6: update vehicle details
         {
             Inventory inventory = new Inventory();
             Prompt = "Select a detail that you want to change";
@@ -77,7 +75,7 @@ namespace Peak_Performance_Vehicle_Rentals
             else
                 return "";
         }
-        public string VehicleTypeChoice() //choice method ?: view owned vehicles
+        public string VehicleTypeChoice() //CHOICE METHOD 7: vehicle type
         {
             Prompt = "Choose vehicle type";
             Options = new string[] { "Car", "Motorcycle" };
@@ -106,7 +104,7 @@ namespace Peak_Performance_Vehicle_Rentals
             else
                 return "";
         }
-        public string VehicleFuelChoice() //choice method ?: view owned vehicles
+        public string VehicleFuelChoice() //CHOICE METHOD 8: vehicle fuel
         {
             Prompt = "Choose fuel type";
             Options = new string[] { "Gasoline", "Diesel", "Electric", "Hybrid", "Hydrogen" };
@@ -114,7 +112,7 @@ namespace Peak_Performance_Vehicle_Rentals
             UserInterface VF = new UserInterface(Prompt, Options);
             return VF.RunUserInterfaceString();
         }
-        public string VehicleStatusChoice() //choice method ?: view owned vehicles
+        public string VehicleStatusChoice() //CHOICE METHOD 9: vehicle status
         {
             Prompt = "Choose vehicle status";
             Options = new string[] { "Available", "In Maintenance", "Reserved" };
@@ -122,7 +120,7 @@ namespace Peak_Performance_Vehicle_Rentals
             UserInterface VS = new UserInterface(Prompt, Options);
             return VS.RunUserInterfaceString();
         }
-        public int ManageUserChoice() //choice method 2: main menu
+        public int ManageUserChoice() //CHOICE METHOD 10: manage user
         {
             Prompt = "User Management";
             Options = new string[] { "View account details", "Update account details", "Delete account", "Go back to main menu" };
@@ -131,7 +129,7 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = MM.RunUserInterface();
             return choice;
         }
-        public string UpdateUserDetailsChoice(string username, FilePathManager file) //choice method ?: view all vehicles
+        public string UpdateUserDetailsChoice(string username, FilePathManager file) //CHOICE METHOD 11: update user details
         {
             Inventory inventory = new Inventory();
             Prompt = "Select a detail that you want to change";
@@ -145,7 +143,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             else return "";
         }
-        public int DeleteUserChoice(string username, FilePathManager file) //choice method ?: view all vehicles
+        public int DeleteUserChoice(string username, FilePathManager file) //CHOICE METHOD 12: delete user
         {
             Inventory inventory = new Inventory();
             Prompt = "Are you sure that you want to delete your account? This will also remove all vehicles owned by you.";

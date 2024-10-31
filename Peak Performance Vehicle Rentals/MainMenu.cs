@@ -13,15 +13,14 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class VehicleManager : VehicleDetailManager, IVehicleManagement
     {
-        public void ViewRentalVehicles(FilePathManager file)
+        public void ViewRentalVehicles(FilePathManager file) //MAIN METHOD for view rentable vehicles
         {
             int choice;
             Choice choose = new Choice();
             Inventory inventory = new Inventory();
             do
             {
-                choice = choose.ViewAllVehiclesChoice(file); //problem here
-                
+                choice = choose.ViewAllVehiclesChoice(file);
                 if (choice != inventory.ViewVehicles(file).Length - 1)
                 {
                     VehicleFile vehicle = new VehicleFile();
@@ -31,10 +30,9 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             } while (choice != inventory.ViewVehicles(file).Length - 1);
         }
-        public void AddVehicle(string username)
-        {
 
-            bool success = false;
+        public void AddVehicle(string username) //MAIN METHOD 1 for manage vehicles
+        {
             string[] details = new string[12];
             Choice choose = new Choice();
 
@@ -70,7 +68,7 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.WriteLine("New vehicle has been added!"); Thread.Sleep(1000);
         }
 
-        public void UpdateVehicle(string username, FilePathManager file)
+        public void UpdateVehicle(string username, FilePathManager file) //MAIN METHOD 2 for manage vehicles
         {
             //Update vehicle file
             int choice;
@@ -114,20 +112,18 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (choice != inventory.ViewVehicles(username, file).Length - 1);
         }
         
-        public void DeleteVehicle(string username, FilePathManager file)
+        public void DeleteVehicle(string username, FilePathManager file) //MAIN METHOD 3 for manage vehicles
         {
-
-            //Delete vehicle file
             Choice choose = new Choice();
             int choice = choose.ViewOwnedVehiclesChoice(username, file);
             VehicleFile vehicle = new VehicleFile();
-            vehicle.DeleteVehicleFile(username, file, choice);
+            vehicle.DeleteVehicleFile(username, file, choice); //Delete vehicle file
         }
     }
 
     internal class VehicleDetailManager : IVehicleDetailManagement
     {
-        public string VehicleName()
+        public string VehicleName() //SUPPORTING METHOD 1 for manage vehicles
         {
             string name;
             do
@@ -139,7 +135,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (name == "");
             return name;
         }
-        public string VehicleModel()
+        public string VehicleModel() //SUPPORTING METHOD 2 for manage vehicles
         {
             string model;
             do
@@ -151,7 +147,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (model == "");
             return model;
         }
-        public string VehicleYear()
+        public string VehicleYear() //SUPPORTING METHOD 3 for manage vehicles
         {
             string year = "";
             int tempyear;
@@ -168,7 +164,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (!success || tempyear < 0 || tempyear > 3000);
             return year;
         }
-        public string VehicleLicensePlate()
+        public string VehicleLicensePlate() //SUPPORTING METHOD 4 for manage vehicles
         {
             string licenseplate;
             do
@@ -180,7 +176,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (licenseplate == "");
             return licenseplate;
         }
-        public string VehicleColor()
+        public string VehicleColor() //SUPPORTING METHOD 5 for manage vehicles
         {
             string color;
             int tempcolor;
@@ -197,7 +193,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (success || color == "");
             return color;
         }
-        public string VehicleSeatingCapacity()
+        public string VehicleSeatingCapacity() //SUPPORTING METHOD 6 for manage vehicles
         {
             string seats;
             int tempseats;
@@ -214,7 +210,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (!success || tempseats < 1 || tempseats > 50);
             return seats;
         }
-        public string VehicleMileage()
+        public string VehicleMileage() //SUPPORTING METHOD 7 for manage vehicles
         {
             int tempmileage;
             string mileage;
@@ -231,7 +227,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (!success || tempmileage < 0);
             return mileage + " km";
         }
-        public string VehicleLocation()
+        public string VehicleLocation() //SUPPORTING METHOD 8 for manage vehicles
         {
             string location;
             do
@@ -243,7 +239,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (location == "");
             return location;
         }
-        public string VehiclePrice()
+        public string VehiclePrice() //SUPPORTING METHOD 9 for manage vehicles
         {
             string price;
             int tempprice;
@@ -264,14 +260,14 @@ namespace Peak_Performance_Vehicle_Rentals
 
     internal class UserManager : UserDetailManager, IUserManagement
     {
-        public void ViewUserDetails(string username, FilePathManager file)
+        public void ViewUserDetails(string username, FilePathManager file) //MAIN METHOD 1 for manage user account
         {
             UserFile user = new UserFile();
             user.DisplayUserFile(username);
             UserInterface UI = new UserInterface("Press any key if you are done reading the details");
             UI.WaitForKey();
         }
-        public void UpdateUser(string username, FilePathManager file)
+        public void UpdateUser(string username, FilePathManager file) //MAIN METHOD 2 for manage user account
         {
             //Update vehicle file
             string detailchoice = "";
@@ -290,13 +286,13 @@ namespace Peak_Performance_Vehicle_Rentals
                 if (detailchoice != "")
                 {
                     UserFile user = new UserFile();
-                    user.UpdateUserFile(username, detailchoice, newdetail);
+                    user.UpdateUserFile(username, detailchoice, newdetail); //update user file
                 }
             } while (detailchoice != "");
         }
-        public bool DeleteUser(string username, FilePathManager file)
+
+        public bool DeleteUser(string username, FilePathManager file) //MAIN METHOD 3 for manage user account
         {
-            //Update vehicle file
             int choice;
             Choice choose = new Choice();
             choice = choose.DeleteUserChoice(username, file);
@@ -304,7 +300,7 @@ namespace Peak_Performance_Vehicle_Rentals
             if (choice == 0)
             {
                 UserFile user = new UserFile();
-                user.DeleteUserFile(username);
+                user.DeleteUserFile(username); //delete user file
                 return false;
             }
             else
@@ -314,7 +310,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
     internal class UserDetailManager : IUserDetailManagement
     {
-        public string UserEmail()
+        public string UserEmail() //SUPPORTING METHOD 1 for manage user account
         {
             string email;
             do
@@ -326,16 +322,10 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (email == "");
             return email;
         }
-        public string UserBirth()
+
+        public string UserBirth() //SUPPORTING METHOD 2 for manage user account
         {
             string[] details = new string[3];
-            do
-            {
-                Console.Write("Year: ");
-                details[0] = Console.ReadLine();
-                if (details[0] == "")
-                    Console.WriteLine("Please enter a proper year");
-            } while (details[0] == "");
             do
             {
                 Console.Write("Month: ");
@@ -350,9 +340,17 @@ namespace Peak_Performance_Vehicle_Rentals
                 if (details[2] == "")
                     Console.WriteLine("Please enter a proper day");
             } while (details[2] == "");
+            do
+            {
+                Console.Write("Year: ");
+                details[0] = Console.ReadLine();
+                if (details[0] == "")
+                    Console.WriteLine("Please enter a proper year");
+            } while (details[0] == "");
             return $"{details[1]}/{details[2]}/{details[0]}";
         }
-        public string UserAddress()
+
+        public string UserAddress() //SUPPORTING METHOD 3 for manage user account
         {
             string address;
             do

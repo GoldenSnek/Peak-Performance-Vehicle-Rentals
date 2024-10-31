@@ -11,11 +11,9 @@ using System.Runtime.CompilerServices;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    public class FilePathManager
+    public class FilePathManager : FilePathManagerBase
     {
-        private string baseDirectory;
-        public string BaseDirectory { get { return baseDirectory; } set { baseDirectory = value; } }
-        public FilePathManager() //create a base directory for storing the data
+        public FilePathManager() //CONSTRUCTOR for creating necessary directories for storing the data
         {
             BaseDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Peak Performance Vehicle Rentals");
             Directory.CreateDirectory(BaseDirectory);
@@ -26,18 +24,19 @@ namespace Peak_Performance_Vehicle_Rentals
                 StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt");
             }
         }
-        internal string GetUserFilePath(string username) //for accessing user filepath
+        internal string GetUserFilePath(string username) //METHOD for accessing user filepath
         {
             return BaseDirectory + $"\\UserData\\{username}.txt";
         }
-        internal string GetVehicleFilePath(string model, string type, string username) //for accessing vehicle filepath
+        internal string GetVehicleFilePath(string model, string type, string username) //METHOD for accessing vehicle filepath
         {
             return BaseDirectory + $"\\VehicleData\\{model}-{type}-{username}.txt";
         }
     }
-    internal class UserFile : FilePathManager, IUserFileManagement //class for managing each individual user
+
+    internal class UserFile : FilePathManager, IUserFileManagement
     {
-        public void CreateUserFile(string username) //create user file
+        public void CreateUserFile(string username) //METHOD for creating user file
         {
             string filePath = GetUserFilePath(username);
 
@@ -45,9 +44,9 @@ namespace Peak_Performance_Vehicle_Rentals
             string accountCreationDate = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             string[] creation = accountCreationDate.Split(' ');
 
-            if (!File.Exists(filePath)) //check if the file already exists
+            if (!File.Exists(filePath))
             {
-                using (var writer = new StreamWriter(filePath)) // Create the file and write the username and password
+                using (var writer = new StreamWriter(filePath)) //create the file and write the username and password
                 {
                     writer.WriteLine($"Username: {username}");
                     writer.WriteLine($"Email Address: -no data-");
@@ -58,7 +57,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void UpdateUserFile(string username, string detailchoice, string newdetail) //update details of the user
+        public void UpdateUserFile(string username, string detailchoice, string newdetail) //METHOD for updating the details of the user
         {
             string filePath = GetUserFilePath(username);
             string tempPath = BaseDirectory + "\\Temp.txt";
@@ -89,7 +88,7 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.WriteLine("User details has been successfuly updated!"); Thread.Sleep(1000);
         }
 
-        public void DeleteUserFile(string username) //delete user file
+        public void DeleteUserFile(string username) //METHOD for deleting user file + vehicle files linked with the user
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*{username}.txt");
             string filePath = BaseDirectory + "\\Users.txt";
@@ -132,7 +131,8 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.WriteLine("User Account has been successfully deleted!"); Thread.Sleep(1000);
             Console.WriteLine("Returning to login screen..."); Thread.Sleep(1000);
         }
-        public void DisplayUserFile(string username) //display details of user
+
+        public void DisplayUserFile(string username) //METHOD for displaying info inside the user file
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\UserData", $"{username}.txt");
             Console.WriteLine("\nUser Details");
@@ -140,10 +140,9 @@ namespace Peak_Performance_Vehicle_Rentals
         }
     }
 
-    internal class VehicleFile : FilePathManager,  IVehicleFileManagement //class for managing each individual vehicle
+    internal class VehicleFile : FilePathManager,  IVehicleFileManagement
     {
-
-        public void CreateVehicleFile(string username, string[] details) //create vehicle file
+        public void CreateVehicleFile(string username, string[] details) //METHOD creating vehicle file
         {
             string filePath = GetVehicleFilePath(details[2], details[0], username); // 2 model, 0 type
 
@@ -172,7 +171,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail) //update details of the vehicle
+        public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail) //METHOD for updating the details of the vehicle
         {
             string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", $"*{username}.txt");
             string tempPath = BaseDirectory + "\\Temp.txt";
@@ -203,7 +202,7 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.WriteLine("Vehicle has been successfuly updated!"); Thread.Sleep(1000);
         }
 
-        public void DeleteVehicleFile(string username, FilePathManager file, int choice) //delete vehicle file
+        public void DeleteVehicleFile(string username, FilePathManager file, int choice) //METHOD for deleting vehicle file
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*{username}.txt");
                 
@@ -219,7 +218,8 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             }
         }
-        public void DisplayVehicleFile(int DVchoice) //display details of vehicles
+
+        public void DisplayVehicleFile(int DVchoice) //METHOD for displaying info inside the vehicle file
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", "*.txt");
             for (int i = 0; i < files.Length; i++)
@@ -230,8 +230,6 @@ namespace Peak_Performance_Vehicle_Rentals
                     Console.WriteLine(File.ReadAllText(files[i]));
                 }
             }
-
         }
-
     }
 }

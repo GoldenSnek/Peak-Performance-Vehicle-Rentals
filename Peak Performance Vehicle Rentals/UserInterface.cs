@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Peak_Performance_Vehicle_Rentals
 {
-    internal class UserInterface : AbstractUserInterface
+    internal class UserInterface : UserInterfaceBase, IUserInterface
     {
+        //CONSTRUCTORS
         public UserInterface(string prompt)
         {
             Prompt = prompt;
@@ -18,7 +19,9 @@ namespace Peak_Performance_Vehicle_Rentals
             Options = options;
             Choice = 0;
         }
-        public override int RunUserInterface() //MAIN METHOD for running the interface, returns int
+
+        //METHODS
+        public int RunUserInterface() //MAIN METHOD for running the interface, returns int
         {
             ConsoleKey keyPressed;
             do
@@ -41,19 +44,15 @@ namespace Peak_Performance_Vehicle_Rentals
                     if (Choice == Options.Length)
                         Choice = 0;
                 }
-
             } while (keyPressed != ConsoleKey.Enter);
-
             return Choice;
         }
-
-        public override string RunUserInterfaceString() //MAIN METHOD for running the interface, returns string
+        public string RunUserInterfaceString() //MAIN METHOD for running the interface, returns string
         {
             RunUserInterface();
             return Options[Choice];
         }
-
-        public override void DisplayOptions() //method supporting RunUseInterface
+        public void DisplayOptions() //SUPPORTING METHOD for RunUserInterface, displays the options to the screen
         {
             Console.WriteLine(Prompt);
             for (int i = 0; i < Options.Length; i++)
@@ -74,23 +73,24 @@ namespace Peak_Performance_Vehicle_Rentals
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine($"{style[0]} {currentOption} {style[1]}");
-                
             }
             Console.ResetColor();
         }
-        public override void WaitForKey() //extra method
+        public void WaitForKey() //EXTRA METHOD, wait for any key to be pressed
         {
             Console.Write(Prompt);
             Console.ReadKey(true);
         }
-        public override void WaitForSpecificKey() //extra method
+        public void WaitForSpecificKey() //EXTRA METHOD, wait for a specific key to be pressed
         {
-            Console.Write("Press any [specific key] to [do this and that]");
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            ConsoleKey keyPressed = keyInfo.Key;
-            while ( keyPressed != ConsoleKey.Enter) {
-                //do nothing
-            }
+            Console.Write(Prompt);
+            ConsoleKeyInfo keyInfo;
+            ConsoleKey keyPressed;
+            do
+            {
+                keyInfo = Console.ReadKey(true);
+                keyPressed = keyInfo.Key;
+            } while (keyPressed != ConsoleKey.Enter);
         }
     }
 }
