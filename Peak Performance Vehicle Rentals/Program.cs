@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 //Notes for self:
 //Date Started: 10/18/24
@@ -36,6 +37,7 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         static void Main(string[] args)
         {
+            Console.CursorVisible = false;
             do //entire program
             {
                 //variable declarations
@@ -44,7 +46,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 string username = "";
 
                 //Login Register
-                bool LRrunning = true; //LR = LoginRegister
+                bool LRrunning = true;
                 LoginRegister LR = new LoginRegister();  
                 do
                 {
@@ -55,14 +57,18 @@ namespace Peak_Performance_Vehicle_Rentals
                             username = LR.UserLogin(file);
                             if (username != "")
                             {
-                                Console.WriteLine("Login Successful!\n");
-                                Thread.Sleep(1000);
+                                UserInterface.CenterTextMargin(3, 2);
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Login Successful!"); Thread.Sleep(1000);
+                                Console.ResetColor();
                                 LRrunning = false;
                             }
                             else
                             {
-                                Console.WriteLine("Invalid credentials!\n");
-                                Thread.Sleep(1000);
+                                UserInterface.CenterTextMargin(3, 2);
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid credentials!"); Thread.Sleep(1000);
+                                Console.ResetColor();
                                 LRrunning = true;
                             }
                             break;
@@ -72,9 +78,11 @@ namespace Peak_Performance_Vehicle_Rentals
                             break;
 
                         case 2:
-                            Console.WriteLine("This is my Final Project for CPE261!");
-                            Console.WriteLine("Program created by: John Michael A. Nave");
-                            UserInterface UI = new UserInterface("Press any key to return to the Login and Register screen");
+                            string text = @"This is my Final Project for CPE261!
+                                            Program created by: John Michael A. Nave
+                                            Press any key to return to the Login and Register screen";
+                            UserInterface.CenterVerbatimText(text);
+                            UserInterface UI = new UserInterface();
                             UI.WaitForKey();
                             break;
 
@@ -98,7 +106,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     {
                         VehicleManager MV = new VehicleManager();
                         UserManager UR = new UserManager();
-                        int MMchoice = choice.MainMenuChoice();
+                        int MMchoice = choice.MainMenuChoice(username);
                         switch (MMchoice)
                         {
                             case 0:

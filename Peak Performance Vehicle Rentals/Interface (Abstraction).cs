@@ -88,7 +88,7 @@ namespace Peak_Performance_Vehicle_Rentals
     public interface IChoice
     {
         public int LoginRegisterChoice();
-        public int MainMenuChoice();
+        public int MainMenuChoice(string username);
         public int ViewAllVehiclesChoice(FilePathManager file);
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file);
         public int ManageVehiclesChoice();

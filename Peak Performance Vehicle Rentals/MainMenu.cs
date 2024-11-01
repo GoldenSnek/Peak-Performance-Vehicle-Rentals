@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.Marshalling;
 //2. View Rental History
 //3. Add user details when displaying vehicle details
 //4. Add rental process and application (final part og ang pinakalisod nga part before ko mo proceed sa pa chuychuy sa UI)
+//5. details should also accept integers such as the price
 
 namespace Peak_Performance_Vehicle_Rentals
 {

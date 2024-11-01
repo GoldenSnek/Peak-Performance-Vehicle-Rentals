@@ -11,16 +11,28 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         public int LoginRegisterChoice() //CHOICE METHOD 1: login and register
         {
-            Prompt = "Welcome to the program";
+            Prompt = @"
+╔═╗┌─┐┌─┐┬┌─  ╔═╗┌─┐┬─┐┌─┐┌─┐┬─┐┌┬┐┌─┐┌┐┌┌─┐┌─┐    ╦  ╦┌─┐┬ ┬┬┌─┐┬  ┌─┐  ╦═╗┌─┐┌┐┌┌┬┐┌─┐┬  ┌─┐
+╠═╝├┤ ├─┤├┴┐  ╠═╝├┤ ├┬┘├┤ │ │├┬┘│││├─┤││││  ├┤     ╚╗╔╝├┤ ├─┤││  │  ├┤   ╠╦╝├┤ │││ │ ├─┤│  └─┐
+╩  └─┘┴ ┴┴ ┴  ╩  └─┘┴└─└  └─┘┴└─┴ ┴┴ ┴┘└┘└─┘└─┘     ╚╝ └─┘┴ ┴┴└─┘┴─┘└─┘  ╩╚═└─┘┘└┘ ┴ ┴ ┴┴─┘└─┘
+
+""Rent, Ride, Repeat""
+(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] {"Login", "Register", "About", "Exit"};
 
             UserInterface LR = new UserInterface(Prompt, Options);
             int choice = LR.RunUserInterface();
             return choice;
         }
-        public int MainMenuChoice() //CHOICE METHOD 2: main menu
+        public int MainMenuChoice(string username) //CHOICE METHOD 2: main menu
         {
-            Prompt = "MAIN MENU";
+            Prompt = @$"
+ _______ _______ _____ __   _      _______ _______ __   _ _     _
+ |  |  | |_____|   |   | \  |      |  |  | |______ | \  | |     |
+ |  |  | |     | __|__ |  \_|      |  |  | |______ |  \_| |_____|
+
+Hello {username}! What would you like to do today?
+(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
 
             UserInterface MM = new UserInterface(Prompt, Options);
@@ -30,7 +42,12 @@ namespace Peak_Performance_Vehicle_Rentals
         public int ViewAllVehiclesChoice(FilePathManager file) //CHOICE METHOD 3: view all vehicles
         {
             Inventory inventory = new Inventory();
-            Prompt = "Select a vehicle that you want to view the details";
+            Prompt = @"
+____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
+[__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
+___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
+
+(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = inventory.ViewVehicles(file);
 
             UserInterface VAV = new UserInterface(Prompt, Options);
@@ -40,7 +57,13 @@ namespace Peak_Performance_Vehicle_Rentals
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file) //CHOICE METHOD 4: view owned vehicles
         {
             Inventory inventory = new Inventory();
-            Prompt = "Select a vehicle that you want to manage";
+            Prompt = @$"
+____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
+[__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
+___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
+
+Only vehicles owned by {username} are displayed.
+(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = inventory.ViewVehicles(username, file);
 
             UserInterface VOV = new UserInterface(Prompt, Options);
@@ -49,7 +72,12 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         public int ManageVehiclesChoice() //CHOICE METHOD 5: manage vehicles
         {
-            Prompt = "Manage Vehicles";
+            Prompt = @"
+_  _ ____ _  _ ____ ____ ____    _  _ ____ _  _ _ ____ _    ____ ____ 
+|\/| |__| |\ | |__| | __ |___    |  | |___ |__| | |    |    |___ [___
+|  | |  | | \| |  | |__] |___     \/  |___ |  | | |___ |___ |___ ___]           
+
+(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] { "Add your own rentable vehicle", "Update vehicles", "Delete vehicles", "Go back to main menu" };
 
             UserInterface MV = new UserInterface(Prompt, Options);
@@ -122,7 +150,13 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         public int ManageUserChoice() //CHOICE METHOD 10: manage user
         {
-            Prompt = "User Management";
+            Prompt = @"
+_  _ ____ _  _ ____ ____ ____    _  _ ____ ____ ____ 
+|\/| |__| |\ | |__| | __ |___    |  | [__  |___ |__/ 
+|  | |  | | \| |  | |__] |___    |__| ___] |___ |  \ 
+
+(use the UP or DOWN arrow keys to navigate, press ENTER to select)
+";
             Options = new string[] { "View account details", "Update account details", "Delete account", "Go back to main menu" };
 
             UserInterface MM = new UserInterface(Prompt, Options);
