@@ -27,15 +27,40 @@ namespace Peak_Performance_Vehicle_Rentals
         }
 
         //METHODS
-        public int RunUserInterface() //MAIN METHOD for running the interface, returns int
+        public static void ClearAllRUI()
+        {
+            Console.CursorVisible = false;
+            ClearVisibleRegion();
+        }
+        public static void ClearLineRUI(int ctr)
+        {
+            Console.CursorVisible = false;
+            Console.SetCursorPosition(0, Console.CursorTop - 1);
+            for (int i = 0; i < ctr; i++)
+            {
+                Console.Write(new string(' ', Console.BufferWidth));
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+            }
+
+        }
+        public int RunUserInterface(string type) //MAIN METHOD for running the interface, returns int
         {
             ConsoleKey keyPressed;
+            int ctr = 0;
+            bool verbatim = true;
             do
             {
-                Console.CursorVisible = false;
-                ClearVisibleRegion();
-                DisplayOptions();
+                if (type == "all") //type = ALL or type = LINE
+                    ClearAllRUI();
+                else if (type == "rent")
+                {
+                    if (ctr == 0)
+                        CenterTextMargin(3 , 6); ctr++;
+                    ClearLineRUI(5); //number of times para sa loop
+                    verbatim = false;
+                }
 
+                DisplayOptions(verbatim);
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 keyPressed = keyInfo.Key;
 
@@ -54,14 +79,23 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (keyPressed != ConsoleKey.Enter);
             return Choice;
         }
-        public string RunUserInterfaceString() //MAIN METHOD for running the interface, returns string
+        public string RunUserInterfaceString(string type) //MAIN METHOD for running the interface, returns string
         {
-            RunUserInterface();
+            RunUserInterface(type);
             return Options[Choice];
         }
-        public void DisplayOptions() //SUPPORTING METHOD for RunUserInterface, displays the options to the screen
+        public void DisplayOptions(bool verbatim) //SUPPORTING METHOD for RunUserInterface, displays the options to the screen
         {
-            position = CenterVerbatimText(Prompt);
+            if (verbatim)
+                position = CenterVerbatimText(Prompt);
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                CenterTextMargin(3, 0);
+                Console.WriteLine(Prompt);
+                Console.ResetColor();
+            }
+
             for (int i = 0; i < Options.Length; i++)
             {
                 Console.WriteLine();
@@ -89,7 +123,10 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         public void WaitForKey() //EXTRA METHOD, wait for any key to be pressed
         {
+            CenterTextMargin(3, 0);
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write(Prompt);
+            Console.ResetColor();
             Console.ReadKey(true);
         }
         public void WaitForSpecificKey() //EXTRA METHOD, wait for a specific key to be pressed

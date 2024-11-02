@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 //Notes for self:
 //Date Started: 10/18/24
@@ -78,10 +81,22 @@ namespace Peak_Performance_Vehicle_Rentals
                             break;
 
                         case 2:
-                            string text = @"This is my Final Project for CPE261!
+                            string text = @$"This is my Final Project for CPE261 - H2!
                                             Program created by: John Michael A. Nave
-                                            Press any key to return to the Login and Register screen";
+
+                                            Special thanks:
+                                            Mga barkada sa CPE
+                                            Sources (YouTube, GitHub, ChatGPT, Microsoft C# tutorial, etc.)
+                                            Engr. Julian N. Semblante
+
+                                            Links:
+                                            Text Art: https://patorjk.com/software/taag/#p=display&f=Graffiti&t=
+                                            Car Art: https://www.asciiart.eu/vehicles/cars
+                            ";
                             UserInterface.CenterVerbatimText(text);
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            UserInterface.CenterVerbatimText("Press any key to return to the Login and Register screen");
+                            Console.ResetColor();
                             UserInterface UI = new UserInterface();
                             UI.WaitForKey();
                             break;
@@ -110,10 +125,33 @@ namespace Peak_Performance_Vehicle_Rentals
                         switch (MMchoice)
                         {
                             case 0:
-                                MV.ViewRentalVehicles(file);
+                                MV.ViewRentalVehicles(username, file);
                                 break;
 
                             case 1:
+                                bool VRrunning = true;
+                                do
+                                {
+                                    int VRchoice = choice.RentalDetailsChoice();
+                                    switch (VRchoice)
+                                    {
+                                        case 0:
+                                            Console.WriteLine("test case 1"); Thread.Sleep(1000);
+                                            break;
+
+                                        case 1:
+                                            Console.WriteLine("test case 2"); Thread.Sleep(1000);
+                                            break;
+
+                                        case 2:
+                                            VRrunning = false;
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                } while (VRrunning);
+
                                 break;
 
                             case 2:

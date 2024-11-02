@@ -23,9 +23,9 @@ namespace Peak_Performance_Vehicle_Rentals
     }
     public interface IUserInterface
     {
-        abstract public int RunUserInterface();
-        abstract public string RunUserInterfaceString();
-        abstract public void DisplayOptions();
+        abstract public int RunUserInterface(string type);
+        abstract public string RunUserInterfaceString(string type);
+        abstract public void DisplayOptions(bool verbatim);
         abstract public void WaitForKey();
         abstract public void WaitForSpecificKey();
     }
@@ -47,7 +47,7 @@ namespace Peak_Performance_Vehicle_Rentals
     //Main Menu
     public interface IVehicleManagement
     {
-        public void ViewRentalVehicles(FilePathManager file);
+        public void ViewRentalVehicles(string username, FilePathManager file);
         public void AddVehicle(string username);
         public void UpdateVehicle(string username, FilePathManager file);
         public void DeleteVehicle(string username, FilePathManager file);
@@ -62,7 +62,8 @@ namespace Peak_Performance_Vehicle_Rentals
         public string VehicleSeatingCapacity();
         public string VehicleMileage();
         public string VehicleLocation();
-        public string VehiclePrice();
+        public string VehiclePriceDay();
+        public string VehiclePriceHour();
     }
     public interface IUserManagement
     {
@@ -120,13 +121,13 @@ namespace Peak_Performance_Vehicle_Rentals
         public void CreateUserFile(string username);
         public void UpdateUserFile(string username, string detailchoice, string newdetail);
         public void DeleteUserFile(string username);
-        public void DisplayUserFile(string username);
+        public void DisplayUserFile(string type, string username);
     }
     public interface IVehicleFileManagement
     {
         public void CreateVehicleFile(string username, string[] details);
         public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail);
         public void DeleteVehicleFile(string username, FilePathManager file, int choice);
-        public void DisplayVehicleFile(int DVchoice);
+        public string[] DisplayVehicleFile(int DVchoice);
     }
 }

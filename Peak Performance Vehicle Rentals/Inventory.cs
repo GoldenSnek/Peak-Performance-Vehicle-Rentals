@@ -82,7 +82,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             }
 
-            string[] details = new string[10]; //identify details of specific vehicle
+            string[] details = new string[11]; //identify details of specific vehicle
             if (index < files.Length)
             {
                 for (int i = 0; i < details.Length; i++) //start at 4 to skip changing the important details
@@ -99,7 +99,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         }
                     }
                 }
-                details[9] = "Go back to Main Menu";
+                details[10] = "Go back to Main Menu";
             }
             else
                 details[0] = "";
