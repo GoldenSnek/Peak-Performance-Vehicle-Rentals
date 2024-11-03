@@ -37,41 +37,31 @@ namespace Peak_Performance_Vehicle_Rentals
                         switch (choiceRent)
                         {
                             case 0:
-                                string[] rentDetails = new string[2];
+                                string[] rentDetails = new string[3];
                                 Choice chooseRent = new Choice();
+
                                 //calculations for rent
                                 int priceCalculation = chooseRent.RentalTimeChoice();
 
                                 if (priceCalculation == 0)
-                                    rentDetails[0] = CalculatePrice(0, int.Parse(vehicleRentDetails[0]));
+                                {
+                                    string[] tempDetails = CalculatePrice(0, int.Parse(vehicleRentDetails[0]));
+                                    rentDetails[0] = tempDetails[0];
+                                    rentDetails[1] = tempDetails[1];
+                                }
                                 else if (priceCalculation == 1)
-                                    rentDetails[0] = CalculatePrice(1, int.Parse(vehicleRentDetails[1]));
-
+                                {
+                                    string[] tempDetails = CalculatePrice(1, int.Parse(vehicleRentDetails[1]));
+                                    rentDetails[0] = tempDetails[0];
+                                    rentDetails[1] = tempDetails[1];
+                                }
                                 //extra
-                                rentDetails[1] = AddNote();
+                                rentDetails[2] = AddNote();
 
-
-
-
-                                //finish tomorrow - transfer the vehicle file to the rental folder, then make a reciept
-                                //finish tomorrow
-                                //finish tomorrow
-                                //finish tomorrow
-                                //finish tomorrow
-                                //finish tomorrow
-                                //finish tomorrow
-                                //finish tomorrow
-                                //finish tomorrow
-                                //finish tomorrow
-
-
-
-
-
-
-                                choiceRent = 1; //temporary
+                                VehicleFile pending = new VehicleFile();
+                                pending.TransferPendingFile(choice, rentDetails, username);
+                                choiceRent = 1;
                                 break;
-                            case 1: break;
                         }
                     } while (choiceRent != 1);
                 }
@@ -115,6 +105,7 @@ namespace Peak_Performance_Vehicle_Rentals
             vehicle.CreateVehicleFile(username, details);
 
             Console.WriteLine("New vehicle has been added!"); Thread.Sleep(1000);
+
         }
 
         public void UpdateVehicle(string username, FilePathManager file) //MAIN METHOD 2 for manage vehicles
@@ -170,6 +161,83 @@ namespace Peak_Performance_Vehicle_Rentals
             VehicleFile vehicle = new VehicleFile();
             vehicle.DeleteVehicleFile(username, file, choice); //Delete vehicle file
         }
+
+        public void PendingVehicles(string username, FilePathManager file) //MAIN METHOD ???
+        {
+            Choice choose = new Choice();
+            int choice = choose.ViewPendingChoice(username, file);
+
+            Inventory inventory = new Inventory();
+            if (choice == inventory.ViewPendingRental(username, file).Length - 1)
+                return;
+
+            VehicleFile vehicle = new VehicleFile();
+            vehicle.DisplayPendingFile(choice, username, file);
+
+            int approveChoice = choose.ApprovePendingChoice();
+
+            if (approveChoice == 0)
+            {
+                vehicle.TransferApprovedFile(choice, username, file);
+                Console.WriteLine("The vehicle rental application is approved!"); Thread.Sleep(1000);
+            }
+            else if (approveChoice == 1)
+            {
+                vehicle.TransferNonApprovedFile(choice, username, file);
+                Console.WriteLine("The vehicle rental application is not approved!"); Thread.Sleep(1000);
+            }
+
+        }
+
+        //finish later
+        public void ApprovedVehicles(string username, FilePathManager file) //MAIN METHOD ???
+        {
+
+            Console.Clear();
+            UserInterface.CenterVerbatimText(@"
+____ ___  ___  ____ ____ _  _ ____ ___     _  _ ____ _  _ _ ____ _    ____ ____ 
+|__| |__] |__] |__/ |  | |  | |___ |  \    |  | |___ |__| | |    |    |___ [__  
+|  | |    |    |  \ |__|  \/  |___ |__/     \/  |___ |  | | |___ |___ |___ ___] 
+
+Shown below are vehicles that you own which are currently being rented
+");
+
+            Inventory inventory = new Inventory();
+            string[] vehicles = inventory.ViewApprovedRental(username, file);
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            for (int i = 0; i < vehicles.Length; i++)
+            {
+                UserInterface.CenterTextMargin(0, 0);
+                Console.WriteLine(">> " +vehicles[i] + "\n");
+            }
+            Console.ResetColor();
+
+            UserInterface UI = new UserInterface("Press any key if you are done looking at the vehicles");
+            UI.WaitForKey();
+
+        }
+
+        public void CurrentlyRentingVehicles(string username, FilePathManager file)
+        {
+            Choice choose = new Choice();
+            int choice;
+            do
+            {
+                choice = choose.CurrentlyRentingChoice(username, file);
+                if (choice == 0)
+                {
+                    VehicleFile vehicle = new VehicleFile();
+                    vehicle.DisplayRecieptFile(username, file);
+                }
+                else if (choice == 1)
+                {
+                    VehicleFile vehicle = new VehicleFile();
+                    vehicle.TransferFinishRentFile(username, file);
+                    choice = 2;
+                }
+            } while (choice != 2);
+        }
     }
 
     internal class VehicleDetailManager : IVehicleDetailManagement
@@ -179,6 +247,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string name;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter vehicle brand: ");
                 name = Console.ReadLine();
                 if (name == "")
@@ -191,6 +260,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string model;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter vehicle model: ");
                 model = Console.ReadLine();
                 if (model == "")
@@ -205,6 +275,7 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter the manufacture year of the vehicle: ");
                 year = Console.ReadLine();
 
@@ -220,6 +291,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string licenseplate;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter license plate #: ");
                 licenseplate = Console.ReadLine();
                 if (licenseplate == "")
@@ -234,6 +306,7 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter color of the vehicle: ");
                 color = Console.ReadLine();
 
@@ -251,6 +324,7 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter the number of seats of the vehicle: ");
                 seats = Console.ReadLine();
 
@@ -268,6 +342,7 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter mileage of the vehicle in kilometers: ");
                 mileage = Console.ReadLine();
 
@@ -283,6 +358,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string location;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter vehicle pickup and return location: ");
                 location = Console.ReadLine();
                 if (location == "")
@@ -297,6 +373,7 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter the DAILY rental rate of the vehicle in PHP/day: ");
                 price = Console.ReadLine();
 
@@ -314,6 +391,7 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter the HOURLY rental rate of the vehicle in PHP/hr: ");
                 price = Console.ReadLine();
 
@@ -324,16 +402,18 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (!success || tempPrice < 10 || tempPrice > 10000);
             return price + " PHP/hr";
         }
-        public string CalculatePrice(int type, int price)
+        public string[] CalculatePrice(int type, int price)
         {
             int time;
             string tempTime;
+            string[] priceDetails = new string[2];
             bool success = false;
 
             if (type == 0)
             {
                 do
                 {
+                    UserInterface.CenterTextMargin(3, 0);
                     Console.Write("How many days would you rent the vehicle: ");
                     tempTime = Console.ReadLine();
 
@@ -342,13 +422,16 @@ namespace Peak_Performance_Vehicle_Rentals
                     if (!success || time < 1 || time > 30)
                         Console.WriteLine("You can only rent the vehicle for a minimum of 1 day and a maximum of 30 days");
                 } while (!success || time < 1 || time > 30);
-                price *= time;
+
+                priceDetails[0] = time + " day(s)";
+                priceDetails[1] = price * time + " PHP";
 
             }
             else if (type == 1)
             {
                 do
                 {
+                    UserInterface.CenterTextMargin(3, 0);
                     Console.Write("How many hours would you rent the vehicle: ");
                     tempTime = Console.ReadLine();
 
@@ -358,14 +441,18 @@ namespace Peak_Performance_Vehicle_Rentals
                         Console.WriteLine("You can only rent the vehicle for a minimum of 1 hour and a maximum of 24 hours");
                 } while (!success || time < 1 || time > 24);
                 price *= time;
+
+                priceDetails[0] = time + " hour(s)";
+                priceDetails[1] = price * time + " PHP";
             }
 
-            return price + " PHP";
+            return priceDetails;
         }
         public string AddNote()
         {
             string note = "";
-            Console.Write("Any additional information that you want the vehicle owner to know?: ");
+            UserInterface.CenterTextMargin(3, 0);
+            Console.Write("Additional notes: ");
             note = Console.ReadLine();
 
             if (note == "")
@@ -432,6 +519,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string email;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter your email address: ");
                 email = Console.ReadLine();
                 if (email == "")
@@ -445,6 +533,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] details = new string[3];
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Month: ");
                 details[1] = Console.ReadLine();
                 if (details[1] == "")
@@ -452,6 +541,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (details[1] == "");
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Day: ");
                 details[2] = Console.ReadLine();
                 if (details[2] == "")
@@ -459,6 +549,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (details[2] == "");
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Year: ");
                 details[0] = Console.ReadLine();
                 if (details[0] == "")
@@ -472,6 +563,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string address;
             do
             {
+                UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter your home address: ");
                 address = Console.ReadLine();
                 if (address == "")

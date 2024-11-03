@@ -136,14 +136,18 @@ namespace Peak_Performance_Vehicle_Rentals
                                     switch (VRchoice)
                                     {
                                         case 0:
-                                            Console.WriteLine("test case 1"); Thread.Sleep(1000);
+                                            MV.PendingVehicles(username, file);
                                             break;
 
                                         case 1:
-                                            Console.WriteLine("test case 2"); Thread.Sleep(1000);
+                                            MV.ApprovedVehicles(username, file);
                                             break;
 
                                         case 2:
+                                            MV.CurrentlyRentingVehicles(username, file);
+                                            break;
+
+                                        case 3:
                                             VRrunning = false;
                                             break;
 

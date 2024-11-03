@@ -48,7 +48,7 @@
   <Class Name="Peak_Performance_Vehicle_Rentals.VehicleDetailManager">
     <Position X="4.5" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gAAAQAAgAARAAAAAAAAQAAAAAAAAAAAAQAAEBIAAAAA=</HashCode>
+      <HashCode>gAAAQAAgAARAAAAAAAAQAAAAAAAAAAIAQAAEBIAIAAA=</HashCode>
       <FileName>MainMenu.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -59,7 +59,7 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAEAAAAAAAAAAAACAAAAACAgAAA=</HashCode>
+      <HashCode>AAACECAAAAAAAAAAABAAAAAAAQAAAAACAAAIACAgAAA=</HashCode>
       <FileName>FileManager.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -67,7 +67,7 @@
   <Class Name="Peak_Performance_Vehicle_Rentals.VehicleManager">
     <Position X="4.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAkAAAABAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAQAAAAEAAAAAAAAAAAAAAkAAAADAAQA=</HashCode>
       <FileName>MainMenu.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -75,7 +75,7 @@
   <Class Name="Peak_Performance_Vehicle_Rentals.Choice">
     <Position X="8.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEgAIQAgAAQIEAAgAABAAAAAAAQAAhAAAAAAAA=</HashCode>
+      <HashCode>gAAAAAEgAIQAgABQJEEAgAABAAAAAAAQAAhAAAAAAAA=</HashCode>
       <FileName>Choice.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -90,7 +90,7 @@
   <Class Name="Peak_Performance_Vehicle_Rentals.Inventory">
     <Position X="10.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAABAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <HashCode>AAAAAABAAAAAABAAAAACAAAAAAAAAAAEAAAAAAAABAA=</HashCode>
       <FileName>Inventory.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

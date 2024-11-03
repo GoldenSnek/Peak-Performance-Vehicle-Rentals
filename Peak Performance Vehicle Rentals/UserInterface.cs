@@ -59,6 +59,13 @@ namespace Peak_Performance_Vehicle_Rentals
                     ClearLineRUI(5); //number of times para sa loop
                     verbatim = false;
                 }
+                else if (type == "current")
+                {
+                    if (ctr == 0)
+                        CenterTextMargin(3, 8); ctr++;
+                    ClearLineRUI(7); //number of times para sa loop
+                    verbatim = false;
+                }
 
                 DisplayOptions(verbatim);
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);

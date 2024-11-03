@@ -101,6 +101,22 @@ Only vehicles owned by {username} are displayed.
 
             return choice;
         }
+        public int ViewPendingChoice(string username, FilePathManager file) //CHOICE METHOD
+        {
+            Inventory inventory = new Inventory();
+            Prompt = @"
+____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
+[__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
+___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
+
+Shown below are the pending vehicles. Please select a vehicle to view its details.
+(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+            Options = inventory.ViewPendingRental(username, file);
+
+            UserInterface VAV = new UserInterface(Prompt, Options);
+            int choice = VAV.RunUserInterface("all");
+            return choice;
+        }
         public int RentalTimeChoice() //CHOICE METHOD ?: ????
         {
             UserInterface.CenterTextMargin(3, 0);
@@ -120,13 +136,48 @@ ____ ____ _  _ ___ ____ _       ___  ____ ___ ____ _ _    ____
 |  \ |___ | \|  |  |  | |___    |__/ |___  |  |  | | |___ ___]
 
 (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
-            Options = new string[] { "View pending rental applications of your vehicle", "Manage vehicles you are currently renting", "Go back to main menu" };
+            Options = new string[] { "View pending rental applications", "View approved rental applications", "Manage the vehicle you are currently renting", "Go back to main menu" };
 
             UserInterface RD = new UserInterface(Prompt, Options);
             int choice = RD.RunUserInterface("all");
             return choice;
         }
-        
+        public int ApprovePendingChoice() //CHOICE METHOD ?: ????
+        {
+            UserInterface.CenterTextMargin(3, 0);
+            Prompt = "Do you want to approve this request?";
+            Options = new string[] { "YES", "NO" };
+
+            UserInterface RD = new UserInterface(Prompt, Options);
+            int choice = RD.RunUserInterface("rent");
+            return choice;
+        }
+        public int CurrentlyRentingChoice(string username, FilePathManager file) //CHOICE METHOD ?: ????
+        {
+            Inventory inventory = new Inventory();
+            string vehicle = "";
+            vehicle = inventory.CurrentRental(username, file);
+            int choice = 2;
+
+            if (vehicle != "")
+            {
+                Prompt = "What would you like to do your current rental vehicle?";
+                Options = new string[] { "View reciept", "Finish renting the vehicle", "Go back to main menu" };
+
+                UserInterface RD = new UserInterface(Prompt, Options);
+                choice = RD.RunUserInterface("current");
+            }
+            else
+            {
+                UserInterface.CenterTextMargin(3, 0);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You are currently not renting a car"); Thread.Sleep(1000);
+                Console.ResetColor();
+                choice = 2;
+            }
+            return choice;
+        }
+
         public int ManageVehiclesChoice() //CHOICE METHOD 5: manage vehicles
         {
 
