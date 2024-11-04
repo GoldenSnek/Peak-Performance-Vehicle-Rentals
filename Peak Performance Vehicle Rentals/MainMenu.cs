@@ -11,6 +11,7 @@ using System.Runtime.InteropServices.Marshalling;
 //5. details should also accept integers such as the price
 //6. rental process - price calculation should include discounts, tax, extra fees, para taas ang reciept
 //7. ang car nga gi rent ma wagtang sa view all vehicles
+//MAJOR PROBLEM, IF I SPAM ANG SPACES MO COUNT GYAPON SIYA
 
 namespace Peak_Performance_Vehicle_Rentals
 {
@@ -104,7 +105,7 @@ namespace Peak_Performance_Vehicle_Rentals
             VehicleFile vehicle = new VehicleFile();
             vehicle.CreateVehicleFile(username, details);
 
-            Console.WriteLine("New vehicle has been added!"); Thread.Sleep(1000);
+            UserInterface.WriteColoredText(3, 2, "green", "New vehicle has been added!");
 
         }
 
@@ -195,12 +196,12 @@ namespace Peak_Performance_Vehicle_Rentals
 
             Console.Clear();
             UserInterface.CenterVerbatimText(@"
-____ ___  ___  ____ ____ _  _ ____ ___     _  _ ____ _  _ _ ____ _    ____ ____ 
-|__| |__] |__] |__/ |  | |  | |___ |  \    |  | |___ |__| | |    |    |___ [__  
-|  | |    |    |  \ |__|  \/  |___ |__/     \/  |___ |  | | |___ |___ |___ ___] 
+                                            ____ ___  ___  ____ ____ _  _ ____ ___     _  _ ____ _  _ _ ____ _    ____ ____ 
+                                            |__| |__] |__] |__/ |  | |  | |___ |  \    |  | |___ |__| | |    |    |___ [__  
+                                            |  | |    |    |  \ |__|  \/  |___ |__/     \/  |___ |  | | |___ |___ |___ ___] 
 
-Shown below are vehicles that you own which are currently being rented
-");
+                                            Shown below are vehicles that you own which are currently being rented
+                                            ");
 
             Inventory inventory = new Inventory();
             string[] vehicles = inventory.ViewApprovedRental(username, file);
@@ -208,13 +209,13 @@ Shown below are vehicles that you own which are currently being rented
             Console.ForegroundColor = ConsoleColor.Yellow;
             for (int i = 0; i < vehicles.Length; i++)
             {
+                Console.WriteLine();
                 UserInterface.CenterTextMargin(0, 0);
-                Console.WriteLine(">> " +vehicles[i] + "\n");
+                Console.WriteLine(">> " +vehicles[i]);
             }
             Console.ResetColor();
 
-            UserInterface UI = new UserInterface("Press any key if you are done looking at the vehicles");
-            UI.WaitForKey();
+            UserInterface.WaitForKey(3, 1, "Press any key if you are done looking at the vehicles");
 
         }
 
@@ -251,7 +252,8 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Enter vehicle brand: ");
                 name = Console.ReadLine();
                 if (name == "")
-                    Console.WriteLine("Please do not leave the vehicle brand empty");
+                    InvalidVehicleDetail(3, 0, "red", "Please do not leave the vehicle brand empty");
+
             } while (name == "");
             return name;
         }
@@ -264,7 +266,7 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Enter vehicle model: ");
                 model = Console.ReadLine();
                 if (model == "")
-                    Console.WriteLine("Please do not leave the vehicle model empty");
+                    InvalidVehicleDetail(3, 0, "red", "Please do not leave the vehicle model empty");
             } while (model == "");
             return model;
         }
@@ -282,7 +284,7 @@ Shown below are vehicles that you own which are currently being rented
                 success = int.TryParse(year, out tempyear);
 
                 if (!success || tempyear < 0 || tempyear > 3000)
-                    Console.WriteLine("Please enter a proper year!");
+                    InvalidVehicleDetail(3, 0, "red", "Please enter a proper year!");
             } while (!success || tempyear < 0 || tempyear > 3000);
             return year;
         }
@@ -295,7 +297,7 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Enter license plate #: ");
                 licenseplate = Console.ReadLine();
                 if (licenseplate == "")
-                    Console.WriteLine("Please do not leave the license plate # empty");
+                    InvalidVehicleDetail(3, 0, "red", "Please do not leave the license plate # empty");
             } while (licenseplate == "");
             return licenseplate;
         }
@@ -311,9 +313,8 @@ Shown below are vehicles that you own which are currently being rented
                 color = Console.ReadLine();
 
                 success = int.TryParse(color, out tempcolor);
-
                 if (success || color == "")
-                    Console.WriteLine("Please enter a proper color!");
+                    InvalidVehicleDetail(3, 0, "red", "Please enter a proper color!");
             } while (success || color == "");
             return color;
         }
@@ -331,7 +332,7 @@ Shown below are vehicles that you own which are currently being rented
                 success = int.TryParse(seats, out tempseats);
 
                 if (!success || tempseats < 1 || tempseats > 50)
-                    Console.WriteLine("Please enter a proper amount of seats!");
+                    InvalidVehicleDetail(3, 0, "red", "Please enter a proper amount of seats!");
             } while (!success || tempseats < 1 || tempseats > 50);
             return seats;
         }
@@ -349,7 +350,7 @@ Shown below are vehicles that you own which are currently being rented
                 success = int.TryParse(mileage, out tempmileage);
 
                 if (!success || tempmileage < 0)
-                    Console.WriteLine("Please enter a realistic mileage!");
+                    InvalidVehicleDetail(3, 0, "red", "Please enter a realistic mileage!");
             } while (!success || tempmileage < 0);
             return mileage + " km";
         }
@@ -362,7 +363,7 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Enter vehicle pickup and return location: ");
                 location = Console.ReadLine();
                 if (location == "")
-                    Console.WriteLine("Please do not leave the vehicle pickup and return location empty");
+                    InvalidVehicleDetail(3, 0, "red", "Please do not leave the vehicle pickup and return location empty!");
             } while (location == "");
             return location;
         }
@@ -380,7 +381,7 @@ Shown below are vehicles that you own which are currently being rented
                 success = int.TryParse(price, out tempPrice);
 
                 if (!success || tempPrice < 100 || tempPrice > 100000)
-                    Console.WriteLine("Minimum should be 100 Php/day and max 100,000 Php/day!");
+                    InvalidVehicleDetail(3, 0, "red", "Minimum should be 100 Php/day and max 100,000 Php/day");
             } while (!success || tempPrice < 100 || tempPrice > 100000);
             return price + " PHP/day";
         }
@@ -398,7 +399,7 @@ Shown below are vehicles that you own which are currently being rented
                 success = int.TryParse(price, out tempPrice);
 
                 if (!success || tempPrice < 10 || tempPrice > 10000)
-                    Console.WriteLine("Minimum should be 10 Php/hr and max 1,0000 Php/hr");
+                    InvalidVehicleDetail(3, 0, "red", "Minimum should be 10 Php/hr and max 1,0000 Php/hr");
             } while (!success || tempPrice < 10 || tempPrice > 10000);
             return price + " PHP/hr";
         }
@@ -420,7 +421,7 @@ Shown below are vehicles that you own which are currently being rented
                     success = int.TryParse(tempTime, out time);
 
                     if (!success || time < 1 || time > 30)
-                        Console.WriteLine("You can only rent the vehicle for a minimum of 1 day and a maximum of 30 days");
+                        InvalidVehicleDetail(3, 0, "red", "You can only rent the vehicle for a minimum of 1 day and a maximum of 30 days");
                 } while (!success || time < 1 || time > 30);
 
                 priceDetails[0] = time + " day(s)";
@@ -438,7 +439,7 @@ Shown below are vehicles that you own which are currently being rented
                     success = int.TryParse(tempTime, out time);
 
                     if (!success || time < 1 || time > 24)
-                        Console.WriteLine("You can only rent the vehicle for a minimum of 1 hour and a maximum of 24 hours");
+                        InvalidVehicleDetail(3, 0, "red", "You can only rent the vehicle for a minimum of 1 hour and a maximum of 24 hours");
                 } while (!success || time < 1 || time > 24);
                 price *= time;
 
@@ -460,6 +461,12 @@ Shown below are vehicles that you own which are currently being rented
             else
                 return note;
         }
+        public static void InvalidVehicleDetail(int x, int y, string color, string text) //SUPPORTING METHOD
+        {
+            UserInterface.WriteColoredText(x, y, color, text);
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.BufferWidth));
+        }
     }
 
     internal class UserManager : UserDetailManager, IUserManagement
@@ -468,12 +475,10 @@ Shown below are vehicles that you own which are currently being rented
         {
             UserFile user = new UserFile();
             user.DisplayUserFile("user", username);
-            UserInterface UI = new UserInterface("Press any key if you are done reading the details");
-            UI.WaitForKey();
+            UserInterface.WaitForKey(3, 0, "Press any key if you are done reading the details");
         }
         public void UpdateUser(string username, FilePathManager file) //MAIN METHOD 2 for manage user account
         {
-            //Update vehicle file
             string detailchoice = "";
             string newdetail = "";
             Choice choose = new Choice();
@@ -523,7 +528,7 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Enter your email address: ");
                 email = Console.ReadLine();
                 if (email == "")
-                    Console.WriteLine("Please do not leave the email address empty!");
+                    InvalidUserDetail(3, 0, "red", "Please do not leave the email address empty!");
             } while (email == "");
             return email;
         }
@@ -537,7 +542,7 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Month: ");
                 details[1] = Console.ReadLine();
                 if (details[1] == "")
-                    Console.WriteLine("Please enter a proper month");
+                    InvalidUserDetail(3, 0, "red", "Please enter a proper month!");
             } while (details[1] == "");
             do
             {
@@ -545,7 +550,7 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Day: ");
                 details[2] = Console.ReadLine();
                 if (details[2] == "")
-                    Console.WriteLine("Please enter a proper day");
+                    InvalidUserDetail(3, 0, "red", "Please enter a proper day!");
             } while (details[2] == "");
             do
             {
@@ -553,7 +558,7 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Year: ");
                 details[0] = Console.ReadLine();
                 if (details[0] == "")
-                    Console.WriteLine("Please enter a proper year");
+                    InvalidUserDetail(3, 0, "red", "Please enter a proper year!");
             } while (details[0] == "");
             return $"{details[1]}/{details[2]}/{details[0]}";
         }
@@ -567,9 +572,15 @@ Shown below are vehicles that you own which are currently being rented
                 Console.Write("Enter your home address: ");
                 address = Console.ReadLine();
                 if (address == "")
-                    Console.WriteLine("Please do not leave the address empty!");
+                    InvalidUserDetail(3, 0, "red", "Please do not leave the address empty!");
             } while (address == "");
             return address;
+        }
+        public static void InvalidUserDetail(int x, int y, string color, string text) //SUPPORTING METHOD
+        {
+            UserInterface.WriteColoredText(x, y, color, text);
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.BufferWidth));
         }
     }
 }

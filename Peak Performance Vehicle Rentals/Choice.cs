@@ -24,6 +24,7 @@ namespace Peak_Performance_Vehicle_Rentals
 |  ==(o)-----(o)==J    `(o)-------(o)=   `(o)------(o)'   `--(o)(o)--------------(o)--'  |
 
 ""Rent, Ride, Repeat""
+
 (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] {"Login", "Register", "About", "Exit"};
 
@@ -34,12 +35,13 @@ namespace Peak_Performance_Vehicle_Rentals
         public int MainMenuChoice(string username) //CHOICE METHOD 2: main menu
         {
             Prompt = @$"
- _______ _______ _____ __   _      _______ _______ __   _ _     _
- |  |  | |_____|   |   | \  |      |  |  | |______ | \  | |     |
- |  |  | |     | __|__ |  \_|      |  |  | |______ |  \_| |_____|
+                    _______ _______ _____ __   _      _______ _______ __   _ _     _
+                    |  |  | |_____|   |   | \  |      |  |  | |______ | \  | |     |
+                    |  |  | |     | __|__ |  \_|      |  |  | |______ |  \_| |_____|
 
-Hello {username}! What would you like to do today?
-(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+                    Hello {username}! What would you like to do today?
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
 
             UserInterface MM = new UserInterface(Prompt, Options);
@@ -50,12 +52,13 @@ Hello {username}! What would you like to do today?
         {
             Inventory inventory = new Inventory();
             Prompt = @"
-____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
-[__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
-___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
+                    ____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
+                    [__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
+                    ___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
 
-Shown below are the vehicles available for rent. Please select a vehicle to view its details.
-(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+                    Shown below are the vehicles available for rent. Please select a vehicle to view its details.
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = inventory.ViewVehicles(file);
 
             UserInterface VAV = new UserInterface(Prompt, Options);
@@ -66,12 +69,13 @@ Shown below are the vehicles available for rent. Please select a vehicle to view
         {
             Inventory inventory = new Inventory();
             Prompt = @$"
-____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
-[__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
-___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
+                    ____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
+                    [__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
+                    ___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
 
-Only vehicles owned by {username} are displayed.
-(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+                    Only vehicles owned by {username} are displayed.
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = inventory.ViewVehicles(username, file);
 
             UserInterface VOV = new UserInterface(Prompt, Options);
@@ -94,8 +98,7 @@ Only vehicles owned by {username} are displayed.
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("You cannot rent a car that you own!"); Thread.Sleep(1000);
                 Console.ResetColor();
-                UserInterface UI = new UserInterface("Press any key to select another vehicle");
-                UI.WaitForKey();
+                UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle");
                 choice = 1;
             }
 
@@ -105,12 +108,13 @@ Only vehicles owned by {username} are displayed.
         {
             Inventory inventory = new Inventory();
             Prompt = @"
-____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
-[__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
-___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
+                    ____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
+                    [__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
+                    ___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
 
-Shown below are the pending vehicles. Please select a vehicle to view its details.
-(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+                    Shown below are the pending vehicles. Please select a vehicle to view its details.
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = inventory.ViewPendingRental(username, file);
 
             UserInterface VAV = new UserInterface(Prompt, Options);
@@ -131,11 +135,11 @@ Shown below are the pending vehicles. Please select a vehicle to view its detail
         {
             UserInterface.CenterTextMargin(3, 0);
             Prompt = @"
-____ ____ _  _ ___ ____ _       ___  ____ ___ ____ _ _    ____ 
-|__/ |___ |\ |  |  |__| |       |  \ |___  |  |__| | |    [___
-|  \ |___ | \|  |  |  | |___    |__/ |___  |  |  | | |___ ___]
+                    ____ ____ _  _ ___ ____ _       ___  ____ ___ ____ _ _    ____ 
+                    |__/ |___ |\ |  |  |__| |       |  \ |___  |  |__| | |    [___
+                    |  \ |___ | \|  |  |  | |___    |__/ |___  |  |  | | |___ ___]
 
-(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] { "View pending rental applications", "View approved rental applications", "Manage the vehicle you are currently renting", "Go back to main menu" };
 
             UserInterface RD = new UserInterface(Prompt, Options);
@@ -182,11 +186,11 @@ ____ ____ _  _ ___ ____ _       ___  ____ ___ ____ _ _    ____
         {
 
             Prompt = @"
-_  _ ____ _  _ ____ ____ ____    _  _ ____ _  _ _ ____ _    ____ ____ 
-|\/| |__| |\ | |__| | __ |___    |  | |___ |__| | |    |    |___ [___
-|  | |  | | \| |  | |__] |___     \/  |___ |  | | |___ |___ |___ ___]           
+                    _  _ ____ _  _ ____ ____ ____    _  _ ____ _  _ _ ____ _    ____ ____ 
+                    |\/| |__| |\ | |__| | __ |___    |  | |___ |__| | |    |    |___ [___
+                    |  | |  | | \| |  | |__] |___     \/  |___ |  | | |___ |___ |___ ___]           
 
-(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] { "Add your own rentable vehicle", "Update vehicles", "Delete vehicles", "Go back to main menu" };
 
             UserInterface MV = new UserInterface(Prompt, Options);
@@ -260,12 +264,11 @@ _  _ ____ _  _ ____ ____ ____    _  _ ____ _  _ _ ____ _    ____ ____
         public int ManageUserChoice() //CHOICE METHOD 10: manage user
         {
             Prompt = @"
-_  _ ____ _  _ ____ ____ ____    _  _ ____ ____ ____ 
-|\/| |__| |\ | |__| | __ |___    |  | [__  |___ |__/ 
-|  | |  | | \| |  | |__] |___    |__| ___] |___ |  \ 
+                    _  _ ____ _  _ ____ ____ ____    _  _ ____ ____ ____ 
+                    |\/| |__| |\ | |__| | __ |___    |  | [__  |___ |__/ 
+                    |  | |  | | \| |  | |__] |___    |__| ___] |___ |  \ 
 
-(use the UP or DOWN arrow keys to navigate, press ENTER to select)
-";
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] { "View account details", "Update account details", "Delete account", "Go back to main menu" };
 
             UserInterface MM = new UserInterface(Prompt, Options);

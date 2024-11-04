@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
+using System.Runtime.ConstrainedExecution;
+using static System.Net.Mime.MediaTypeNames;
 
 //To-Do List:
 //1.dili enter number, but rather arrow keys ra [optional] (done 10/23/24)
@@ -17,31 +20,25 @@ namespace Peak_Performance_Vehicle_Rentals
                 UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter username: ");
                 Username = Console.ReadLine();
-                if (Username == "")
+                if (Username.Length >= 20)
                 {
-                    UserInterface.CenterTextMargin(3, 0);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Please do not leave the username empty"); Thread.Sleep(1000);
-                    Console.ResetColor();
-                    UserInterface.ClearLine();
+                    UserInterface.WriteColoredText(3, 0, "red", "Username is too long. Keep it below 20 characters");
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.Write(new string(' ', Console.BufferWidth));
                 }
-            } while (Username == "");
+                if (Username == "")
+                    UserInterface.WriteColoredText(3, 0, "red", "Please do not leave the username empty");
+            } while (Username == "" || Username.Length >= 20);
             do
             {
                 UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter password: ");
                 Password = ReadPassword();
                 if (Password == "")
-                {
-                    UserInterface.CenterTextMargin(3, 1);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Please do not leave the password empty"); Thread.Sleep(1000);
-                    Console.ResetColor();
-                    UserInterface.ClearLine();
-                }
+                    UserInterface.WriteColoredText(3, 1, "red", "Please do not leave the password empty");
             } while (Password == "");
 
-            // Check if the credentials are valid
+            //check if the credentials are valid
             bool isValidUser = false;
             using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))
             {
@@ -75,23 +72,20 @@ namespace Peak_Performance_Vehicle_Rentals
                 DuplicateUser = UserExists(Username, file);
                 if (DuplicateUser)
                 {
-                    UserInterface.CenterTextMargin(3, 0);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Username already exists. Please choose a different one."); Thread.Sleep(1000);
-                    Console.ResetColor();
-                    UserInterface.ClearLine();
+                    UserInterface.WriteColoredText(3, 0, "red", "Username already exists. Please choose a different one.");
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.Write(new string(' ', Console.BufferWidth));
+                }
+                if (Username.Length >= 20)
+                {
+
+                    UserInterface.WriteColoredText(3, 0, "red", "Username is too long. Keep it below 20 characters");
                     Console.SetCursorPosition(0, Console.CursorTop);
                     Console.Write(new string(' ', Console.BufferWidth));
                 }
                 if (Username == "")
-                {
-                    UserInterface.CenterTextMargin(3, 0);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Please do not leave the username empty"); Thread.Sleep(1000);
-                    Console.ResetColor();
-                    UserInterface.ClearLine();
-                }
-            } while (DuplicateUser || Username == "");
+                    UserInterface.WriteColoredText(3, 0, "red", "Please do not leave the username empty");
+            } while (DuplicateUser || Username == "" || Username.Length >= 20);
 
             string password;
             do
@@ -100,13 +94,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.Write("Enter password: ");
                 password = ReadPassword();
                 if (password == "")
-                {
-                    UserInterface.CenterTextMargin(3, 1);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Please do not leave the password empty"); Thread.Sleep(1000);
-                    Console.ResetColor();
-                    UserInterface.ClearLine();
-                }
+                    UserInterface.WriteColoredText(3, 1, "red", "Please do not leave the password empty");
             } while (password == "");
 
             using (StreamWriter writer = new StreamWriter(file.BaseDirectory + "\\Users.txt", true)) //save username and password to the user text file
@@ -117,14 +105,8 @@ namespace Peak_Performance_Vehicle_Rentals
             UserFile user = new UserFile();
             user.CreateUserFile(Username); //create an individual user file
 
-            UserInterface.CenterTextMargin(3, 2);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.CursorVisible = false;
-            Console.WriteLine("Registration successful!"); Thread.Sleep(1000);
-            Console.ResetColor();
-            UserInterface.ClearLine();
+            UserInterface.WriteColoredText(3, 2, "green", "Registration Successful");
         }
-
         internal static bool UserExists(string Username, FilePathManager file) //SUPPORTING METHOD for UserRegister, check for duplicate user
         {
             bool DuplicateUser = false;
@@ -143,28 +125,22 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return DuplicateUser;
         }
-        internal static string ReadPassword()
+        internal static string ReadPassword() //SUPPORTING METHOD, hide password with asterisks
         {
             string password = "";
-
             while (true)
             {
-                // Read a key without displaying it
-                var keyInfo = Console.ReadKey(intercept: true);
+                var keyInfo = Console.ReadKey(true);
 
-                // Check for Enter key
                 if (keyInfo.Key == ConsoleKey.Enter)
                 {
                     break;
                 }
-                // Check for Backspace key
                 else if (keyInfo.Key == ConsoleKey.Backspace)
                 {
                     if (password.Length > 0)
                     {
-                        // Remove the last character from password
-                        password = password[0..^1]; // Equivalent to password.Remove(password.Length - 1)
-                                                    // Move the cursor back, overwrite with space, and move back again
+                        password = password[0..^1];
                         Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
                         Console.Write(" ");
                         Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
@@ -172,13 +148,13 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
                 else if (char.IsLetterOrDigit(keyInfo.KeyChar))
                 {
-                    // Add the character to the password string
-                    password += keyInfo.KeyChar;
-                    // Display an asterisk
-                    Console.Write("*");
+                    if (password.Length < 20) // maximum password is 20 characters
+                    {
+                        password += keyInfo.KeyChar;
+                        Console.Write("*");
+                    }
                 }
             }
-
             return password;
         }
     }

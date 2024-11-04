@@ -23,11 +23,9 @@ namespace Peak_Performance_Vehicle_Rentals
     }
     public interface IUserInterface
     {
-        abstract public int RunUserInterface(string type);
-        abstract public string RunUserInterfaceString(string type);
-        abstract public void DisplayOptions(bool verbatim);
-        abstract public void WaitForKey();
-        abstract public void WaitForSpecificKey();
+        public int RunUserInterface(string type);
+        public string RunUserInterfaceString(string type);
+        public void DisplayOptions(bool verbatim);
     }
 
     //Login Register

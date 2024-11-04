@@ -27,22 +27,6 @@ namespace Peak_Performance_Vehicle_Rentals
         }
 
         //METHODS
-        public static void ClearAllRUI()
-        {
-            Console.CursorVisible = false;
-            ClearVisibleRegion();
-        }
-        public static void ClearLineRUI(int ctr)
-        {
-            Console.CursorVisible = false;
-            Console.SetCursorPosition(0, Console.CursorTop - 1);
-            for (int i = 0; i < ctr; i++)
-            {
-                Console.Write(new string(' ', Console.BufferWidth));
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-            }
-
-        }
         public int RunUserInterface(string type) //MAIN METHOD for running the interface, returns int
         {
             ConsoleKey keyPressed;
@@ -50,20 +34,22 @@ namespace Peak_Performance_Vehicle_Rentals
             bool verbatim = true;
             do
             {
-                if (type == "all") //type = ALL or type = LINE
+                if (type == "all") //clear all
                     ClearAllRUI();
                 else if (type == "rent")
                 {
                     if (ctr == 0)
-                        CenterTextMargin(3 , 6); ctr++;
-                    ClearLineRUI(5); //number of times para sa loop
+                        CenterTextMargin(3 , 6);
+                    ctr++;
+                    ClearLineRUI(5);
                     verbatim = false;
                 }
                 else if (type == "current")
                 {
                     if (ctr == 0)
-                        CenterTextMargin(3, 8); ctr++;
-                    ClearLineRUI(7); //number of times para sa loop
+                        CenterTextMargin(3, 8);
+                    ctr++;
+                    ClearLineRUI(7);
                     verbatim = false;
                 }
 
@@ -91,7 +77,7 @@ namespace Peak_Performance_Vehicle_Rentals
             RunUserInterface(type);
             return Options[Choice];
         }
-        public void DisplayOptions(bool verbatim) //SUPPORTING METHOD for RunUserInterface, displays the options to the screen
+        public void DisplayOptions(bool verbatim) //SUPPORTING MAIN METHOD for RunUserInterface, displays the options to the screen
         {
             if (verbatim)
                 position = CenterVerbatimText(Prompt);
@@ -128,26 +114,7 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.WriteLine();
             Console.ResetColor();
         }
-        public void WaitForKey() //EXTRA METHOD, wait for any key to be pressed
-        {
-            CenterTextMargin(3, 0);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write(Prompt);
-            Console.ResetColor();
-            Console.ReadKey(true);
-        }
-        public void WaitForSpecificKey() //EXTRA METHOD, wait for a specific key to be pressed
-        {
-            Console.Write(Prompt);
-            ConsoleKeyInfo keyInfo;
-            ConsoleKey keyPressed;
-            do
-            {
-                keyInfo = Console.ReadKey(true);
-                keyPressed = keyInfo.Key;
-            } while (keyPressed != ConsoleKey.Enter);
-        }
-        internal static void ClearVisibleRegion() //SUPPORTING METHOD
+        internal static void ClearVisibleRegion() //SUPPORTING METHOD, reduces screen flicker
         {
             int cursorTop = Console.CursorTop;
             int cursorLeft = Console.CursorLeft;
@@ -187,11 +154,42 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             Console.SetCursorPosition(position + x, Console.CursorTop + y);
         }
-        internal static void ClearLine()
+        public static void ClearAllRUI() //SUPPORTING METHOD, clear all lines
         {
+            Console.CursorVisible = false;
+            ClearVisibleRegion();
+        }
+        public static void ClearLineRUI(int ctr) //SUPPORTING and EXTRA METHOD, clear specific amount of lines
+        {
+            Console.CursorVisible = false;
             Console.SetCursorPosition(0, Console.CursorTop - 1);
-            Console.Write(new string(' ', Console.BufferWidth));
-            Console.SetCursorPosition(0, Console.CursorTop - 1);
+            for (int i = 0; i < ctr; i++)
+            {
+                Console.Write(new string(' ', Console.BufferWidth));
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+            }
+        }
+        public static void WriteColoredText(int x, int y, string color, string text) //EXTRA METHOD, write a static text
+        {
+            Console.CursorVisible = false;
+            UserInterface.CenterTextMargin(x, y);
+            if (color == "red")
+                Console.ForegroundColor = ConsoleColor.Red;
+            if (color == "green")
+                Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(text);
+            Console.ResetColor();
+            Thread.Sleep(1000);
+            UserInterface.ClearLineRUI(1);
+            Console.CursorVisible = true;
+        }
+        public static void WaitForKey(int x, int y, string text) //EXTRA METHOD, wait for any key to be pressed
+        {
+            CenterTextMargin(x, y);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write(text);
+            Console.ResetColor();
+            Console.ReadKey(true);
         }
     }
 }

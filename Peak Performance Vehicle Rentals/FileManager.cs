@@ -514,8 +514,7 @@ namespace Peak_Performance_Vehicle_Rentals
                                     Console.WriteLine(lines[j]);
                                 }
                                 Console.WriteLine("");
-                                UserInterface UI = new UserInterface("Press any key if you are done looking at the receipt");
-                                UI.WaitForKey();
+                                UserInterface.WaitForKey(3, 0, "Press any key if you are done looking at the receipt");
                             }
                         }
                     }

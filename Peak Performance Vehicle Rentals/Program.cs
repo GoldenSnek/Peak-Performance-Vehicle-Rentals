@@ -60,18 +60,12 @@ namespace Peak_Performance_Vehicle_Rentals
                             username = LR.UserLogin(file);
                             if (username != "")
                             {
-                                UserInterface.CenterTextMargin(3, 2);
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine("Login Successful!"); Thread.Sleep(1000);
-                                Console.ResetColor();
+                                UserInterface.WriteColoredText(3, 2, "green", "Login Successful!");
                                 LRrunning = false;
                             }
                             else
                             {
-                                UserInterface.CenterTextMargin(3, 2);
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Invalid credentials!"); Thread.Sleep(1000);
-                                Console.ResetColor();
+                                UserInterface.WriteColoredText(3, 2, "red", "Invalid Credentials!");
                                 LRrunning = true;
                             }
                             break;
@@ -97,8 +91,7 @@ namespace Peak_Performance_Vehicle_Rentals
                             Console.ForegroundColor = ConsoleColor.Cyan;
                             UserInterface.CenterVerbatimText("Press any key to return to the Login and Register screen");
                             Console.ResetColor();
-                            UserInterface UI = new UserInterface();
-                            UI.WaitForKey();
+                            UserInterface.WaitForKey(0, 0, "");
                             break;
 
                         case 3:
