@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Runtime.InteropServices.Marshalling;
+using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 //To-Do List
 //1. [top priority] Edit vehicle details (ugma or kung kanusa naay time)
@@ -46,13 +49,13 @@ namespace Peak_Performance_Vehicle_Rentals
 
                                 if (priceCalculation == 0)
                                 {
-                                    string[] tempDetails = CalculatePrice(0, int.Parse(vehicleRentDetails[0]));
+                                    string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
                                     rentDetails[0] = tempDetails[0];
                                     rentDetails[1] = tempDetails[1];
                                 }
                                 else if (priceCalculation == 1)
                                 {
-                                    string[] tempDetails = CalculatePrice(1, int.Parse(vehicleRentDetails[1]));
+                                    string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
                                     rentDetails[0] = tempDetails[0];
                                     rentDetails[1] = tempDetails[1];
                                 }
@@ -71,11 +74,23 @@ namespace Peak_Performance_Vehicle_Rentals
 
         public void AddVehicle(string username) //MAIN METHOD 1 for manage vehicles
         {
-            string[] details = new string[13];
+
+            Console.Clear();
+            UserInterface.CenterVerbatimText(@"
+                                            ____ ___  ___     _  _ ____ _  _ _ ____ _    ____ 
+                                            |__| |  \ |  \    |  | |___ |__| | |    |    |___ 
+                                            |  | |__/ |__/     \/  |___ |  | | |___ |___ |___ 
+                                                  
+                                            Enter the necessary details to add a vehicle to the rentable list
+                                            ");
+
+            string[] details = new string[12];
             Choice choose = new Choice();
 
             //type
             details[0] = choose.VehicleTypeChoice();
+            if (details[0] == "")
+                return;
             //brand
             details[1] = VehicleName();
             //model
@@ -87,6 +102,7 @@ namespace Peak_Performance_Vehicle_Rentals
             //color
             details[5] = VehicleColor();
             //fuel
+            Console.WriteLine();
             details[6] = choose.VehicleFuelChoice();
             //seating capacity
             details[7] = VehicleSeatingCapacity();
@@ -98,17 +114,14 @@ namespace Peak_Performance_Vehicle_Rentals
             details[10] = VehiclePriceDay();
             //rental price
             details[11] = VehiclePriceHour();
-            //status
-            details[12] = choose.VehicleStatusChoice();
 
             //create a new vehicle file
             VehicleFile vehicle = new VehicleFile();
             vehicle.CreateVehicleFile(username, details);
 
-            UserInterface.WriteColoredText(3, 2, "green", "New vehicle has been added!");
+            UserInterface.WriteColoredText(3, 1, "green", "New vehicle has been added!");
 
         }
-
         public void UpdateVehicle(string username, FilePathManager file) //MAIN METHOD 2 for manage vehicles
         {
             //Update vehicle file
@@ -143,8 +156,6 @@ namespace Peak_Performance_Vehicle_Rentals
                             newdetail = VehiclePriceDay();
                         if (detailchoice == "Hourly Rental Price")
                             newdetail = VehiclePriceHour();
-                        if (detailchoice == "Status")
-                            newdetail = choose.VehicleStatusChoice();
                         if (detailchoice != "")
                         {
                             VehicleFile vehicle = new VehicleFile();
@@ -166,42 +177,44 @@ namespace Peak_Performance_Vehicle_Rentals
         public void PendingVehicles(string username, FilePathManager file) //MAIN METHOD ???
         {
             Choice choose = new Choice();
-            int choice = choose.ViewPendingChoice(username, file);
-
             Inventory inventory = new Inventory();
-            if (choice == inventory.ViewPendingRental(username, file).Length - 1)
-                return;
-
-            VehicleFile vehicle = new VehicleFile();
-            vehicle.DisplayPendingFile(choice, username, file);
-
-            int approveChoice = choose.ApprovePendingChoice();
-
-            if (approveChoice == 0)
+            do
             {
-                vehicle.TransferApprovedFile(choice, username, file);
-                Console.WriteLine("The vehicle rental application is approved!"); Thread.Sleep(1000);
-            }
-            else if (approveChoice == 1)
-            {
-                vehicle.TransferNonApprovedFile(choice, username, file);
-                Console.WriteLine("The vehicle rental application is not approved!"); Thread.Sleep(1000);
-            }
+                int choice = choose.ViewPendingChoice(username, file);
+
+
+                if (choice == inventory.ViewPendingRental(username, file).Length - 1)
+                    return;
+
+                VehicleFile vehicle = new VehicleFile();
+                vehicle.DisplayPendingFile(choice, username, file);
+
+                int approveChoice = choose.ApprovePendingChoice();
+
+                if (approveChoice == 0)
+                {
+                    vehicle.TransferApprovedFile(choice, username, file);
+                    Console.WriteLine("The vehicle rental application is approved!"); Thread.Sleep(1000);
+                }
+                else if (approveChoice == 1)
+                {
+                    vehicle.TransferNonApprovedFile(choice, username, file);
+                    Console.WriteLine("The vehicle rental application is not approved!"); Thread.Sleep(1000);
+                }
+            } while (true);
 
         }
 
-        //finish later
         public void ApprovedVehicles(string username, FilePathManager file) //MAIN METHOD ???
         {
 
             Console.Clear();
             UserInterface.CenterVerbatimText(@"
                                             ____ ___  ___  ____ ____ _  _ ____ ___     _  _ ____ _  _ _ ____ _    ____ ____ 
-                                            |__| |__] |__] |__/ |  | |  | |___ |  \    |  | |___ |__| | |    |    |___ [__  
+                                            |__| |__] |__] |__/ |  | |  | |___ |  \    |  | |___ |__| | |    |    |___ [___ 
                                             |  | |    |    |  \ |__|  \/  |___ |__/     \/  |___ |  | | |___ |___ |___ ___] 
 
-                                            Shown below are vehicles that you own which are currently being rented
-                                            ");
+                                            Shown below are vehicles that you own which are currently being rented");
 
             Inventory inventory = new Inventory();
             string[] vehicles = inventory.ViewApprovedRental(username, file);
@@ -230,6 +243,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     VehicleFile vehicle = new VehicleFile();
                     vehicle.DisplayRecieptFile(username, file);
+                    UserInterface.WaitForKey(3, 0, "Press any key if you are done looking at the receipt");
                 }
                 else if (choice == 1)
                 {
@@ -248,13 +262,14 @@ namespace Peak_Performance_Vehicle_Rentals
             string name;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter vehicle brand: ");
+                Prompt("Enter vehicle brand: ");
                 name = Console.ReadLine();
-                if (name == "")
+                if (string.IsNullOrWhiteSpace(name))
                     InvalidVehicleDetail(3, 0, "red", "Please do not leave the vehicle brand empty");
+                else if (name.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
 
-            } while (name == "");
+            } while (string.IsNullOrWhiteSpace(name) | name.Length >= 20);
             return name;
         }
         public string VehicleModel() //SUPPORTING METHOD 2 for manage vehicles
@@ -262,12 +277,13 @@ namespace Peak_Performance_Vehicle_Rentals
             string model;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter vehicle model: ");
+                Prompt("Enter vehicle model: ");
                 model = Console.ReadLine();
-                if (model == "")
-                    InvalidVehicleDetail(3, 0, "red", "Please do not leave the vehicle model empty");
-            } while (model == "");
+                if (string.IsNullOrWhiteSpace(model))
+                    InvalidVehicleDetail(3, 0, "red", "Please do not leave the vehicle brand empty");
+                else if (model.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+            } while (string.IsNullOrWhiteSpace(model) || model.Length >= 20);
             return model;
         }
         public string VehicleYear() //SUPPORTING METHOD 3 for manage vehicles
@@ -277,12 +293,9 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter the manufacture year of the vehicle: ");
+                Prompt("Enter the manufacture year of the vehicle: ");
                 year = Console.ReadLine();
-
                 success = int.TryParse(year, out tempyear);
-
                 if (!success || tempyear < 0 || tempyear > 3000)
                     InvalidVehicleDetail(3, 0, "red", "Please enter a proper year!");
             } while (!success || tempyear < 0 || tempyear > 3000);
@@ -293,29 +306,29 @@ namespace Peak_Performance_Vehicle_Rentals
             string licenseplate;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter license plate #: ");
+                Prompt("Enter license plate #: ");
                 licenseplate = Console.ReadLine();
-                if (licenseplate == "")
+                if (string.IsNullOrWhiteSpace(licenseplate))
                     InvalidVehicleDetail(3, 0, "red", "Please do not leave the license plate # empty");
-            } while (licenseplate == "");
+                else if (licenseplate.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+            } while (string.IsNullOrWhiteSpace(licenseplate) || licenseplate.Length >= 20);
             return licenseplate;
         }
         public string VehicleColor() //SUPPORTING METHOD 5 for manage vehicles
         {
             string color;
-            int tempcolor;
-            bool success = false;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter color of the vehicle: ");
+                Prompt("Enter color of the vehicle: ");
                 color = Console.ReadLine();
-
-                success = int.TryParse(color, out tempcolor);
-                if (success || color == "")
+                if (string.IsNullOrWhiteSpace(color))
+                    InvalidVehicleDetail(3, 0, "red", "Please do not leave the color empty!");
+                else if (color.Any(char.IsDigit))
                     InvalidVehicleDetail(3, 0, "red", "Please enter a proper color!");
-            } while (success || color == "");
+                else if (color.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+            } while (string.IsNullOrWhiteSpace(color) || color.Any(char.IsDigit) || color.Length >= 20);
             return color;
         }
         public string VehicleSeatingCapacity() //SUPPORTING METHOD 6 for manage vehicles
@@ -325,33 +338,32 @@ namespace Peak_Performance_Vehicle_Rentals
             bool success = false;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter the number of seats of the vehicle: ");
+                Prompt("Enter the number of seats of the vehicle: ");
                 seats = Console.ReadLine();
-
                 success = int.TryParse(seats, out tempseats);
-
                 if (!success || tempseats < 1 || tempseats > 50)
                     InvalidVehicleDetail(3, 0, "red", "Please enter a proper amount of seats!");
-            } while (!success || tempseats < 1 || tempseats > 50);
+                else if (seats.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+            } while (!success || tempseats < 1 || tempseats > 50 | seats.Length >= 20);
             return seats;
         }
         public string VehicleMileage() //SUPPORTING METHOD 7 for manage vehicles
         {
-            int tempmileage;
+            double tempmileage;
             string mileage;
             bool success = false;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter mileage of the vehicle in kilometers: ");
+                Prompt("Enter mileage of the vehicle in kilometers: ");
                 mileage = Console.ReadLine();
-
-                success = int.TryParse(mileage, out tempmileage);
-
-                if (!success || tempmileage < 0)
+                success = double.TryParse(mileage, out tempmileage);
+                if (!success || tempmileage < 0 || tempmileage > 999999999)
                     InvalidVehicleDetail(3, 0, "red", "Please enter a realistic mileage!");
-            } while (!success || tempmileage < 0);
+                else if (mileage.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+            } while (!success || tempmileage < 0 || tempmileage > 999999999 || mileage.Length >= 20);
+            mileage = $"{Math.Round(tempmileage, 2)}";
             return mileage + " km";
         }
         public string VehicleLocation() //SUPPORTING METHOD 8 for manage vehicles
@@ -359,51 +371,54 @@ namespace Peak_Performance_Vehicle_Rentals
             string location;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter vehicle pickup and return location: ");
+                Prompt("Enter vehicle pickup and return location: ");
                 location = Console.ReadLine();
-                if (location == "")
+                if (string.IsNullOrWhiteSpace(location))
                     InvalidVehicleDetail(3, 0, "red", "Please do not leave the vehicle pickup and return location empty!");
-            } while (location == "");
+                else if (location.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+            } while (string.IsNullOrWhiteSpace(location) || location.Length >= 20);
             return location;
         }
         public string VehiclePriceDay() //SUPPORTING METHOD 9 for manage vehicles
         {
             string price;
-            int tempPrice;
+            double tempPrice;
             bool success = false;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter the DAILY rental rate of the vehicle in PHP/day: ");
+                Prompt("Enter the DAILY rental rate of the vehicle in PHP/day: ");
+
                 price = Console.ReadLine();
 
-                success = int.TryParse(price, out tempPrice);
-
+                success = double.TryParse(price, out tempPrice);
                 if (!success || tempPrice < 100 || tempPrice > 100000)
                     InvalidVehicleDetail(3, 0, "red", "Minimum should be 100 Php/day and max 100,000 Php/day");
-            } while (!success || tempPrice < 100 || tempPrice > 100000);
+                else if (price.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+            } while (!success || tempPrice < 100 || tempPrice > 100000 || price.Length >= 20);
+            price = $"{Math.Round(tempPrice, 2)}";
             return price + " PHP/day";
         }
         public string VehiclePriceHour() //SUPPORTING METHOD 10 for manage vehicles
         {
             string price;
-            int tempPrice;
+            double tempPrice;
             bool success = false;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter the HOURLY rental rate of the vehicle in PHP/hr: ");
+                Prompt("Enter the HOURLY rental rate of the vehicle in PHP/hr: ");
                 price = Console.ReadLine();
-
-                success = int.TryParse(price, out tempPrice);
-
+                success = double.TryParse(price, out tempPrice);
                 if (!success || tempPrice < 10 || tempPrice > 10000)
-                    InvalidVehicleDetail(3, 0, "red", "Minimum should be 10 Php/hr and max 1,0000 Php/hr");
-            } while (!success || tempPrice < 10 || tempPrice > 10000);
+                    InvalidVehicleDetail(3, 0, "red", "Minimum should be 10 Php/hr and max 10,000 Php/hr");
+                else if (price.Length >= 20)
+                    InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+            } while (!success || tempPrice < 10 || tempPrice > 10000 || price.Length >= 20);
+            price = $"{Math.Round(tempPrice, 2)}";
             return price + " PHP/hr";
         }
-        public string[] CalculatePrice(int type, int price)
+        public string[] CalculatePrice(int type, double price)
         {
             int time;
             string tempTime;
@@ -414,37 +429,34 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 do
                 {
-                    UserInterface.CenterTextMargin(3, 0);
-                    Console.Write("How many days would you rent the vehicle: ");
+                    Prompt("How many days would you rent the vehicle: ");
                     tempTime = Console.ReadLine();
-
                     success = int.TryParse(tempTime, out time);
-
                     if (!success || time < 1 || time > 30)
                         InvalidVehicleDetail(3, 0, "red", "You can only rent the vehicle for a minimum of 1 day and a maximum of 30 days");
-                } while (!success || time < 1 || time > 30);
+                    else if (tempTime.Length >= 20)
+                        InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+                } while (!success || time < 1 || time > 30 || tempTime.Length >= 20);
 
                 priceDetails[0] = time + " day(s)";
-                priceDetails[1] = price * time + " PHP";
+                priceDetails[1] = $"{Math.Round(price * (double)time, 2)} PHP";
 
             }
             else if (type == 1)
             {
                 do
                 {
-                    UserInterface.CenterTextMargin(3, 0);
-                    Console.Write("How many hours would you rent the vehicle: ");
+                    Prompt("How many hours would you rent the vehicle: ");
                     tempTime = Console.ReadLine();
-
                     success = int.TryParse(tempTime, out time);
-
                     if (!success || time < 1 || time > 24)
                         InvalidVehicleDetail(3, 0, "red", "You can only rent the vehicle for a minimum of 1 hour and a maximum of 24 hours");
-                } while (!success || time < 1 || time > 24);
+                    else if (tempTime.Length >= 20)
+                        InvalidVehicleDetail(3, 0, "red", "Please keep it below 20 characters");
+                } while (!success || time < 1 || time > 24 || tempTime.Length >= 20);
                 price *= time;
-
                 priceDetails[0] = time + " hour(s)";
-                priceDetails[1] = price * time + " PHP";
+                priceDetails[1] = $"{Math.Round(price * (double)time, 2)} PHP";
             }
 
             return priceDetails;
@@ -452,14 +464,21 @@ namespace Peak_Performance_Vehicle_Rentals
         public string AddNote()
         {
             string note = "";
-            UserInterface.CenterTextMargin(3, 0);
-            Console.Write("Additional notes: ");
+            Prompt("Additional notes: ");
             note = Console.ReadLine();
 
-            if (note == "")
+            if (string.IsNullOrWhiteSpace(note))
                 return "N/A";
             else
                 return note;
+        }
+        public static void Prompt(string text) //SUPPORTING METHOD
+        {
+            Console.CursorVisible = true;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            UserInterface.CenterTextMargin(3, 0);
+            Console.Write(text);
+            Console.ResetColor();
         }
         public static void InvalidVehicleDetail(int x, int y, string color, string text) //SUPPORTING METHOD
         {

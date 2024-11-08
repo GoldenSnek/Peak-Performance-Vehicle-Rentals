@@ -94,7 +94,6 @@ namespace Peak_Performance_Vehicle_Rentals
         public string UpdateVehicleDetailsChoice(string username, FilePathManager file, int choice);
         public string VehicleTypeChoice();
         public string VehicleFuelChoice();
-        public string VehicleStatusChoice();
         public int ManageUserChoice();
         public string UpdateUserDetailsChoice(string username, FilePathManager file);
         public int DeleteUserChoice(string username, FilePathManager file);

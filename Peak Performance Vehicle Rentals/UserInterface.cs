@@ -44,6 +44,38 @@ namespace Peak_Performance_Vehicle_Rentals
                     ClearLineRUI(5);
                     verbatim = false;
                 }
+                else if (type == "vehicle type" || type == "pending")
+                {
+                    if (ctr == 0)
+                        CenterTextMargin(3, 8);
+                    ctr++;
+                    ClearLineRUI(7);
+                    verbatim = false;
+                }
+                else if (type == "car type")
+                {
+                    if (ctr == 0)
+                        CenterTextMargin(3, 22);
+                    ctr++;
+                    ClearLineRUI(21);
+                    verbatim = false;
+                }
+                else if (type == "motorcycle type")
+                {
+                    if (ctr == 0)
+                        CenterTextMargin(3, 18);
+                    ctr++;
+                    ClearLineRUI(17);
+                    verbatim = false;
+                }
+                else if (type == "vehicle fuel")
+                {
+                    if (ctr == 0)
+                        CenterTextMargin(3, 12);
+                    ctr++;
+                    ClearLineRUI(11);
+                    verbatim = false;
+                }
                 else if (type == "current")
                 {
                     if (ctr == 0)

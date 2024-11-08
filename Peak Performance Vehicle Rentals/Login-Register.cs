@@ -20,23 +20,25 @@ namespace Peak_Performance_Vehicle_Rentals
                 UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter username: ");
                 Username = Console.ReadLine();
-                if (Username.Length >= 20)
+
+                if (string.IsNullOrWhiteSpace(Username))
+                    UserInterface.WriteColoredText(3, 0, "red", "Please do not leave the username empty");
+                else if (Username.Length >= 20)
                 {
-                    UserInterface.WriteColoredText(3, 0, "red", "Username is too long. Keep it below 20 characters");
+                    UserInterface.WriteColoredText(3, 0, "red", "Username is too long. Please keep it below 20 characters");
                     Console.SetCursorPosition(0, Console.CursorTop);
                     Console.Write(new string(' ', Console.BufferWidth));
                 }
-                if (Username == "")
-                    UserInterface.WriteColoredText(3, 0, "red", "Please do not leave the username empty");
-            } while (Username == "" || Username.Length >= 20);
+                
+            } while (string.IsNullOrWhiteSpace(Username) || Username.Length >= 20);
             do
             {
                 UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter password: ");
                 Password = ReadPassword();
-                if (Password == "")
+                if (string.IsNullOrWhiteSpace(Password))
                     UserInterface.WriteColoredText(3, 1, "red", "Please do not leave the password empty");
-            } while (Password == "");
+            } while (string.IsNullOrWhiteSpace(Password));
 
             //check if the credentials are valid
             bool isValidUser = false;
@@ -70,36 +72,36 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.Write("Enter username: ");
                 Username = Console.ReadLine();
                 DuplicateUser = UserExists(Username, file);
-                if (DuplicateUser)
+                if (string.IsNullOrWhiteSpace(Username))
+                    UserInterface.WriteColoredText(3, 0, "red", "Please do not leave the username empty.");
+                else if (DuplicateUser)
                 {
                     UserInterface.WriteColoredText(3, 0, "red", "Username already exists. Please choose a different one.");
                     Console.SetCursorPosition(0, Console.CursorTop);
                     Console.Write(new string(' ', Console.BufferWidth));
                 }
-                if (Username.Length >= 20)
+                else if (Username.Length >= 20)
                 {
 
-                    UserInterface.WriteColoredText(3, 0, "red", "Username is too long. Keep it below 20 characters");
+                    UserInterface.WriteColoredText(3, 0, "red", "Username is too long. Please keep it below 20 characters.");
                     Console.SetCursorPosition(0, Console.CursorTop);
                     Console.Write(new string(' ', Console.BufferWidth));
                 }
-                if (Username == "")
-                    UserInterface.WriteColoredText(3, 0, "red", "Please do not leave the username empty");
-            } while (DuplicateUser || Username == "" || Username.Length >= 20);
+                
+            } while (DuplicateUser || string.IsNullOrWhiteSpace(Username) || Username.Length >= 20);
 
-            string password;
             do
             {
                 UserInterface.CenterTextMargin(3, 0);
                 Console.Write("Enter password: ");
-                password = ReadPassword();
-                if (password == "")
+                Password = ReadPassword();
+                if (string.IsNullOrWhiteSpace(Password))
                     UserInterface.WriteColoredText(3, 1, "red", "Please do not leave the password empty");
-            } while (password == "");
+            } while (string.IsNullOrWhiteSpace(Password));
 
             using (StreamWriter writer = new StreamWriter(file.BaseDirectory + "\\Users.txt", true)) //save username and password to the user text file
             {
-                writer.WriteLine($"{Username},{password}");
+                writer.WriteLine($"{Username},{Password}");
             }
 
             UserFile user = new UserFile();

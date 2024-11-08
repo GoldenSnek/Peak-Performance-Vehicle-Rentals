@@ -64,7 +64,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 vehicles[i] = $"{brand} {parts[0]}";
             }
 
-            vehicles[files.Length] = "Go back to Main Menu";
+            vehicles[files.Length] = "Go back to Manage Vehicles Menu";
             return vehicles;
         }
 
@@ -82,7 +82,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             }
 
-            string[] details = new string[11]; //identify details of specific vehicle
+            string[] details = new string[10]; //identify details of specific vehicle
             if (index < files.Length)
             {
                 for (int i = 0; i < details.Length; i++) //start at 4 to skip changing the important details
@@ -99,7 +99,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         }
                     }
                 }
-                details[10] = "Go back to Main Menu";
+                details[9] = "Go back and select another vehicle";
             }
             else
                 details[0] = "";
@@ -125,7 +125,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     }
                 }
             }
-            details[3] = "Go back to Main Menu";
+            details[3] = "Go back to Manage User Menu";
             return details;
         }
         public string[] ViewPendingRental(string username, FilePathManager file) //MAIN METHOD ?
@@ -172,7 +172,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             }
 
-            vehicles.Add("Go back to Main Menu");
+            vehicles.Add("Go back to Rental Details Menu");
             return vehicles.ToArray();
         }
 

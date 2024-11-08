@@ -13,19 +13,19 @@ namespace Peak_Performance_Vehicle_Rentals
         public int LoginRegisterChoice() //CHOICE METHOD 1: login and register
         {
             Prompt = @"
-╔═╗┌─┐┌─┐┬┌─  ╔═╗┌─┐┬─┐┌─┐┌─┐┬─┐┌┬┐┌─┐┌┐┌┌─┐┌─┐    ╦  ╦┌─┐┬ ┬┬┌─┐┬  ┌─┐  ╦═╗┌─┐┌┐┌┌┬┐┌─┐┬  ┌─┐
-╠═╝├┤ ├─┤├┴┐  ╠═╝├┤ ├┬┘├┤ │ │├┬┘│││├─┤││││  ├┤     ╚╗╔╝├┤ ├─┤││  │  ├┤   ╠╦╝├┤ │││ │ ├─┤│  └─┐
-╩  └─┘┴ ┴┴ ┴  ╩  └─┘┴└─└  └─┘┴└─┴ ┴┴ ┴┘└┘└─┘└─┘     ╚╝ └─┘┴ ┴┴└─┘┴─┘└─┘  ╩╚═└─┘┘└┘ ┴ ┴ ┴┴─┘└─┘
+                    ╔═╗┌─┐┌─┐┬┌─  ╔═╗┌─┐┬─┐┌─┐┌─┐┬─┐┌┬┐┌─┐┌┐┌┌─┐┌─┐    ╦  ╦┌─┐┬ ┬┬┌─┐┬  ┌─┐  ╦═╗┌─┐┌┐┌┌┬┐┌─┐┬  ┌─┐
+                    ╠═╝├┤ ├─┤├┴┐  ╠═╝├┤ ├┬┘├┤ │ │├┬┘│││├─┤││││  ├┤     ╚╗╔╝├┤ ├─┤││  │  ├┤   ╠╦╝├┤ │││ │ ├─┤│  └─┐
+                    ╩  └─┘┴ ┴┴ ┴  ╩  └─┘┴└─└  └─┘┴└─┴ ┴┴ ┴┘└┘└─┘└─┘     ╚╝ └─┘┴ ┴┴└─┘┴─┘└─┘  ╩╚═└─┘┘└┘ ┴ ┴ ┴┴─┘└─┘
 
-|                                                          _________________________     |
-|                     /\\      _____          _____       |   |     |     |    | |  \    |
-|      ,-----,       /  \\____/__|__\_    ___/__|__\___   |___|_____|_____|____|_|___\   |
-|   ,--'---:---`--, /  |  _     |     `| |      |      `| |                    | |    \  |
-|  ==(o)-----(o)==J    `(o)-------(o)=   `(o)------(o)'   `--(o)(o)--------------(o)--'  |
+                    |                                                          _________________________     |
+                    |                     /\\      _____          _____       |   |     |     |    | |  \    |
+                    |      ,-----,       /  \\____/__|__\_    ___/__|__\___   |___|_____|_____|____|_|___\   |
+                    |   ,--'---:---`--, /  |  _     |     `| |      |      `| |                    | |    \  |
+                    |  ==(o)-----(o)==J    `(o)-------(o)=   `(o)------(o)'   `--(o)(o)--------------(o)--'  |
 
-""Rent, Ride, Repeat""
+                    ""Rent, Ride, Repeat""
 
-(use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = new string[] {"Login", "Register", "About", "Exit"};
 
             UserInterface LR = new UserInterface(Prompt, Options);
@@ -140,7 +140,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     |  \ |___ | \|  |  |  | |___    |__/ |___  |  |  | | |___ ___]
 
                     (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
-            Options = new string[] { "View pending rental applications", "View approved rental applications", "Manage the vehicle you are currently renting", "Go back to main menu" };
+            Options = new string[] { "View pending rental applications", "View approved rental applications", "Manage the vehicle you are currently renting", "Go back to Main Menu" };
 
             UserInterface RD = new UserInterface(Prompt, Options);
             int choice = RD.RunUserInterface("all");
@@ -150,10 +150,10 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             UserInterface.CenterTextMargin(3, 0);
             Prompt = "Do you want to approve this request?";
-            Options = new string[] { "YES", "NO" };
+            Options = new string[] { "YES", "NO", "Decide later"};
 
             UserInterface RD = new UserInterface(Prompt, Options);
-            int choice = RD.RunUserInterface("rent");
+            int choice = RD.RunUserInterface("pending");
             return choice;
         }
         public int CurrentlyRentingChoice(string username, FilePathManager file) //CHOICE METHOD ?: ????
@@ -166,7 +166,7 @@ namespace Peak_Performance_Vehicle_Rentals
             if (vehicle != "")
             {
                 Prompt = "What would you like to do your current rental vehicle?";
-                Options = new string[] { "View reciept", "Finish renting the vehicle", "Go back to main menu" };
+                Options = new string[] { "View reciept", "Finish renting the vehicle", "Go back to Main Menu" };
 
                 UserInterface RD = new UserInterface(Prompt, Options);
                 choice = RD.RunUserInterface("current");
@@ -191,7 +191,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     |  | |  | | \| |  | |__] |___     \/  |___ |  | | |___ |___ |___ ___]           
 
                     (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
-            Options = new string[] { "Add your own rentable vehicle", "Update vehicles", "Delete vehicles", "Go back to main menu" };
+            Options = new string[] { "Add your own rentable vehicle", "Update vehicles", "Delete vehicles", "Go back to Main Menu" };
 
             UserInterface MV = new UserInterface(Prompt, Options);
             int choice = MV.RunUserInterface("all");
@@ -200,13 +200,20 @@ namespace Peak_Performance_Vehicle_Rentals
         public string UpdateVehicleDetailsChoice(string username, FilePathManager file, int choice) //CHOICE METHOD 6: update vehicle details
         {
             Inventory inventory = new Inventory();
-            Prompt = "Select a detail that you want to change";
+            Prompt = @"
+                    _  _ ___  ___  ____ ___ ____    _  _ ____ _  _ _ ____ _    ____ 
+                    |  | |__] |  \ |__|  |  |___    |  | |___ |__| | |    |    |___ 
+                    |__| |    |__/ |  |  |  |___     \/  |___ |  | | |___ |___ |___ 
+                                                                
+                    Select a detail that you want to update.
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = inventory.ViewVehicleDetails(username, file, choice);
             if (Options[0] != "")
             {
                 UserInterface VAV = new UserInterface(Prompt, Options);
                 string detailchoice = VAV.RunUserInterfaceString("all");
-                if (detailchoice != "Go back to Main Menu")
+                if (detailchoice != "Go back and select another vehicle")
                 {
                     string[] detailchoicepart = detailchoice.Split(": ");
                     return detailchoicepart[0];
@@ -219,27 +226,27 @@ namespace Peak_Performance_Vehicle_Rentals
         public string VehicleTypeChoice() //CHOICE METHOD 7: vehicle type
         {
             Prompt = "Choose vehicle type";
-            Options = new string[] { "Car", "Motorcycle" };
+            Options = new string[] { "Car", "Motorcycle", "Go back to Manage Vehicles Menu"};
 
             UserInterface VT = new UserInterface(Prompt, Options);
-            int choiceVT = VT.RunUserInterface("all");
+            int choiceVT = VT.RunUserInterface("vehicle type");
 
             if (choiceVT == 0)
             {
-                Prompt = "Choose Car type";
+                Prompt = "Choose car type";
                 string[] optionVTCar = { "Sedan", "SUV", "Coupe", "Convertible", "Hatchback", "Minivan", "Pickup Truck", "Limousine", "Sports Car", "Luxury Car" };
 
                 UserInterface VTCar = new UserInterface(Prompt, optionVTCar);
-                return $"Car-{VTCar.RunUserInterfaceString("all")}";
+                return $"Car-{VTCar.RunUserInterfaceString("car type")}";
 
             }
             else if (choiceVT == 1)
             {
-                Prompt = "Choose Motorcycle type: ";
+                Prompt = "Choose motorcycle type";
                 string[] optionVTMotorcycle = { "Underbone", "Scooter", "Naked", "Motocross", "Cafe Racer", "Chopper", "Tourer", "Sports Bike" };
 
                 UserInterface VTMotorcycle = new UserInterface(Prompt, optionVTMotorcycle);
-                return $"Motorcycle-{VTMotorcycle.RunUserInterfaceString("all")}";
+                return $"Motorcycle-{VTMotorcycle.RunUserInterfaceString("motorcycle type")}";
 
             }
             else
@@ -251,15 +258,7 @@ namespace Peak_Performance_Vehicle_Rentals
             Options = new string[] { "Gasoline", "Diesel", "Electric", "Hybrid", "Hydrogen" };
 
             UserInterface VF = new UserInterface(Prompt, Options);
-            return VF.RunUserInterfaceString("all");
-        }
-        public string VehicleStatusChoice() //CHOICE METHOD 9: vehicle status
-        {
-            Prompt = "Choose vehicle status";
-            Options = new string[] { "Available", "In Maintenance", "Reserved" };
-
-            UserInterface VS = new UserInterface(Prompt, Options);
-            return VS.RunUserInterfaceString("all");
+            return VF.RunUserInterfaceString("vehicle fuel");
         }
         public int ManageUserChoice() //CHOICE METHOD 10: manage user
         {
@@ -269,7 +268,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     |  | |  | | \| |  | |__] |___    |__| ___] |___ |  \ 
 
                     (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
-            Options = new string[] { "View account details", "Update account details", "Delete account", "Go back to main menu" };
+            Options = new string[] { "View account details", "Update account details", "Delete account", "Go back to Main Menu" };
 
             UserInterface MM = new UserInterface(Prompt, Options);
             int choice = MM.RunUserInterface("all");
@@ -278,11 +277,18 @@ namespace Peak_Performance_Vehicle_Rentals
         public string UpdateUserDetailsChoice(string username, FilePathManager file) //CHOICE METHOD 11: update user details
         {
             Inventory inventory = new Inventory();
-            Prompt = "Select a detail that you want to change";
+            Prompt = @"
+                    _  _ ___  ___  ____ ___ ____    ___  ____ ___ ____ _ _    ____ 
+                    |  | |__] |  \ |__|  |  |___    |  \ |___  |  |__| | |    [___
+                    |__| |    |__/ |  |  |  |___    |__/ |___  |  |  | | |___ ___] 
+
+                    Select a detail that you want to change
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
             Options = inventory.ViewUserDetails(username, file);
             UserInterface UD = new UserInterface(Prompt, Options);
             string detailchoice = UD.RunUserInterfaceString("all");
-            if (detailchoice != "Go back to Main Menu")
+            if (detailchoice != "Go back to Manage User Menu")
             {
                 string[] detailchoicepart = detailchoice.Split(": ");
                 return detailchoicepart[0];
@@ -292,8 +298,16 @@ namespace Peak_Performance_Vehicle_Rentals
         public int DeleteUserChoice(string username, FilePathManager file) //CHOICE METHOD 12: delete user
         {
             Inventory inventory = new Inventory();
-            Prompt = "Are you sure that you want to delete your account? This will also remove all vehicles owned by you.";
-            Options = new string[] { "I AM SURE IN DELETING MY ACCOUNT", "Go back to main menu" };
+            Prompt = @"
+                    ___  ____ _    ____ ___ ____    _  _ ____ ____ ____ 
+                    |  \ |___ |    |___  |  |___    |  | [__  |___ |__/ 
+                    |__/ |___ |___ |___  |  |___    |__| ___] |___ |  \ 
+        
+                    Are you sure that you want to delete your account? This will also remove all vehicles owned by you.
+                    PROCEED WITH CAUTION! 
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+            Options = new string[] { "I AM SURE IN DELETING MY ACCOUNT", "Go back to Manage User Menu" };
             UserInterface DU = new UserInterface(Prompt, Options);
             int choice = DU.RunUserInterface("all");
             return choice;

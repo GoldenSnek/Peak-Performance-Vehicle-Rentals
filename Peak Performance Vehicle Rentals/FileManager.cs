@@ -193,7 +193,6 @@ namespace Peak_Performance_Vehicle_Rentals
                     writer.WriteLine($"Pickup and Return Location: {details[9]}");
                     writer.WriteLine($"Daily Rental Price: {details[10]}");
                     writer.WriteLine($"Hourly Rental Price: {details[11]}");
-                    writer.WriteLine($"Status: {details[12]}");
                     writer.WriteLine($"Vehicle uploaded to system on: {creation[0]}");
                 }
             }
@@ -514,7 +513,6 @@ namespace Peak_Performance_Vehicle_Rentals
                                     Console.WriteLine(lines[j]);
                                 }
                                 Console.WriteLine("");
-                                UserInterface.WaitForKey(3, 0, "Press any key if you are done looking at the receipt");
                             }
                         }
                     }
