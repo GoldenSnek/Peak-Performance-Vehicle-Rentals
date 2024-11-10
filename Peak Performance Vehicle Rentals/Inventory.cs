@@ -128,13 +128,55 @@ namespace Peak_Performance_Vehicle_Rentals
             details[3] = "Go back to Manage User Menu";
             return details;
         }
-        public string[] ViewPendingRental(string username, FilePathManager file) //MAIN METHOD ?
+        public string ViewPendingRentalClient(string username, FilePathManager file) //MAIN METHOD ?
+        {
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", $"*.txt");
+            string vehicle = "None";
+            string name = "";
+            string brand = "";
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                string line;
+                using (var reader = new StreamReader(files[i]))
+                {
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("Name:"))
+                        {
+                            string[] nameParts = line.Split(": ");
+                            name = nameParts[1];
+
+                            if (name == username)
+                            {
+                                string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                                string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
+                                string lineBrand;
+                                using (var readerBrand = new StreamReader(files[i]))
+                                {
+                                    while ((lineBrand = readerBrand.ReadLine()) != null)
+                                    {
+                                        if (lineBrand.StartsWith("Brand:"))
+                                        {
+                                            string[] brandParts = lineBrand.Split(": ");
+                                            brand = brandParts[1];
+                                        }
+                                    }
+                                    vehicle = $"{brand} {parts[0]}";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return vehicle;
+        }
+        public string[] ViewPendingRentalOwner(string username, FilePathManager file) //MAIN METHOD ?
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", $"*.txt");
             List<string> vehicles = new List<string>(); //identify vehicles
             string name = "";
             string brand = "";
-            int ctr = 0;
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -165,13 +207,11 @@ namespace Peak_Performance_Vehicle_Rentals
                                     }
                                     vehicles.Add($"{brand} {parts[0]}");
                                 }
-                                ctr++;
                             }
                         }
                     }
                 }
             }
-
             vehicles.Add("Go back to Rental Details Menu");
             return vehicles.ToArray();
         }
@@ -210,7 +250,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return vehicles;
         }
-        public string CurrentRental(string username, FilePathManager file) //MAIN METHOD ?
+        public string ViewCurrentRental(string username, FilePathManager file) //MAIN METHOD ?
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
             string vehicle = "";
@@ -222,7 +262,6 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
                 string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
-
 
                 string line;
                 using (var reader = new StreamReader(files[i])) //find the brand to be included in the display
@@ -241,16 +280,6 @@ namespace Peak_Performance_Vehicle_Rentals
                             if (client == username) //car is owned by user a.k.a. me
                             {
                                 vehicle = $"{brand} {parts[0]}";
-                                Console.Clear();
-                                string Prompt = @$"
-                                                ____ _  _ ____ ____ ____ _  _ ___ _    _   _    ____ ____ _  _ ___ _ _  _ ____ 
-                                                |    |  | |__/ |__/ |___ |\ |  |  |     \_/     |__/ |___ |\ |  |  | |\ | | __ 
-                                                |___ |__| |  \ |  \ |___ | \|  |  |___   |      |  \ |___ | \|  |  | | \| |__] 
-
-                                                                               {vehicle}
-                                                                ";
-
-                                UserInterface.CenterVerbatimText(Prompt);
                             }
                         }
                     }

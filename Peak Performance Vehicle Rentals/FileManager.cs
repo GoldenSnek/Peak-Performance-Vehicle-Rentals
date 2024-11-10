@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
@@ -19,15 +20,22 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         public FilePathManager() //CONSTRUCTOR for creating necessary directories for storing the data
         {
-            BaseDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Peak Performance Vehicle Rentals");
-            Directory.CreateDirectory(BaseDirectory);
-            Directory.CreateDirectory(BaseDirectory + "\\UserData");
-            Directory.CreateDirectory(BaseDirectory + "\\VehicleData");
-            Directory.CreateDirectory(BaseDirectory + "\\RentalData\\PendingRental");
-            Directory.CreateDirectory(BaseDirectory + "\\RentalData\\ApprovedRental");
-            if (!File.Exists(BaseDirectory + "\\Users.txt"))
+            try
             {
-                StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt");
+                BaseDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Peak Performance Vehicle Rentals");
+                Directory.CreateDirectory(BaseDirectory);
+                Directory.CreateDirectory(BaseDirectory + "\\UserData");
+                Directory.CreateDirectory(BaseDirectory + "\\VehicleData");
+                Directory.CreateDirectory(BaseDirectory + "\\RentalData\\PendingRental");
+                Directory.CreateDirectory(BaseDirectory + "\\RentalData\\ApprovedRental");
+                if (!File.Exists(BaseDirectory + "\\Users.txt"))
+                {
+                    StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt");
+                }
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
         internal string GetUserFilePath(string username) //METHOD for accessing user filepath
@@ -37,10 +45,6 @@ namespace Peak_Performance_Vehicle_Rentals
         internal string GetVehicleFilePath(string model, string type, string username) //METHOD for accessing vehicle filepath
         {
             return BaseDirectory + $"\\VehicleData\\{model}-{type}-{username}.txt";
-        }
-        internal string GetRentalFilePath(string model, string type, string username) //METHOD for accessing vehicle filepath
-        {
-            return BaseDirectory + $"\\RentalData\\{username}.txt";
         }
     }
 
@@ -54,16 +58,22 @@ namespace Peak_Performance_Vehicle_Rentals
             string accountCreationDate = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
             string[] creation = accountCreationDate.Split(' ');
 
-            if (!File.Exists(filePath))
-            {
-                using (var writer = new StreamWriter(filePath)) //create the file and write the username and password
+            try {
+                if (!File.Exists(filePath))
                 {
-                    writer.WriteLine($"Username: {username}");
-                    writer.WriteLine($"Email Address: -no data-");
-                    writer.WriteLine($"Date of Birth (MM/DD/YY): -no data-");
-                    writer.WriteLine($"Address: -no data-");
-                    writer.WriteLine($"Account creation date: {creation[0]}");
+                    using (var writer = new StreamWriter(filePath)) //create the file and write the username and password
+                    {
+                        writer.WriteLine($"Username: {username}");
+                        writer.WriteLine($"Email Address: -no data-");
+                        writer.WriteLine($"Date of Birth (MM/DD/YY): -no data-");
+                        writer.WriteLine($"Home Address: -no data-");
+                        writer.WriteLine($"Account creation date: {creation[0]}");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
 
@@ -72,74 +82,105 @@ namespace Peak_Performance_Vehicle_Rentals
             string filePath = GetUserFilePath(username);
             string tempPath = BaseDirectory + "\\Temp.txt";
 
-            using (StreamReader reader = new StreamReader(filePath))
-            using (StreamWriter writer = new StreamWriter(tempPath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+            try {
+                using (StreamReader reader = new StreamReader(filePath))
+                using (StreamWriter writer = new StreamWriter(tempPath))
                 {
-                    // Check if the current line starts with the search line
-                    if (line.StartsWith(detailchoice))
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        writer.WriteLine($"{detailchoice}: {newdetail}"); // Write the new line to the temp file
-                    }
-                    else
-                    {
-                        writer.WriteLine(line); // Write the original line to the temp file
+                        // Check if the current line starts with the search line
+                        if (line.StartsWith(detailchoice))
+                        {
+                            writer.WriteLine($"{detailchoice}: {newdetail}"); // Write the new line to the temp file
+                        }
+                        else
+                        {
+                            writer.WriteLine(line); // Write the original line to the temp file
+                        }
                     }
                 }
+                //replace the original file with the updated temp file
+                File.Delete(filePath); //delete the original file
+                File.Move(tempPath, filePath);
+                File.Delete(tempPath);
+
+                UserInterface.WriteColoredText(3, 1, "green", "User details has been successfuly updated!");
             }
-
-            //replace the original file with the updated temp file
-            File.Delete(filePath); //delete the original file
-            File.Move(tempPath, filePath);
-            File.Delete(tempPath);
-
-            Console.WriteLine("User details has been successfuly updated!"); Thread.Sleep(1000);
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+            }
         }
 
-        public void DeleteUserFile(string username) //METHOD for deleting user file + vehicle files linked with the user
+        public int DeleteUserFile(string username, FilePathManager file) //METHOD for deleting user file + vehicle files linked with the user
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*{username}.txt");
             string filePath = BaseDirectory + "\\Users.txt";
             string tempPath = BaseDirectory + "\\Temp.txt";
 
-            //delete the user line from the main user file
-            using (StreamReader reader = new StreamReader(filePath))
-            using (StreamWriter writer = new StreamWriter(tempPath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+            try {
+
+                //initial check kung naay vehicle in the renting process from the side of the owner, or the client
+                Inventory inventory = new Inventory();
+                //owner
+                string[] pending = inventory.ViewPendingRentalOwner(username, file);
+                string[] approved = inventory.ViewApprovedRental(username, file);
+                //client
+                string currentpending = inventory.ViewPendingRentalClient(username, file);
+                string currentapproved = inventory.ViewCurrentRental(username, file);
+
+                if (pending.Length <= 1 && approved.Length < 1 && currentpending == "None" && currentapproved == "")
                 {
-                    // Check if the current line starts with the search line
-                    if (!line.StartsWith(username))
+                    //delete the user line from the main user file
+                    using (StreamReader reader = new StreamReader(filePath))
+                    using (StreamWriter writer = new StreamWriter(tempPath))
                     {
-                        writer.WriteLine(line); // Write the original line to the temp file
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            // Check if the current line starts with the search line
+                            if (!line.StartsWith(username))
+                            {
+                                writer.WriteLine(line); // Write the original line to the temp file
+                            }
+                        }
                     }
+
+                    //replace the original file with the updated temp file
+                    File.Delete(filePath); //delete the original file
+                    File.Move(tempPath, filePath);
+                    File.Delete(tempPath);
+
+                    //delete the actual user file and details
+                    if (File.Exists(GetUserFilePath(username)))
+                    {
+                        File.Delete(GetUserFilePath(username));
+                    }
+
+                    //delete all the vehicles of the user
+                    for (int i = 0; i < files.Length; i++)
+                    {
+                        if (File.Exists(files[i]))
+                        {
+                            File.Delete(files[i]);
+                        }
+                    }
+                    Console.WriteLine("User Account has been successfully deleted!"); Thread.Sleep(1000);
+                    Console.WriteLine("Returning to login screen..."); Thread.Sleep(3000);
+                    return 1;
                 }
-            }
-
-            //replace the original file with the updated temp file
-            File.Delete(filePath); //delete the original file
-            File.Move(tempPath, filePath);
-            File.Delete(tempPath);
-
-            //delete the actual user file and details
-            if (File.Exists(GetUserFilePath(username)))
-            {
-                File.Delete(GetUserFilePath(username));
-            }
-
-            //delete all the vehicles of the user
-            for (int i = 0; i < files.Length; i++)
-            {
-                if (File.Exists(files[i]))
+                else
                 {
-                    File.Delete(files[i]);
+                    Console.WriteLine("Make sure that there is no ongoing rental process before deleting your account"); Thread.Sleep(3000);
+                    return 0;
                 }
             }
-            Console.WriteLine("User Account has been successfully deleted!"); Thread.Sleep(1000);
-            Console.WriteLine("Returning to login screen..."); Thread.Sleep(1000);
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+                return 0;
+            }
         }
 
         public void DisplayUserFile(string type, string username) //METHOD for displaying info inside the user file
@@ -148,17 +189,24 @@ namespace Peak_Performance_Vehicle_Rentals
             string content = File.ReadAllText(files[0]);
             string[] lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
-            UserInterface.CenterTextMargin(3, 0);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            if (type == "user")
-                Console.WriteLine("User Details");
-            else if (type == "vehicle")
-                Console.WriteLine("Vehicle Owner");
-            Console.ResetColor();
-            for (int j = 0; j < lines.Length; j++)
+            try
             {
                 UserInterface.CenterTextMargin(3, 0);
-                Console.WriteLine(lines[j]);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                if (type == "user")
+                    Console.WriteLine("User Details");
+                else if (type == "vehicle")
+                    Console.WriteLine("Vehicle Owner");
+                Console.ResetColor();
+                for (int j = 0; j < lines.Length; j++)
+                {
+                    UserInterface.CenterTextMargin(3, 0);
+                    Console.WriteLine(lines[j]);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
     }
@@ -172,29 +220,36 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] type = details[0].Split("-");
 
             // Check if the file already exists
-            if (!File.Exists(filePath))
+            try
             {
-                string accountCreationDate = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
-                string[] creation = accountCreationDate.Split(' ');
-
-                // Create the file and write the vehicle name
-                using (var writer = new StreamWriter(filePath))
+                if (!File.Exists(filePath))
                 {
-                    writer.WriteLine($"Owner: {username}");
-                    writer.WriteLine($"Vehicle Type: {type[0]} ({type[1]})");
-                    writer.WriteLine($"Brand: {details[1]}");
-                    writer.WriteLine($"Model: {details[2]}");
-                    writer.WriteLine($"Manufacture Year: {details[3]}");
-                    writer.WriteLine($"License Plate: {details[4]}");
-                    writer.WriteLine($"Color: {details[5]}");
-                    writer.WriteLine($"Fuel Type: {details[6]}");
-                    writer.WriteLine($"Seating Capacity: {details[7]}");
-                    writer.WriteLine($"Mileage: {details[8]}");
-                    writer.WriteLine($"Pickup and Return Location: {details[9]}");
-                    writer.WriteLine($"Daily Rental Price: {details[10]}");
-                    writer.WriteLine($"Hourly Rental Price: {details[11]}");
-                    writer.WriteLine($"Vehicle uploaded to system on: {creation[0]}");
+                    string accountCreationDate = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+                    string[] creation = accountCreationDate.Split(' ');
+
+                    // Create the file and write the vehicle name
+                    using (var writer = new StreamWriter(filePath))
+                    {
+                        writer.WriteLine($"Owner: {username}");
+                        writer.WriteLine($"Vehicle Type: {type[0]} ({type[1]})");
+                        writer.WriteLine($"Brand: {details[1]}");
+                        writer.WriteLine($"Model: {details[2]}");
+                        writer.WriteLine($"Manufacture Year: {details[3]}");
+                        writer.WriteLine($"License Plate: {details[4]}");
+                        writer.WriteLine($"Color: {details[5]}");
+                        writer.WriteLine($"Fuel Type: {details[6]}");
+                        writer.WriteLine($"Seating Capacity: {details[7]}");
+                        writer.WriteLine($"Mileage: {details[8]}");
+                        writer.WriteLine($"Pickup and Return Location: {details[9]}");
+                        writer.WriteLine($"Daily Rental Price: {details[10]}");
+                        writer.WriteLine($"Hourly Rental Price: {details[11]}");
+                        writer.WriteLine($"Vehicle uploaded to system on: {creation[0]}");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
 
@@ -203,46 +258,59 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", $"*{username}.txt");
             string tempPath = BaseDirectory + "\\Temp.txt";
 
-            using (StreamReader reader = new StreamReader(files[choice]))
-            using (StreamWriter writer = new StreamWriter(tempPath))
+            try
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                using (StreamReader reader = new StreamReader(files[choice]))
+                using (StreamWriter writer = new StreamWriter(tempPath))
                 {
-                    // Check if the current line starts with the search line
-                    if (line.StartsWith(detailchoice))
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        writer.WriteLine($"{detailchoice}: {newdetail}"); // Write the new line to the temp file
-                    }
-                    else
-                    {
-                        writer.WriteLine(line); // Write the original line to the temp file
+                        // Check if the current line starts with the search line
+                        if (line.StartsWith(detailchoice))
+                        {
+                            writer.WriteLine($"{detailchoice}: {newdetail}"); // Write the new line to the temp file
+                        }
+                        else
+                        {
+                            writer.WriteLine(line); // Write the original line to the temp file
+                        }
                     }
                 }
+                //replace the original file with the updated temp file
+                File.Delete(files[choice]); //delete the original file
+                File.Move(tempPath, files[choice]);
+                File.Delete(tempPath);
+
+                UserInterface.WriteColoredText(3, 1, "green", "Vehicle details has been successfuly updated!");
             }
-
-            //replace the original file with the updated temp file
-            File.Delete(files[choice]); //delete the original file
-            File.Move(tempPath, files[choice]);
-            File.Delete(tempPath);
-
-            Console.WriteLine("Vehicle has been successfuly updated!"); Thread.Sleep(1000);
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+            }
         }
 
         public void DeleteVehicleFile(string username, FilePathManager file, int choice) //METHOD for deleting vehicle file
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*{username}.txt");
 
-            //delete the file
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                if (choice == i)
-                    if (File.Exists(files[i]))
-                    {
-                        File.Delete(files[i]);
-                        Console.WriteLine("Vehicle has been deleted from the inventory!"); Thread.Sleep(1000);
-                        break;
-                    }
+                //delete the file
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (choice == i)
+                        if (File.Exists(files[i]))
+                        {
+                            File.Delete(files[i]);
+                            UserInterface.WriteColoredText(3, 0, "green", "Vehicle has been successfully deleted from the inventory!");
+                            break;
+                        }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
 
@@ -250,70 +318,79 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", "*.txt");
             string[] vehicleRentDetails = new string[3]; //0 is daily, 1 is hourly, 2 is owner
-            for (int i = 0; i < files.Length; i++)
-            {
-                if (DVchoice == i)
-                {
-                    Console.Clear();
-                    string content = File.ReadAllText(files[i]);
-                    string[] lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-                    string[] details = new string[2];
 
-                    using (StreamReader reader = new StreamReader(files[i]))
+            try
+            {
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (DVchoice == i)
                     {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
+                        Console.Clear();
+                        string content = File.ReadAllText(files[i]);
+                        string[] lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                        string[] details = new string[2];
+
+                        using (StreamReader reader = new StreamReader(files[i]))
                         {
-                            //pa chuy chuy
-                            if (line.StartsWith("Brand"))
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
                             {
-                                string[] lineParts = line.Split(": ");
-                                details[0] = lineParts[1];
-                            }
-                            if (line.StartsWith("Model"))
-                            {
-                                string[] lineParts = line.Split(": ");
-                                details[1] = lineParts[1];
-                            }
-                            if (line.StartsWith("Daily"))
-                            {
-                                string[] lineParts = line.Split(" ");
-                                vehicleRentDetails[0] = lineParts[3];
-                            }
-                            if (line.StartsWith("Hourly"))
-                            {
-                                string[] lineParts = line.Split(" ");
-                                vehicleRentDetails[1] = lineParts[3];
+                                //pa chuy chuy
+                                if (line.StartsWith("Brand"))
+                                {
+                                    string[] lineParts = line.Split(": ");
+                                    details[0] = lineParts[1];
+                                }
+                                if (line.StartsWith("Model"))
+                                {
+                                    string[] lineParts = line.Split(": ");
+                                    details[1] = lineParts[1];
+                                }
+                                if (line.StartsWith("Daily"))
+                                {
+                                    string[] lineParts = line.Split(" ");
+                                    vehicleRentDetails[0] = lineParts[3];
+                                }
+                                if (line.StartsWith("Hourly"))
+                                {
+                                    string[] lineParts = line.Split(" ");
+                                    vehicleRentDetails[1] = lineParts[3];
+                                }
                             }
                         }
-                    }
 
-                    string Prompt = @$"___  ____ ___ ____ _ _    ____ 
+                        string Prompt = @$"
+                                       ___  ____ ___ ____ _ _    ____ 
                                        |  \ |___  |  |__| | |    [___
                                        |__/ |___  |  |  | | |___ ___]
 
                                        {details[0]} {details[1]}
                                                                 ";
 
-                    UserInterface.CenterVerbatimText(Prompt);
+                        UserInterface.CenterVerbatimText(Prompt);
 
-                    UserInterface.CenterTextMargin(3, 0);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Vehicle Details");
-                    Console.ResetColor();
-                    for (int j = 0; j < lines.Length; j++)
-                    {
                         UserInterface.CenterTextMargin(3, 0);
-                        Console.WriteLine(lines[j]);
-                    }
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Vehicle Details");
+                        Console.ResetColor();
+                        for (int j = 0; j < lines.Length; j++)
+                        {
+                            UserInterface.CenterTextMargin(3, 0);
+                            Console.WriteLine(lines[j]);
+                        }
 
-                    //also display the user details
-                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                    string[] username = fileName.Split("-");
-                    UserFile owner = new UserFile();
-                    owner.DisplayUserFile("vehicle", username[3]);
-                    vehicleRentDetails[2] = username[3];
+                        //also display the user details
+                        string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                        string[] username = fileName.Split("-");
+                        UserFile owner = new UserFile();
+                        owner.DisplayUserFile("vehicle", username[3]);
+                        vehicleRentDetails[2] = username[3];
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
             return vehicleRentDetails;
         }
@@ -321,23 +398,30 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", "*.txt");
 
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                if (choice == i)
+                for (int i = 0; i < files.Length; i++)
                 {
-                    //append
-                    using (StreamWriter writer = new StreamWriter(files[i], true)) // 'true' for append mode
+                    if (choice == i)
                     {
-                        writer.WriteLine("Details of the client");
-                        writer.WriteLine($"Name: {username}");
-                        writer.WriteLine($"Number of days/hours the vehicle will be rented: {rentDetails[0]}");
-                        writer.WriteLine($"Total price: {rentDetails[1]}");
-                        writer.WriteLine($"Additional information: {rentDetails[2]}");
-                    }
+                        //append
+                        using (StreamWriter writer = new StreamWriter(files[i], true)) // 'true' for append mode
+                        {
+                            writer.WriteLine("Details of the client");
+                            writer.WriteLine($"Name: {username}");
+                            writer.WriteLine($"Number of days/hours the vehicle will be rented: {rentDetails[0]}");
+                            writer.WriteLine($"Total price: {rentDetails[1]}");
+                            writer.WriteLine($"Additional information: {rentDetails[2]}");
+                        }
 
-                    File.Move(files[i], BaseDirectory + $"\\RentalData\\PendingRental\\{Path.GetFileName(files[i])}");
-                    Console.WriteLine("waiting for the owners approval"); Thread.Sleep(1000);
+                        File.Move(files[i], BaseDirectory + $"\\RentalData\\PendingRental\\{Path.GetFileName(files[i])}");
+                        UserInterface.WriteColoredText(3, 1, "green", "Please wait patiently for the owners approval.");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
 
@@ -345,66 +429,73 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\RentalData\\PendingRental", $"*{username}.txt");
 
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                if (i == choice)
+                for (int i = 0; i < files.Length; i++)
                 {
-                    //create a reciept
-                    string[] lines = File.ReadAllLines(files[i]);
-
-                    // Assuming we already have the details in the lines variable
-                    string owner = ExtractValue(lines, "Owner:");
-                    string vehicleType = ExtractValue(lines, "Vehicle Type:");
-                    string brand = ExtractValue(lines, "Brand:");
-                    string model = ExtractValue(lines, "Model:");
-                    string year = ExtractValue(lines, "Manufacture Year:");
-                    string licensePlate = ExtractValue(lines, "License Plate:");
-                    string color = ExtractValue(lines, "Color:");
-                    string fuelType = ExtractValue(lines, "Fuel Type:");
-                    string seatingCapacity = ExtractValue(lines, "Seating Capacity:");
-                    string mileage = ExtractValue(lines, "Mileage:");
-                    string dailyPrice = ExtractValue(lines, "Daily Rental Price:");
-                    string clientName = ExtractValue(lines, "Name:"); // Assuming this is the client's name
-                    string rentalDuration = ExtractValue(lines, "Number of days/hours the vehicle will be rented:"); // As provided in the client details
-                    string totalPrice = ExtractValue(lines, "Total price:"); // As provided
-                    string additionalInfo = ExtractValue(lines, "Additional information:"); // Additional information
-
-                    //delete details of the client
-                    // Find the index of the line containing "Details of the client"
-                    int detailsIndex = Array.IndexOf(lines, "Details of the client");
-
-                    // Create a new array to hold the lines to keep
-                    string[] newLines = new string[detailsIndex];
-
-                    // Copy lines up to and including "Details of the client"
-                    Array.Copy(lines, newLines, detailsIndex);
-
-                    // Write the updated lines back to the file
-                    File.WriteAllLines(files[i], newLines);
-
-                    //append
-                    using (StreamWriter writer = new StreamWriter(files[i], true)) // 'true' for append mode
+                    if (i == choice)
                     {
-                        writer.WriteLine("Receipt");
-                        writer.WriteLine("   PEAK PERFORMANCE VEHICLE RENTALS    ");
-                        writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-                        writer.WriteLine("          Vehicle Information          ");
-                        writer.WriteLine($"Vehicle Owner: {owner}");
-                        writer.WriteLine($"Vehicle Name: {brand} {model} {year}");
-                        writer.WriteLine($"Type: {vehicleType}");
-                        writer.WriteLine($"License Plate: {licensePlate}");
-                        writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-                        writer.WriteLine("            Client Information         ");
-                        writer.WriteLine($"Name: {clientName}");
-                        writer.WriteLine($"Rental Duration: {rentalDuration}");
-                        writer.WriteLine($"Total Price: {totalPrice}");
-                        writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-                        writer.WriteLine("   Show the receipt when you pickup    ");
-                        writer.WriteLine("  or return the vehicle to the owner   ");
-                    }
+                        //create a reciept
+                        string[] lines = File.ReadAllLines(files[i]);
 
-                    File.Move(files[i], BaseDirectory + $"\\RentalData\\ApprovedRental\\{Path.GetFileName(files[i])}");
+                        // Assuming we already have the details in the lines variable
+                        string owner = ExtractValue(lines, "Owner:");
+                        string vehicleType = ExtractValue(lines, "Vehicle Type:");
+                        string brand = ExtractValue(lines, "Brand:");
+                        string model = ExtractValue(lines, "Model:");
+                        string year = ExtractValue(lines, "Manufacture Year:");
+                        string licensePlate = ExtractValue(lines, "License Plate:");
+                        string color = ExtractValue(lines, "Color:");
+                        string fuelType = ExtractValue(lines, "Fuel Type:");
+                        string seatingCapacity = ExtractValue(lines, "Seating Capacity:");
+                        string mileage = ExtractValue(lines, "Mileage:");
+                        string dailyPrice = ExtractValue(lines, "Daily Rental Price:");
+                        string clientName = ExtractValue(lines, "Name:"); // Assuming this is the client's name
+                        string rentalDuration = ExtractValue(lines, "Number of days/hours the vehicle will be rented:"); // As provided in the client details
+                        string totalPrice = ExtractValue(lines, "Total price:"); // As provided
+                        string additionalInfo = ExtractValue(lines, "Additional information:"); // Additional information
+
+                        //delete details of the client
+                        // Find the index of the line containing "Details of the client"
+                        int detailsIndex = Array.IndexOf(lines, "Details of the client");
+
+                        // Create a new array to hold the lines to keep
+                        string[] newLines = new string[detailsIndex];
+
+                        // Copy lines up to and including "Details of the client"
+                        Array.Copy(lines, newLines, detailsIndex);
+
+                        // Write the updated lines back to the file
+                        File.WriteAllLines(files[i], newLines);
+
+                        //append
+                        using (StreamWriter writer = new StreamWriter(files[i], true)) // 'true' for append mode
+                        {
+                            writer.WriteLine("Receipt");
+                            writer.WriteLine("   PEAK PERFORMANCE VEHICLE RENTALS    ");
+                            writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+                            writer.WriteLine("          Vehicle Information          ");
+                            writer.WriteLine($"Vehicle Owner: {owner}");
+                            writer.WriteLine($"Vehicle Name: {brand} {model} {year}");
+                            writer.WriteLine($"Type: {vehicleType}");
+                            writer.WriteLine($"License Plate: {licensePlate}");
+                            writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+                            writer.WriteLine("            Client Information         ");
+                            writer.WriteLine($"Name: {clientName}");
+                            writer.WriteLine($"Rental Duration: {rentalDuration}");
+                            writer.WriteLine($"Total Price: {totalPrice}");
+                            writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+                            writer.WriteLine("   Show the receipt when you pickup    ");
+                            writer.WriteLine("  or return the vehicle to the owner   ");
+                        }
+
+                        File.Move(files[i], BaseDirectory + $"\\RentalData\\ApprovedRental\\{Path.GetFileName(files[i])}");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
         static string ExtractValue(string[] lines, string key) //supporting
@@ -423,27 +514,25 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\RentalData\\PendingRental", $"*{username}.txt");
 
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                if (i == choice)
+                for (int i = 0; i < files.Length; i++)
                 {
-                    // Read all lines from the file
-                    string[] lines = File.ReadAllLines(files[i]);
+                    if (i == choice)
+                    {
+                        string[] lines = File.ReadAllLines(files[i]);
+                        int detailsIndex = Array.IndexOf(lines, "Details of the client");
+                        string[] newLines = new string[detailsIndex];
 
-                    // Find the index of the line containing "Details of the client"
-                    int detailsIndex = Array.IndexOf(lines, "Details of the client");
-
-                    // Create a new array to hold the lines to keep
-                    string[] newLines = new string[detailsIndex];
-
-                    // Copy lines up to and including "Details of the client"
-                    Array.Copy(lines, newLines, detailsIndex);
-
-                    // Write the updated lines back to the file
-                    File.WriteAllLines(files[i], newLines);
-
-                    File.Move(files[i], BaseDirectory + $"\\VehicleData\\{Path.GetFileName(files[i])}");
+                        Array.Copy(lines, newLines, detailsIndex);
+                        File.WriteAllLines(files[i], newLines);
+                        File.Move(files[i], BaseDirectory + $"\\VehicleData\\{Path.GetFileName(files[i])}");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
 
@@ -452,27 +541,34 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] files = Directory.GetFiles(BaseDirectory + "\\RentalData\\PendingRental", $"*{username}.txt");
             string[] lines = new string[20];
 
-            // Read all lines from the file
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                if (i == choice)
+                // Read all lines from the file
+                for (int i = 0; i < files.Length; i++)
                 {
-                    lines = File.ReadAllLines(files[i]);
+                    if (i == choice)
+                    {
+                        lines = File.ReadAllLines(files[i]);
+                    }
                 }
-            }
-            // Find the index of the line containing "Details of the client"
-            int detailsIndex = Array.IndexOf(lines, "Details of the client");
+                // Find the index of the line containing "Details of the client"
+                int detailsIndex = Array.IndexOf(lines, "Details of the client");
 
-            UserInterface.CenterTextMargin(3, 0);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Details of the client");
-            Console.ResetColor();
-            for (int i = detailsIndex + 1; i < lines.Length; i++)
-            {
                 UserInterface.CenterTextMargin(3, 0);
-                Console.WriteLine(lines[i]);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Details of the client");
+                Console.ResetColor();
+                for (int i = detailsIndex + 1; i < lines.Length; i++)
+                {
+                    UserInterface.CenterTextMargin(3, 0);
+                    Console.WriteLine(lines[i]);
+                }
+                Console.WriteLine("");
             }
-            Console.WriteLine("");
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+            }
         }
 
         public void DisplayRecieptFile(string username, FilePathManager file)
@@ -480,43 +576,50 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
             string client = "";
 
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
-
-                string line;
-                using (var reader = new StreamReader(files[i])) //find the brand to be included in the display
+                for (int i = 0; i < files.Length; i++)
                 {
-                    while ((line = reader.ReadLine()) != null)
+                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                    string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
+
+                    string line;
+                    using (var reader = new StreamReader(files[i])) //find the brand to be included in the display
                     {
-                        if (line.StartsWith("Name:"))
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            string[] clientParts = line.Split(": ");
-                            client = clientParts[1];
-                            if (client == username) //car is owned by user a.k.a. me
+                            if (line.StartsWith("Name:"))
                             {
-                                string[] lines = new string[20];
-
-                                lines = File.ReadAllLines(files[i]);
-
-                                // Find the index of the line containing "Details of the client"
-                                int detailsIndex = Array.IndexOf(lines, "Receipt");
-
-                                UserInterface.CenterTextMargin(3, 0);
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.WriteLine("Receipt: \n");
-                                Console.ResetColor();
-                                for (int j = detailsIndex + 1; j < lines.Length; j++)
+                                string[] clientParts = line.Split(": ");
+                                client = clientParts[1];
+                                if (client == username) //car is owned by user a.k.a. me
                                 {
+                                    string[] lines = new string[20];
+
+                                    lines = File.ReadAllLines(files[i]);
+
+                                    // Find the index of the line containing "Details of the client"
+                                    int detailsIndex = Array.IndexOf(lines, "Receipt");
+
                                     UserInterface.CenterTextMargin(3, 0);
-                                    Console.WriteLine(lines[j]);
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.WriteLine("Receipt: \n");
+                                    Console.ResetColor();
+                                    for (int j = detailsIndex + 1; j < lines.Length; j++)
+                                    {
+                                        UserInterface.CenterTextMargin(3, 0);
+                                        Console.WriteLine(lines[j]);
+                                    }
+                                    Console.WriteLine("");
                                 }
-                                Console.WriteLine("");
                             }
                         }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
         public void TransferFinishRentFile(string username, FilePathManager file)
@@ -525,45 +628,43 @@ namespace Peak_Performance_Vehicle_Rentals
             string client = "";
             int index = 0;
 
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
-
-                string line;
-                using (var reader = new StreamReader(files[i])) //find the brand to be included in the display
+                for (int i = 0; i < files.Length; i++)
                 {
-                    while ((line = reader.ReadLine()) != null)
+                    string fileName = Path.GetFileNameWithoutExtension(files[i]);
+                    string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
+
+                    string line;
+                    using (var reader = new StreamReader(files[i])) //find the brand to be included in the display
                     {
-                        if (line.StartsWith("Name:"))
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            string[] clientParts = line.Split(": ");
-                            client = clientParts[1];
-                            if (client == username) //car is owned by user a.k.a. me
+                            if (line.StartsWith("Name:"))
                             {
-                                index = i;
-                                break;
+                                string[] clientParts = line.Split(": ");
+                                client = clientParts[1];
+                                if (client == username) //car is owned by user a.k.a. me
+                                {
+                                    index = i;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+                string[] lines = File.ReadAllLines(files[index]);
+                int detailsIndex = Array.IndexOf(lines, "Receipt");
+                string[] newLines = new string[detailsIndex];
+
+                Array.Copy(lines, newLines, detailsIndex);
+                File.WriteAllLines(files[index], newLines);
+                File.Move(files[index], BaseDirectory + $"\\VehicleData\\{Path.GetFileName(files[index])}");
             }
-            // Read all lines from the file
-            string[] lines = File.ReadAllLines(files[index]);
-
-            // Find the index of the line containing "Details of the client"
-            int detailsIndex = Array.IndexOf(lines, "Receipt");
-
-            // Create a new array to hold the lines to keep
-            string[] newLines = new string[detailsIndex];
-
-            // Copy lines up to and including "Details of the client"
-            Array.Copy(lines, newLines, detailsIndex);
-
-            // Write the updated lines back to the file
-            File.WriteAllLines(files[index], newLines);
-
-            File.Move(files[index], BaseDirectory + $"\\VehicleData\\{Path.GetFileName(files[index])}");
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+            }
         }
     }
 }

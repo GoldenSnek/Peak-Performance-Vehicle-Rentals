@@ -125,7 +125,7 @@ namespace Peak_Performance_Vehicle_Rentals
                                 bool VRrunning = true;
                                 do
                                 {
-                                    int VRchoice = choice.RentalDetailsChoice();
+                                    int VRchoice = choice.RentalDetailsChoice(username, file);
                                     switch (VRchoice)
                                     {
                                         case 0:
@@ -137,7 +137,7 @@ namespace Peak_Performance_Vehicle_Rentals
                                             break;
 
                                         case 2:
-                                            MV.CurrentlyRentingVehicles(username, file);
+                                            MV.CurrentlyRentingVehicle(username, file);
                                             break;
 
                                         case 3:

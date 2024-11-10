@@ -82,7 +82,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         CenterTextMargin(3, 8);
                     ctr++;
                     ClearLineRUI(7);
-                    verbatim = false;
+                    verbatim = true;
                 }
 
                 DisplayOptions(verbatim);
@@ -211,7 +211,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(text);
             Console.ResetColor();
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
             UserInterface.ClearLineRUI(1);
             Console.CursorVisible = true;
         }

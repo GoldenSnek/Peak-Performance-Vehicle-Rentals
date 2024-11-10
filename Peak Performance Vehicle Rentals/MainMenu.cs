@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -41,30 +42,44 @@ namespace Peak_Performance_Vehicle_Rentals
                         switch (choiceRent)
                         {
                             case 0:
-                                string[] rentDetails = new string[3];
-                                Choice chooseRent = new Choice();
 
-                                //calculations for rent
-                                int priceCalculation = chooseRent.RentalTimeChoice();
-
-                                if (priceCalculation == 0)
+                                string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
+                                string currentVehicle = inventory.ViewCurrentRental(username, file);
+                                if (pendingVehicle == "None" && currentVehicle == "")
                                 {
-                                    string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
-                                    rentDetails[0] = tempDetails[0];
-                                    rentDetails[1] = tempDetails[1];
-                                }
-                                else if (priceCalculation == 1)
-                                {
-                                    string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
-                                    rentDetails[0] = tempDetails[0];
-                                    rentDetails[1] = tempDetails[1];
-                                }
-                                //extra
-                                rentDetails[2] = AddNote();
+                                    string[] rentDetails = new string[3];
+                                    Choice chooseRent = new Choice();
 
-                                VehicleFile pending = new VehicleFile();
-                                pending.TransferPendingFile(choice, rentDetails, username);
-                                choiceRent = 1;
+                                    //calculations for rent
+                                    int priceCalculation = chooseRent.RentalTimeChoice();
+
+                                    if (priceCalculation == 0)
+                                    {
+                                        string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
+                                        rentDetails[0] = tempDetails[0];
+                                        rentDetails[1] = tempDetails[1];
+                                    }
+                                    else if (priceCalculation == 1)
+                                    {
+                                        string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
+                                        rentDetails[0] = tempDetails[0];
+                                        rentDetails[1] = tempDetails[1];
+                                    }
+                                    //extra
+                                    rentDetails[2] = AddNote();
+
+                                    VehicleFile pending = new VehicleFile();
+                                    pending.TransferPendingFile(choice, rentDetails, username);
+                                    choiceRent = 1;
+                                }
+                                else
+                                {
+                                    UserInterface.CenterTextMargin(3, 0);
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
+                                    UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
+                                    choiceRent = 1;
+                                }
                                 break;
                         }
                     } while (choiceRent != 1);
@@ -169,9 +184,14 @@ namespace Peak_Performance_Vehicle_Rentals
         public void DeleteVehicle(string username, FilePathManager file) //MAIN METHOD 3 for manage vehicles
         {
             Choice choose = new Choice();
-            int choice = choose.ViewOwnedVehiclesChoice(username, file);
-            VehicleFile vehicle = new VehicleFile();
-            vehicle.DeleteVehicleFile(username, file, choice); //Delete vehicle file
+            Inventory inventory = new Inventory();
+            int choice;
+            do
+            {
+                choice = choose.ViewOwnedVehiclesChoice(username, file);
+                VehicleFile vehicle = new VehicleFile();
+                vehicle.DeleteVehicleFile(username, file, choice); //Delete vehicle file
+            } while (choice != inventory.ViewVehicles(username, file).Length - 1);
         }
 
         public void PendingVehicles(string username, FilePathManager file) //MAIN METHOD ???
@@ -183,7 +203,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 int choice = choose.ViewPendingChoice(username, file);
 
 
-                if (choice == inventory.ViewPendingRental(username, file).Length - 1)
+                if (choice == inventory.ViewPendingRentalOwner(username, file).Length - 1)
                     return;
 
                 VehicleFile vehicle = new VehicleFile();
@@ -194,12 +214,12 @@ namespace Peak_Performance_Vehicle_Rentals
                 if (approveChoice == 0)
                 {
                     vehicle.TransferApprovedFile(choice, username, file);
-                    Console.WriteLine("The vehicle rental application is approved!"); Thread.Sleep(1000);
+                    UserInterface.WriteColoredText(3, 0, "green", "The vehicle rental application is approved!");
                 }
                 else if (approveChoice == 1)
                 {
                     vehicle.TransferNonApprovedFile(choice, username, file);
-                    Console.WriteLine("The vehicle rental application is not approved!"); Thread.Sleep(1000);
+                    UserInterface.WriteColoredText(3, 0, "red", "The vehicle rental application is not approved!");
                 }
             } while (true);
 
@@ -232,7 +252,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
         }
 
-        public void CurrentlyRentingVehicles(string username, FilePathManager file)
+        public void CurrentlyRentingVehicle(string username, FilePathManager file)
         {
             Choice choose = new Choice();
             int choice;
@@ -249,6 +269,13 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     VehicleFile vehicle = new VehicleFile();
                     vehicle.TransferFinishRentFile(username, file);
+
+                    UserInterface.CenterTextMargin(3, 0);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Thank you trusting \"Peak Performance Vehicle Rentals\" and the vehicle owner"); Thread.Sleep(1000);
+                    UserInterface.CenterTextMargin(3, 0);
+                    Console.WriteLine("Rent from us again next time! \"Rent, Ride, Repeat\"\n"); Thread.Sleep(1000);
+                    UserInterface.WaitForKey(3, 0, "Press any key to return to the Rental Details Menu");
                     choice = 2;
                 }
             } while (choice != 2);
@@ -509,7 +536,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     newdetail = UserEmail();
                 if (detailchoice == "Date of Birth (MM/DD/YY)")
                     newdetail = UserBirth();
-                if (detailchoice == "Address")
+                if (detailchoice == "Home Address")
                     newdetail = UserAddress();
                 if (detailchoice != "")
                 {
@@ -528,8 +555,15 @@ namespace Peak_Performance_Vehicle_Rentals
             if (choice == 0)
             {
                 UserFile user = new UserFile();
-                user.DeleteUserFile(username); //delete user file
-                return false;
+                int deleteChoice = user.DeleteUserFile(username, file); //delete user file
+                if (deleteChoice == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
                 return true;
@@ -544,42 +578,94 @@ namespace Peak_Performance_Vehicle_Rentals
             do
             {
                 UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter your email address: ");
+                Prompt("Enter your email address: ");
                 email = Console.ReadLine();
-                if (email == "")
+                if (string.IsNullOrWhiteSpace(email))
                     InvalidUserDetail(3, 0, "red", "Please do not leave the email address empty!");
-            } while (email == "");
+            } while (string.IsNullOrWhiteSpace(email));
             return email;
         }
 
+        //SOON: error handling for user birth date like leap year 
         public string UserBirth() //SUPPORTING METHOD 2 for manage user account
         {
             string[] details = new string[3];
+            int tempDetails;
+            bool success = false;
+            bool dateSuccess = false;
+
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Month: ");
-                details[1] = Console.ReadLine();
-                if (details[1] == "")
-                    InvalidUserDetail(3, 0, "red", "Please enter a proper month!");
-            } while (details[1] == "");
-            do
+                do
+                {
+                    Prompt("Enter Month: ");
+                    details[0] = Console.ReadLine();
+                    success = int.TryParse(details[0], out tempDetails);
+                    if (!success || tempDetails < 1 || tempDetails > 12)
+                        InvalidUserDetail(3, 0, "red", "Please enter a proper month!");
+                } while (!success || tempDetails < 1 || tempDetails > 12);
+                do
+                {
+                    Prompt("Enter Day: ");
+                    details[1] = Console.ReadLine();
+                    success = int.TryParse(details[1], out tempDetails);
+                    if (!success || tempDetails < 1 || tempDetails > 31)
+                        InvalidUserDetail(3, 0, "red", "Please enter a proper day!");
+                } while (!success || tempDetails < 1 || tempDetails > 31);
+                do
+                {
+                    Prompt("Enter Year: ");
+                    details[2] = Console.ReadLine();
+                    success = int.TryParse(details[2], out tempDetails);
+                    if (!success || tempDetails < 1 || tempDetails > 3000)
+                        InvalidUserDetail(3, 0, "red", "Please enter a proper year!");
+                } while (!success || tempDetails < 1 || tempDetails > 3000);
+
+                dateSuccess = DateChecker(details);
+                if (!dateSuccess)
+                {
+                    InvalidUserDetail(3, 0, "red year", "Date does not exist. Please enter a proper month, day, and year.");
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.Write(new string(' ', Console.BufferWidth));
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.Write(new string(' ', Console.BufferWidth));
+                }
+
+            } while (!dateSuccess);
+
+            return $"{details[0]}/{details[1]}/{details[2]}";
+        }
+        private static bool DateChecker(string[] d) //check if date is valid
+        {
+            if (d[0] == "1" || d[0] == "3" || d[0] == "5" || d[0] == "7" || d[0] == "8" || d[0] == "10" || d[0] == "12")
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Day: ");
-                details[2] = Console.ReadLine();
-                if (details[2] == "")
-                    InvalidUserDetail(3, 0, "red", "Please enter a proper day!");
-            } while (details[2] == "");
-            do
+                int tempDay = int.Parse(d[1]);
+                if (tempDay > 31)
+                    return false;
+            }
+            if (d[0] == "4" || d[0] == "6" || d[0] == "9" || d[0] == "11")
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Year: ");
-                details[0] = Console.ReadLine();
-                if (details[0] == "")
-                    InvalidUserDetail(3, 0, "red", "Please enter a proper year!");
-            } while (details[0] == "");
-            return $"{details[1]}/{details[2]}/{details[0]}";
+                int tempDay = int.Parse(d[1]);
+                if (tempDay > 30)
+                    return false;
+            }
+            if (d[0] == "2") //february leap year
+            {
+                int tempDay = int.Parse(d[1]);
+                int tempYear = int.Parse(d[2]);
+                if (tempYear % 4 == 0) //is leap year
+                {
+                    if (tempDay > 29)
+                        return false;
+                }
+                else
+                {
+                    if (tempDay > 28)
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         public string UserAddress() //SUPPORTING METHOD 3 for manage user account
@@ -587,19 +673,39 @@ namespace Peak_Performance_Vehicle_Rentals
             string address;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter your home address: ");
+                Prompt("Enter your home address: ");
                 address = Console.ReadLine();
-                if (address == "")
+                if (string.IsNullOrWhiteSpace(address))
                     InvalidUserDetail(3, 0, "red", "Please do not leave the address empty!");
-            } while (address == "");
+            } while (string.IsNullOrWhiteSpace(address));
             return address;
         }
         public static void InvalidUserDetail(int x, int y, string color, string text) //SUPPORTING METHOD
         {
-            UserInterface.WriteColoredText(x, y, color, text);
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(new string(' ', Console.BufferWidth));
+            if (color == "red year")
+            {
+                color = "red";
+                UserInterface.WriteColoredText(x, y, color, text);
+                for (int i = 0; i < 2; i++)
+                {
+                    Console.Write(new string(' ', Console.BufferWidth));
+                    Console.SetCursorPosition(0, Console.CursorTop - 1);
+                }
+            }
+            else
+            {
+                UserInterface.WriteColoredText(x, y, color, text);
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write(new string(' ', Console.BufferWidth));
+            }
+        }
+        public static void Prompt(string text) //SUPPORTING METHOD
+        {
+            Console.CursorVisible = true;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            UserInterface.CenterTextMargin(3, 0);
+            Console.Write(text);
+            Console.ResetColor();
         }
     }
 }
