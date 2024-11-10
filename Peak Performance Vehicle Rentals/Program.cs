@@ -118,9 +118,27 @@ namespace Peak_Performance_Vehicle_Rentals
                         switch (MMchoice)
                         {
                             case 0:
-                                MV.ViewRentalVehicles(username, file);
-                                break;
+                                int Rchoice;
+                                do
+                                {
+                                    Rchoice = choice.RentalChoice(file);
+                                    switch (Rchoice)
+                                    {
+                                        case 0:
+                                            MV.SearchRentalVehicles(username, file);
+                                            break;
 
+                                        case 1:
+                                            MV.ViewRentalVehicles(username, file);
+                                            break;
+
+                                        case 2:
+                                            break;
+
+                                    }
+                                } while (Rchoice != 2);
+                                break;
+                                
                             case 1:
                                 bool VRrunning = true;
                                 do

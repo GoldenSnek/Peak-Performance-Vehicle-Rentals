@@ -35,7 +35,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 vehicles[i] = $"{brand} {parts[0]}";
             }
 
-            vehicles[files.Length] = "Go back to Main Menu";
+            vehicles[files.Length] = "Go back to Rental Vehicles Menu";
             return vehicles;
         }
 
@@ -286,6 +286,57 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             }
             return vehicle;
+        }
+        public string[] ViewSearchedVehicles(string keyword, FilePathManager file) //OP SEARCH METHOD (can be OP-ier soon)
+        {
+            List<string> vehicles = new List<string>();
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*.txt");
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                string[] lines = File.ReadAllLines(files[i]);
+
+                string[] details = new string[13];
+
+                //store values for searching
+                details[0] = ExtractValue(lines, "Owner:");
+                details[1] = ExtractValue(lines, "Vehicle Type:");
+                details[2] = ExtractValue(lines, "Brand:");
+                details[3] = ExtractValue(lines, "Model:");
+                details[4] = ExtractValue(lines, "Manufacture Year:");
+                details[5] = ExtractValue(lines, "License Plate:");
+                details[6] = ExtractValue(lines, "Color:");
+                details[7] = ExtractValue(lines, "Fuel Type:");
+                details[8] = ExtractValue(lines, "Seating Capacity:");
+                details[9] = ExtractValue(lines, "Mileage:");
+                details[10] = ExtractValue(lines, "Pickup and Return Location:");
+                details[11] = ExtractValue(lines, "Daily Rental Price:");
+                details[12] = ExtractValue(lines, "Hourly Rental Price:");
+
+                for (int j = 0; j < details.Length; j++)
+                {
+                    if (details[j].ToLower() == keyword.ToLower()) //to lower para di mo matter ang capitalization
+                    {
+                        vehicles.Add($"{details[2]} {details[3]}");
+                        break;
+                    }
+                }
+            }
+            vehicles.Add("Go back to Available Rental Vehicles");
+
+            return vehicles.ToArray();
+
+        }
+        public static string ExtractValue(string[] lines, string key) //supporting
+        {
+            foreach (var line in lines)
+            {
+                if (line.StartsWith(key))
+                {
+                    return line.Substring(key.Length).Trim();
+                }
+            }
+            return string.Empty;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices.Marshalling;
+using System.Transactions;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -21,19 +22,26 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class VehicleManager : VehicleDetailManager, IVehicleManagement
     {
-        public void ViewRentalVehicles (string username, FilePathManager file) //MAIN METHOD for view rentable vehicles
+        public void SearchRentalVehicles(string username, FilePathManager file) //MAIN METHOD for view rentable vehicles
         {
-            int choice;
+            string choice;
             int choiceRent;
             Choice choose = new Choice();
             Inventory inventory = new Inventory();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            UserInterface.CenterTextMargin(3, 0);
+            Console.WriteLine("Search for owner, brand, model, year, etc.");
+            Prompt("Enter the keyword: ");
+            string keyword = Console.ReadLine();
+
             do
             {
-                choice = choose.ViewAllVehiclesChoice(file);
-                if (choice != inventory.ViewVehicles(file).Length - 1)
+                choice = choose.ViewSearchedVehiclesChoice(keyword, file);
+                if (choice != "Go back to Available Rental Vehicles")
                 {
                     VehicleFile vehicle = new VehicleFile();
-                    string[] vehicleRentDetails = vehicle.DisplayVehicleFile(choice);
+                    string[] vehicleRentDetails = vehicle.DisplayVehicleFile(0, choice, "search");
 
                     //choose what to do with the vehicle
                     choiceRent = choose.VehicleRentChoice(vehicleRentDetails[2], username);
@@ -69,7 +77,72 @@ namespace Peak_Performance_Vehicle_Rentals
                                     rentDetails[2] = AddNote();
 
                                     VehicleFile pending = new VehicleFile();
-                                    pending.TransferPendingFile(choice, rentDetails, username);
+                                    pending.TransferPendingFile(0, rentDetails, username, choice, "search");
+                                    choiceRent = 1;
+                                }
+                                else
+                                {
+                                    UserInterface.CenterTextMargin(3, 0);
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
+                                    UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
+                                    choiceRent = 1;
+                                }
+                                break;
+                        }
+                    } while (choiceRent != 1);
+                }
+            } while (choice != "Go back to Available Rental Vehicles");
+        }
+        public void ViewRentalVehicles (string username, FilePathManager file) //MAIN METHOD for view rentable vehicles
+        {
+            int choice;
+            int choiceRent;
+            Choice choose = new Choice();
+            Inventory inventory = new Inventory();
+            do
+            {
+                choice = choose.ViewAllVehiclesChoice(file);
+                if (choice != inventory.ViewVehicles(file).Length - 1)
+                {
+                    VehicleFile vehicle = new VehicleFile();
+                    string[] vehicleRentDetails = vehicle.DisplayVehicleFile(choice, "N A", "all");
+
+                    //choose what to do with the vehicle
+                    choiceRent = choose.VehicleRentChoice(vehicleRentDetails[2], username);
+                    do
+                    {
+                        switch (choiceRent)
+                        {
+                            case 0:
+
+                                string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
+                                string currentVehicle = inventory.ViewCurrentRental(username, file);
+                                if (pendingVehicle == "None" && currentVehicle == "")
+                                {
+                                    string[] rentDetails = new string[3];
+                                    Choice chooseRent = new Choice();
+
+                                    //calculations for rent
+                                    int priceCalculation = chooseRent.RentalTimeChoice();
+
+                                    if (priceCalculation == 0)
+                                    {
+                                        string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
+                                        rentDetails[0] = tempDetails[0];
+                                        rentDetails[1] = tempDetails[1];
+                                    }
+                                    else if (priceCalculation == 1)
+                                    {
+                                        string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
+                                        rentDetails[0] = tempDetails[0];
+                                        rentDetails[1] = tempDetails[1];
+                                    }
+                                    //extra
+                                    rentDetails[2] = AddNote();
+
+                                    VehicleFile pending = new VehicleFile();
+                                    pending.TransferPendingFile(choice, rentDetails, username, "N A", "all");
                                     choiceRent = 1;
                                 }
                                 else
@@ -133,9 +206,6 @@ namespace Peak_Performance_Vehicle_Rentals
             //create a new vehicle file
             VehicleFile vehicle = new VehicleFile();
             vehicle.CreateVehicleFile(username, details);
-
-            UserInterface.WriteColoredText(3, 1, "green", "New vehicle has been added!");
-
         }
         public void UpdateVehicle(string username, FilePathManager file) //MAIN METHOD 2 for manage vehicles
         {

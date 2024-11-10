@@ -48,6 +48,39 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = MM.RunUserInterface("all");
             return choice;
         }
+        public int RentalChoice(FilePathManager file) //CHOICE METHOD 3: view all vehicles
+        {
+            Inventory inventory = new Inventory();
+            Prompt = @"
+                    ____ ____ _  _ ___ ____ _       _  _ ____ _  _ _ ____ _    ____ ____ 
+                    |__/ |___ |\ |  |  |__| |       |  | |___ |__| | |    |    |___ [___
+                    |  \ |___ | \|  |  |  | |___     \/  |___ |  | | |___ |___ |___ ___] 
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+            Options = new string[] { "Search for a specific vehicle", "View all available vehicles", "Go back to Main Menu" };
+
+            UserInterface VAV = new UserInterface(Prompt, Options);
+            int choice = VAV.RunUserInterface("all");
+            return choice;
+        }
+        public string ViewSearchedVehiclesChoice(string keyword, FilePathManager file) //CHOICE METHOD 3: view all vehicles
+        {
+            Inventory inventory = new Inventory();
+            Prompt = @"
+                    ____ ____ _    ____ ____ ___    ____    _  _ ____ _  _ _ ____ _    ____
+                    [__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
+                    ___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
+
+                    Shown below are the vehicles that matches the search. Please select a vehicle to view its details.
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+            Options = inventory.ViewSearchedVehicles(keyword, file);
+
+            UserInterface VAV = new UserInterface(Prompt, Options);
+            string choice = VAV.RunUserInterfaceString("all");
+            return choice;
+        }
+
         public int ViewAllVehiclesChoice(FilePathManager file) //CHOICE METHOD 3: view all vehicles
         {
             Inventory inventory = new Inventory();
@@ -65,6 +98,7 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = VAV.RunUserInterface("all");
             return choice;
         }
+        
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file) //CHOICE METHOD 4: view owned vehicles
         {
             Inventory inventory = new Inventory();
@@ -96,7 +130,7 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 UserInterface.CenterTextMargin(3, 0);
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You cannot rent a car that you own!"); Thread.Sleep(1000);
+                Console.WriteLine("You cannot rent a vehicle that you own!"); Thread.Sleep(1500);
                 UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle");
                 choice = 1;
             }
@@ -187,7 +221,7 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 UserInterface.CenterTextMargin(3, 0);
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You are currently not renting a vehicle"); Thread.Sleep(1000);
+                Console.WriteLine("You are currently not renting a vehicle"); Thread.Sleep(1500);
                 Console.ResetColor();
                 choice = 2;
             }

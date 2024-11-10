@@ -125,6 +125,6 @@ namespace Peak_Performance_Vehicle_Rentals
         public void CreateVehicleFile(string username, string[] details);
         public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail);
         public void DeleteVehicleFile(string username, FilePathManager file, int choice);
-        public string[] DisplayVehicleFile(int DVchoice);
+        public string[] DisplayVehicleFile(int DVchoice, string search, string type);
     }
 }
