@@ -6,7 +6,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 //To-Do List:
 //1.dili enter number, but rather arrow keys ra [optional] (done 10/23/24)
-//2. idk if bug or feature, but when u press arrow keys, mo gawas ang previous input like username
+//2.idk if bug or feature, but when u press arrow keys, mo gawas ang previous input like username
 
 namespace Peak_Performance_Vehicle_Rentals
 {
@@ -109,7 +109,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
             UserInterface.WriteColoredText(3, 2, "green", "Registration Successful");
         }
-        internal static bool UserExists(string Username, FilePathManager file) //SUPPORTING METHOD for UserRegister, check for duplicate user
+        private static bool UserExists(string Username, FilePathManager file) //SUPPORTING METHOD for UserRegister, check for duplicate user
         {
             bool DuplicateUser = false;
             using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))
@@ -127,7 +127,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return DuplicateUser;
         }
-        internal static string ReadPassword() //SUPPORTING METHOD, hide password with asterisks
+        private static string ReadPassword() //SUPPORTING METHOD, hide password with asterisks
         {
             string password = "";
             while (true)

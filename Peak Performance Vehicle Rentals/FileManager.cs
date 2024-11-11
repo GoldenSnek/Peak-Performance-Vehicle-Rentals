@@ -50,7 +50,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
     internal class UserFile : FilePathManager, IUserFileManagement
     {
-        public void CreateUserFile(string username) //METHOD for creating user file
+        public void CreateUserFile(string username) //METHOD 1: for creating user file
         {
             string filePath = GetUserFilePath(username);
 
@@ -77,7 +77,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void UpdateUserFile(string username, string detailchoice, string newdetail) //METHOD for updating the details of the user
+        public void UpdateUserFile(string username, string detailchoice, string newdetail) //METHOD 2: for updating the details of the user
         {
             string filePath = GetUserFilePath(username);
             string tempPath = BaseDirectory + "\\Temp.txt";
@@ -113,7 +113,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public int DeleteUserFile(string username, FilePathManager file) //METHOD for deleting user file + vehicle files linked with the user
+        public int DeleteUserFile(string username, FilePathManager file) //METHOD 3: for deleting user file + vehicle files linked with the user
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*{username}.txt");
             string filePath = BaseDirectory + "\\Users.txt";
@@ -151,13 +151,11 @@ namespace Peak_Performance_Vehicle_Rentals
                     File.Delete(filePath); //delete the original file
                     File.Move(tempPath, filePath);
                     File.Delete(tempPath);
-
                     //delete the actual user file and details
                     if (File.Exists(GetUserFilePath(username)))
                     {
                         File.Delete(GetUserFilePath(username));
                     }
-
                     //delete all the vehicles of the user
                     for (int i = 0; i < files.Length; i++)
                     {
@@ -182,8 +180,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 return 0;
             }
         }
-
-        public void DisplayUserFile(string type, string username) //METHOD for displaying info inside the user file
+        public void DisplayUserFile(string type, string username) //METHOD 4: for displaying info inside the user file
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\UserData", $"{username}.txt");
             string content = File.ReadAllText(files[0]);
@@ -213,7 +210,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
     internal class VehicleFile : FilePathManager, IVehicleFileManagement
     {
-        public void CreateVehicleFile(string username, string[] details) //METHOD creating vehicle file
+        public void CreateVehicleFile(string username, string[] details) //METHOD 1: creating vehicle file
         {
             string vehicleFilePath = BaseDirectory + $"\\VehicleData\\{details[2]}-{details[0]}-{username}.txt";
             string pendingFilePath = BaseDirectory + $"\\RentalData\\PendingRental\\{details[2]}-{details[0]}-{username}.txt";
@@ -263,7 +260,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail) //METHOD for updating the details of the vehicle
+        public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail) //METHOD 2: for updating the details of the vehicle
         {
             string[] files = Directory.GetFiles(BaseDirectory + $"\\VehicleData", $"*{username}.txt");
             string tempPath = BaseDirectory + "\\Temp.txt";
@@ -276,14 +273,14 @@ namespace Peak_Performance_Vehicle_Rentals
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        // Check if the current line starts with the search line
+                        //check if the current line starts with the search line
                         if (line.StartsWith(detailchoice))
                         {
-                            writer.WriteLine($"{detailchoice}: {newdetail}"); // Write the new line to the temp file
+                            writer.WriteLine($"{detailchoice}: {newdetail}"); //write the new line to the temp file
                         }
                         else
                         {
-                            writer.WriteLine(line); // Write the original line to the temp file
+                            writer.WriteLine(line); //write the original line to the temp file
                         }
                     }
                 }
@@ -300,7 +297,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void DeleteVehicleFile(string username, FilePathManager file, int choice) //METHOD for deleting vehicle file
+        public void DeleteVehicleFile(string username, FilePathManager file, int choice) //METHOD 3: for deleting vehicle file
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*{username}.txt");
 
@@ -324,7 +321,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public string[] DisplayVehicleFile(int DVchoice, string search, string type) //METHOD for displaying info inside the vehicle file
+        public string[] DisplayVehicleFile(int DVchoice, string search, string type) //METHOD 4: for displaying info inside the vehicle file
         {
             string[] parts = search.Split(" ");
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*.txt");
@@ -474,12 +471,11 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return vehicleRentDetails;
         }
-        public void TransferPendingFile(int choice, string[] rentDetails, string username, string search, string type)
+        public void TransferPendingFile(int choice, string[] rentDetails, string username, string search, string type) //METHOD 5: transfer to pending
         {
             string[] parts = search.Split(" ");
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*.txt");
             string[] searchFiles = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"{parts[1]}*.txt");
-
 
             try
             {
@@ -532,7 +528,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void TransferApprovedFile(int choice, string username, FilePathManager file)
+        public void TransferApprovedFile(int choice, string username, FilePathManager file) //METHOD 6: transfer approved files
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\RentalData\\PendingRental", $"*{username}.txt");
 
@@ -561,24 +557,17 @@ namespace Peak_Performance_Vehicle_Rentals
                         string hourlyPrice = Inventory.ExtractValue(lines, "Hourly Rental Price:");
                         string clientName = Inventory.ExtractValue(lines, "Name:");
                         string rentalDuration = Inventory.ExtractValue(lines, "Number of days/hours the vehicle will be rented:");
-                        string totalPrice = Inventory.ExtractValue(lines, "Total price:"); // As provided
+                        string totalPrice = Inventory.ExtractValue(lines, "Total price:");
                         string additionalInfo = Inventory.ExtractValue(lines, "Additional information:");
 
                         //delete details of the client
-                        // Find the index of the line containing "Details of the client"
                         int detailsIndex = Array.IndexOf(lines, "Details of the client");
-
-                        // Create a new array to hold the lines to keep
                         string[] newLines = new string[detailsIndex];
-
-                        // Copy lines up to and including "Details of the client"
                         Array.Copy(lines, newLines, detailsIndex);
-
-                        // Write the updated lines back to the file
                         File.WriteAllLines(files[i], newLines);
 
                         //append
-                        using (StreamWriter writer = new StreamWriter(files[i], true)) // 'true' for append mode
+                        using (StreamWriter writer = new StreamWriter(files[i], true)) //write a reciept
                         {
                             writer.WriteLine("Receipt");
                             writer.WriteLine("   PEAK PERFORMANCE VEHICLE RENTALS    ");
@@ -609,7 +598,7 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         
 
-        public void TransferNonApprovedFile(int choice, string username, FilePathManager file)
+        public void TransferNonApprovedFile(int choice, string username, FilePathManager file) //METHOD 7: transfer non-approved files
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\RentalData\\PendingRental", $"*{username}.txt");
 
@@ -635,7 +624,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void DisplayPendingFile(int choice, string username, FilePathManager file)
+        public void DisplayPendingFile(int choice, string username, FilePathManager file) //METHOD 8: display pending files
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\RentalData\\PendingRental", $"*{username}.txt");
             string[] lines = new string[20];
@@ -670,7 +659,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void DisplayRecieptFile(string username, FilePathManager file)
+        public void DisplayRecieptFile(string username, FilePathManager file) //METHOD 9: display reciept
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
             string client = "";
@@ -721,7 +710,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
-        public void TransferFinishRentFile(string username, FilePathManager file)
+        public void TransferFinishRentFile(string username, FilePathManager file) //METHOD 10: finish rental
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
             string client = "";

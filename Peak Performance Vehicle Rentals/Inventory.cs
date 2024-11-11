@@ -38,7 +38,6 @@ namespace Peak_Performance_Vehicle_Rentals
             vehicles[files.Length] = "Go back to Rental Vehicles Menu";
             return vehicles;
         }
-
         public string[] ViewVehicles(string username, FilePathManager file) //MAIN METHOD 1 (overload 2), view owned vehicles
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*{username}.txt");
@@ -67,8 +66,47 @@ namespace Peak_Performance_Vehicle_Rentals
             vehicles[files.Length] = "Go back to Manage Vehicles Menu";
             return vehicles;
         }
+        public string[] ViewSearchedVehicles(string keyword, FilePathManager file) //MAIN METHOD 2, OP search method
+        {
+            List<string> vehicles = new List<string>();
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*.txt");
 
-        public string[] ViewVehicleDetails(string username, FilePathManager file, int choice) //MAIN METHOD 2, view vehicle details
+            for (int i = 0; i < files.Length; i++)
+            {
+                string[] lines = File.ReadAllLines(files[i]);
+
+                string[] details = new string[13];
+
+                //store values for searching
+                details[0] = ExtractValue(lines, "Owner:");
+                details[1] = ExtractValue(lines, "Vehicle Type:");
+                details[2] = ExtractValue(lines, "Brand:");
+                details[3] = ExtractValue(lines, "Model:");
+                details[4] = ExtractValue(lines, "Manufacture Year:");
+                details[5] = ExtractValue(lines, "License Plate:");
+                details[6] = ExtractValue(lines, "Color:");
+                details[7] = ExtractValue(lines, "Fuel Type:");
+                details[8] = ExtractValue(lines, "Seating Capacity:");
+                details[9] = ExtractValue(lines, "Mileage:");
+                details[10] = ExtractValue(lines, "Pickup and Return Location:");
+                details[11] = ExtractValue(lines, "Daily Rental Price:");
+                details[12] = ExtractValue(lines, "Hourly Rental Price:");
+
+                for (int j = 0; j < details.Length; j++)
+                {
+                    if (details[j].ToLower() == keyword.ToLower()) //to lower para di mo matter ang capitalization
+                    {
+                        vehicles.Add($"{details[2]} {details[3]}");
+                        break;
+                    }
+                }
+            }
+            vehicles.Add("Go back to Available Rental Vehicles");
+
+            return vehicles.ToArray();
+
+        }
+        public string[] ViewVehicleDetails(string username, FilePathManager file, int choice) //MAIN METHOD 3, view vehicle details
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", $"*{username}.txt");
             int index = 0;
@@ -106,7 +144,7 @@ namespace Peak_Performance_Vehicle_Rentals
             return details;
         }
 
-        public string[] ViewUserDetails(string username, FilePathManager file) //MAIN METHOD 3, view user details
+        public string[] ViewUserDetails(string username, FilePathManager file) //MAIN METHOD 4, view user details
         {
             string directory = file.BaseDirectory + $"\\UserData\\{username}.txt";
 
@@ -128,7 +166,7 @@ namespace Peak_Performance_Vehicle_Rentals
             details[3] = "Go back to Manage User Menu";
             return details;
         }
-        public string ViewPendingRentalClient(string username, FilePathManager file) //MAIN METHOD ?
+        public string ViewPendingRentalClient(string username, FilePathManager file) //MAIN METHOD 5, view pending vehicle of client
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", $"*.txt");
             string vehicle = "None";
@@ -171,7 +209,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return vehicle;
         }
-        public string[] ViewPendingRentalOwner(string username, FilePathManager file) //MAIN METHOD ?
+        public string[] ViewPendingRentalOwner(string username, FilePathManager file) //MAIN METHOD 6, view pending vehicles of user
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", $"*.txt");
             List<string> vehicles = new List<string>(); //identify vehicles
@@ -216,7 +254,7 @@ namespace Peak_Performance_Vehicle_Rentals
             return vehicles.ToArray();
         }
 
-        public string[] ViewApprovedRental(string username, FilePathManager file) //MAIN METHOD ?
+        public string[] ViewApprovedRental(string username, FilePathManager file) //MAIN METHOD 7, view all approved vehicles
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*{username}.txt");
             string[] vehicles = new string[files.Length];
@@ -250,7 +288,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return vehicles;
         }
-        public string ViewCurrentRental(string username, FilePathManager file) //MAIN METHOD ?
+        public string ViewCurrentRental(string username, FilePathManager file) //MAIN METHOD 8: view current rental vehicle
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
             string vehicle = "";
@@ -287,56 +325,17 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return vehicle;
         }
-        public string[] ViewSearchedVehicles(string keyword, FilePathManager file) //OP SEARCH METHOD (can be OP-ier soon)
+        
+        internal static string ExtractValue(string[] lines, string key) //SUPPORTING and EXTRA METHOD, extracts the data from each line
         {
-            List<string> vehicles = new List<string>();
-            string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*.txt");
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                string[] lines = File.ReadAllLines(files[i]);
-
-                string[] details = new string[13];
-
-                //store values for searching
-                details[0] = ExtractValue(lines, "Owner:");
-                details[1] = ExtractValue(lines, "Vehicle Type:");
-                details[2] = ExtractValue(lines, "Brand:");
-                details[3] = ExtractValue(lines, "Model:");
-                details[4] = ExtractValue(lines, "Manufacture Year:");
-                details[5] = ExtractValue(lines, "License Plate:");
-                details[6] = ExtractValue(lines, "Color:");
-                details[7] = ExtractValue(lines, "Fuel Type:");
-                details[8] = ExtractValue(lines, "Seating Capacity:");
-                details[9] = ExtractValue(lines, "Mileage:");
-                details[10] = ExtractValue(lines, "Pickup and Return Location:");
-                details[11] = ExtractValue(lines, "Daily Rental Price:");
-                details[12] = ExtractValue(lines, "Hourly Rental Price:");
-
-                for (int j = 0; j < details.Length; j++)
-                {
-                    if (details[j].ToLower() == keyword.ToLower()) //to lower para di mo matter ang capitalization
-                    {
-                        vehicles.Add($"{details[2]} {details[3]}");
-                        break;
-                    }
-                }
-            }
-            vehicles.Add("Go back to Available Rental Vehicles");
-
-            return vehicles.ToArray();
-
-        }
-        public static string ExtractValue(string[] lines, string key) //supporting
-        {
-            foreach (var line in lines)
+            foreach (string line in lines)
             {
                 if (line.StartsWith(key))
                 {
                     return line.Substring(key.Length).Trim();
                 }
             }
-            return string.Empty;
+            return string.Empty; //nothing
         }
     }
 }

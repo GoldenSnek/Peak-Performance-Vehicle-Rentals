@@ -11,14 +11,7 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         internal static int position;
 
-        //CONSTRUCTORS
-        public UserInterface()
-        {
-        }
-        public UserInterface(string prompt)
-        {
-            Prompt = prompt;
-        }
+        //CONSTRUCTOR
         public UserInterface(string prompt, string[] options)
         {
             Prompt = prompt;
@@ -89,6 +82,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 keyPressed = keyInfo.Key;
 
+                //arrow up/down based menu
                 if (keyPressed == ConsoleKey.UpArrow)
                 {
                     Choice--;
@@ -109,7 +103,7 @@ namespace Peak_Performance_Vehicle_Rentals
             RunUserInterface(type);
             return Options[Choice];
         }
-        public void DisplayOptions(bool verbatim) //SUPPORTING MAIN METHOD for RunUserInterface, displays the options to the screen
+        public void DisplayOptions(bool verbatim) //SUPPORTING METHOD for RunUserInterface, displays the options to the screen
         {
             if (verbatim)
                 position = CenterVerbatimText(Prompt);
@@ -146,8 +140,9 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.WriteLine();
             Console.ResetColor();
         }
-        internal static void ClearVisibleRegion() //SUPPORTING METHOD, reduces screen flicker
+        private static void ClearAllRUI() //SUPPORTING METHOD, clear all lines without flicker
         {
+            Console.CursorVisible = false;
             int cursorTop = Console.CursorTop;
             int cursorLeft = Console.CursorLeft;
             for (int y = Console.WindowTop; y < Console.WindowTop + Console.WindowHeight; y++)
@@ -157,41 +152,7 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             Console.SetCursorPosition(Console.WindowLeft, Console.WindowTop);
         }
-        internal static int CenterVerbatimText(string text) //SUPPORTING METHOD, center a verbatim text
-        {
-            // Split the text into lines
-            var lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            // Get the console window width
-            int windowWidth = Console.WindowWidth;
-            int position = 0;
-
-            foreach (var line in lines)
-            {
-                // Trim the line to avoid extra spaces
-                string trimmedLine = line.Trim();
-                // Calculate the starting position for centering the line
-                position = (windowWidth - trimmedLine.Length) / 2;
-
-                // Ensure we don't go out of bounds
-                if (position < 0) position = 0;
-
-                // Set the cursor position and write the line
-                Console.SetCursorPosition(position, Console.CursorTop);
-                Console.WriteLine(trimmedLine);
-            }
-            return position;
-        }
-        internal static void CenterTextMargin(int x, int y) //SUPPORTING METHOD, specify where to write text
-        {
-            Console.SetCursorPosition(position + x, Console.CursorTop + y);
-        }
-        public static void ClearAllRUI() //SUPPORTING METHOD, clear all lines
-        {
-            Console.CursorVisible = false;
-            ClearVisibleRegion();
-        }
-        public static void ClearLineRUI(int ctr) //SUPPORTING and EXTRA METHOD, clear specific amount of lines
+        private static void ClearLineRUI(int ctr) //SUPPORTING METHOD, clear specific amount of lines
         {
             Console.CursorVisible = false;
             Console.SetCursorPosition(0, Console.CursorTop - 1);
@@ -201,7 +162,29 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
             }
         }
-        public static void WriteColoredText(int x, int y, string color, string text) //EXTRA METHOD, write a static text
+        internal static int CenterVerbatimText(string text) //SUPPORTING and EXTRA METHOD, center a verbatim text
+        {
+            var lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            int windowWidth = Console.WindowWidth;
+            int position = 0;
+
+            foreach (var line in lines)
+            {
+                string trimmedLine = line.Trim();
+                position = (windowWidth - trimmedLine.Length) / 2;
+
+                if (position < 0) position = 0; //ensure we don't go out of bounds
+
+                Console.SetCursorPosition(position, Console.CursorTop);
+                Console.WriteLine(trimmedLine);
+            }
+            return position;
+        }
+        internal static void CenterTextMargin(int x, int y) //SUPPORTING and EXTRA METHOD, specify where to write text
+        {
+            Console.SetCursorPosition(position + x, Console.CursorTop + y);
+        }
+        internal static void WriteColoredText(int x, int y, string color, string text) //EXTRA METHOD, write a static colored text
         {
             Console.CursorVisible = false;
             UserInterface.CenterTextMargin(x, y);
@@ -212,10 +195,10 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.WriteLine(text);
             Console.ResetColor();
             Thread.Sleep(1500);
-            UserInterface.ClearLineRUI(1);
+            ClearLineRUI(1);
             Console.CursorVisible = true;
         }
-        public static void WaitForKey(int x, int y, string text) //EXTRA METHOD, wait for any key to be pressed
+        internal static void WaitForKey(int x, int y, string text) //EXTRA METHOD, wait for any key to be pressed
         {
             CenterTextMargin(x, y);
             Console.ForegroundColor = ConsoleColor.Cyan;
