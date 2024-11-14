@@ -46,7 +46,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 //variable declarations
                 FilePathManager file = new FilePathManager();
                 Choice choice = new Choice();
-                string username = "";
+                string[] details = {"", ""};
 
                 //Login Register
                 bool LRrunning = true;
@@ -57,8 +57,8 @@ namespace Peak_Performance_Vehicle_Rentals
                     switch (LRchoice)
                     {
                         case 0:
-                            username = LR.UserLogin(file);
-                            if (username != "")
+                            details = LR.UserLogin(file);
+                            if (details[0] != "")
                             {
                                 UserInterface.WriteColoredText(3, 2, "green", "Login Successful!");
                                 LRrunning = false;
@@ -107,14 +107,14 @@ namespace Peak_Performance_Vehicle_Rentals
                 } while (LRrunning);
 
                 //Main Menu
-                if (username != "")
+                if (details[0] != "")
                 {
                     bool MMrunning = true;
                     do
                     {
                         VehicleManager MV = new VehicleManager();
                         UserManager UR = new UserManager();
-                        int MMchoice = choice.MainMenuChoice(username);
+                        int MMchoice = choice.MainMenuChoice(details[0], details[1]);
                         switch (MMchoice)
                         {
                             case 0:
@@ -125,11 +125,11 @@ namespace Peak_Performance_Vehicle_Rentals
                                     switch (Rchoice)
                                     {
                                         case 0:
-                                            MV.SearchRentalVehicles(username, file);
+                                            MV.SearchRentalVehicles(details[0], file);
                                             break;
 
                                         case 1:
-                                            MV.ViewRentalVehicles(username, file);
+                                            MV.ViewRentalVehicles(details[0], file);
                                             break;
 
                                         case 2:
@@ -143,19 +143,19 @@ namespace Peak_Performance_Vehicle_Rentals
                                 bool VRrunning = true;
                                 do
                                 {
-                                    int VRchoice = choice.RentalDetailsChoice(username, file);
+                                    int VRchoice = choice.RentalDetailsChoice(details[0], file);
                                     switch (VRchoice)
                                     {
                                         case 0:
-                                            MV.PendingVehicles(username, file);
+                                            MV.PendingVehicles(details[0], file);
                                             break;
 
                                         case 1:
-                                            MV.ApprovedVehicles(username, file);
+                                            MV.ApprovedVehicles(details[0], file);
                                             break;
 
                                         case 2:
-                                            MV.CurrentlyRentingVehicle(username, file);
+                                            MV.CurrentlyRentingVehicle(details[0], file);
                                             break;
 
                                         case 3:
@@ -177,15 +177,15 @@ namespace Peak_Performance_Vehicle_Rentals
                                     switch (MVchoice)
                                     {
                                         case 0:
-                                            MV.AddVehicle(username);
+                                            MV.AddVehicle(details[0]);
                                             break;
 
                                         case 1:
-                                            MV.UpdateVehicle(username, file);
+                                            MV.UpdateVehicle(details[0], file);
                                             break;
 
                                         case 2:
-                                            MV.DeleteVehicle(username, file);
+                                            MV.DeleteVehicle(details[0], file);
                                             break;
 
                                         case 3:
@@ -207,15 +207,15 @@ namespace Peak_Performance_Vehicle_Rentals
                                     switch (MUchoice)
                                     {
                                         case 0:
-                                            UR.ViewUserDetails(username, file);
+                                            UR.ViewUserDetails(details[0], file);
                                             break;
 
                                         case 1:
-                                            UR.UpdateUser(username, file);
+                                            UR.UpdateUser(details[0], file);
                                             break;
 
                                         case 2:
-                                            MUrunning = UR.DeleteUser(username, file);
+                                            MUrunning = UR.DeleteUser(details[0], file);
                                             if (MUrunning == false)
                                                 MMrunning = false;
                                             break;

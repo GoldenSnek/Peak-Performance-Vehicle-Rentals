@@ -30,7 +30,9 @@ namespace Peak_Performance_Vehicle_Rentals
                 Directory.CreateDirectory(BaseDirectory + "\\RentalData\\ApprovedRental");
                 if (!File.Exists(BaseDirectory + "\\Users.txt"))
                 {
-                    StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt");
+                    using (StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt")) {
+                        writer.WriteLine("ADMIN,01312005,Admin"); //create admin account
+                    };
                 }
             }
             catch (Exception e) 
@@ -41,10 +43,6 @@ namespace Peak_Performance_Vehicle_Rentals
         internal string GetUserFilePath(string username) //METHOD for accessing user filepath
         {
             return BaseDirectory + $"\\UserData\\{username}.txt";
-        }
-        internal string GetVehicleFilePath(string model, string type, string username) //METHOD for accessing vehicle filepath
-        {
-            return BaseDirectory + $"\\VehicleData\\{model}-{type}-{username}.txt";
         }
     }
 
@@ -65,7 +63,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     {
                         writer.WriteLine($"Username: {username}");
                         writer.WriteLine($"Email Address: -no data-");
-                        writer.WriteLine($"Date of Birth (MM/DD/YY): -no data-");
+                        writer.WriteLine($"Date of Birth (MM/DD/YYYY): -no data-");
                         writer.WriteLine($"Home Address: -no data-");
                         writer.WriteLine($"Account creation date: {creation[0]}");
                     }

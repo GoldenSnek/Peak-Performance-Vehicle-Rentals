@@ -12,9 +12,10 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class LoginRegister : LoginRegisterBase, ILoginRegister
     {
-        public string UserLogin(FilePathManager file) //MAIN METHOD for login
+        public string[] UserLogin(FilePathManager file) //MAIN METHOD for login
         {
             Console.CursorVisible = true;
+            string[] details = {"", ""};
             do
             {
                 UserInterface.CenterTextMargin(3, 0);
@@ -47,25 +48,40 @@ namespace Peak_Performance_Vehicle_Rentals
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    string[] parts = line.Split(','); //parts[0] is username, parts[1] is password
+                    string[] parts = line.Split(','); //parts[0] is username, parts[1] is password, [2] is type
                     if (parts[0] == Username && parts[1] == Password)
                     {
+                        details[0] = parts[0];
+                        details[1] = parts[2];
                         isValidUser = true;
                         break;
                     }
                 }
             }
             Console.CursorVisible = false;
-            if (isValidUser)
-                return Username;
-            else
-                return "";
+
+            return details;
         }
 
         public void UserRegister(FilePathManager file) //MAIN METHOD for register
         {
-            Console.CursorVisible = true;
             bool DuplicateUser = true;
+            Choice choose = new Choice();
+            int choice = choose.RegisterTypeChoice();
+            if (choice == 0)
+            {
+                Type = "Client";
+            }
+            else if (choice == 1)
+            {
+                Type = "Vehicle Provider";
+            }
+            else
+            {
+                return;
+            }
+
+            Console.CursorVisible = true;
             do
             {
                 UserInterface.CenterTextMargin(3, 0);
@@ -101,7 +117,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
             using (StreamWriter writer = new StreamWriter(file.BaseDirectory + "\\Users.txt", true)) //save username and password to the user text file
             {
-                writer.WriteLine($"{Username},{Password}");
+                writer.WriteLine($"{Username},{Password},{Type}");
             }
 
             UserFile user = new UserFile();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -37,7 +38,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     ClearLineRUI(5);
                     verbatim = false;
                 }
-                else if (type == "vehicle type" || type == "pending")
+                else if (type == "vehicle type" || type == "pending" || type == "register")
                 {
                     if (ctr == 0)
                         CenterTextMargin(3, 8);
@@ -137,6 +138,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
                 Console.WriteLine($"{style[0]} {currentOption} {style[1]}");
             }
+            //Console.WriteLine("\ndecription here chuchuchu");
             Console.WriteLine();
             Console.ResetColor();
         }
@@ -154,12 +156,18 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         private static void ClearLineRUI(int ctr) //SUPPORTING METHOD, clear specific amount of lines
         {
-            Console.CursorVisible = false;
-            Console.SetCursorPosition(0, Console.CursorTop - 1);
-            for (int i = 0; i < ctr; i++)
+            try
             {
-                Console.Write(new string(' ', Console.BufferWidth));
+                Console.CursorVisible = false;
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
+                for (int i = 0; i < ctr; i++)
+                {
+                    Console.Write(new string(' ', Console.BufferWidth));
+                    Console.SetCursorPosition(0, Console.CursorTop - 1);
+                }
+            }
+            catch (Exception e) {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
         internal static int CenterVerbatimText(string text) //SUPPORTING and EXTRA METHOD, center a verbatim text
@@ -168,43 +176,86 @@ namespace Peak_Performance_Vehicle_Rentals
             int windowWidth = Console.WindowWidth;
             int position = 0;
 
-            foreach (var line in lines)
+            try
             {
-                string trimmedLine = line.Trim();
-                position = (windowWidth - trimmedLine.Length) / 2;
+                foreach (var line in lines)
+                {
+                    string trimmedLine = line.Trim();
+                    position = (windowWidth - trimmedLine.Length) / 2;
 
-                if (position < 0) position = 0; //ensure we don't go out of bounds
+                    if (position < 0) position = 0; //ensure we don't go out of bounds
 
-                Console.SetCursorPosition(position, Console.CursorTop);
-                Console.WriteLine(trimmedLine);
+                    Console.SetCursorPosition(position, Console.CursorTop);
+                    Console.WriteLine(trimmedLine);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
             return position;
         }
         internal static void CenterTextMargin(int x, int y) //SUPPORTING and EXTRA METHOD, specify where to write text
         {
-            Console.SetCursorPosition(position + x, Console.CursorTop + y);
+            if (position == 0) //make sure system doesn't break
+            {
+                x = 0;
+                y = 0;
+            }
+            try
+            {
+                Console.SetCursorPosition(position + x, Console.CursorTop + y);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+            }
         }
         internal static void WriteColoredText(int x, int y, string color, string text) //EXTRA METHOD, write a static colored text
         {
-            Console.CursorVisible = false;
-            UserInterface.CenterTextMargin(x, y);
-            if (color == "red")
-                Console.ForegroundColor = ConsoleColor.Red;
-            if (color == "green")
-                Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(text);
-            Console.ResetColor();
-            Thread.Sleep(1500);
-            ClearLineRUI(1);
-            Console.CursorVisible = true;
+            if (position == 0) //make sure system doesn't break
+            {
+                x = 0;
+                y = 0;
+            }
+            try
+            {
+                Console.CursorVisible = false;
+                UserInterface.CenterTextMargin(x, y);
+                if (color == "red")
+                    Console.ForegroundColor = ConsoleColor.Red;
+                if (color == "green")
+                    Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(text);
+                Console.ResetColor();
+                Thread.Sleep(1500);
+                ClearLineRUI(1);
+                Console.CursorVisible = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+            }
         }
         internal static void WaitForKey(int x, int y, string text) //EXTRA METHOD, wait for any key to be pressed
         {
-            CenterTextMargin(x, y);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write(text);
-            Console.ResetColor();
-            Console.ReadKey(true);
+            if (position == 0) //make sure system doesn't break
+            {
+                x = 0;
+                y = 0;
+            }
+            try
+            {
+                CenterTextMargin(x, y);
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write(text);
+                Console.ResetColor();
+                Console.ReadKey(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+            }
         }
     }
 }

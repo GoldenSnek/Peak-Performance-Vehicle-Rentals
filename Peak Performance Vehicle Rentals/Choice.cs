@@ -32,16 +32,40 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = LR.RunUserInterface("all");
             return choice;
         }
-        public int MainMenuChoice(string username) //CHOICE METHOD 2: main menu
+        public int RegisterTypeChoice() //
+        {
+            Prompt = "Registration Type: ";
+
+            Options = new string[] { "Client", "Vehicle Provider", "Go back to Menu" };
+
+            UserInterface LR = new UserInterface(Prompt, Options);
+            int choice = LR.RunUserInterface("register");
+            return choice;
+        }
+
+        public int MainMenuChoice(string username, string type) //CHOICE METHOD 2: main menu
         {
             Prompt = @$"
                     _______ _______ _____ __   _      _______ _______ __   _ _     _
                     |  |  | |_____|   |   | \  |      |  |  | |______ | \  | |     |
                     |  |  | |     | __|__ |  \_|      |  |  | |______ |  \_| |_____|
 
-                    Hello {username}! What would you like to do today?
+                    Hello {username}! What would you like to do today? <{type}>
 
                     (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+
+            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+
+            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+
+            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+
+            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+
+            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+
+            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+
             Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
 
             UserInterface MM = new UserInterface(Prompt, Options);

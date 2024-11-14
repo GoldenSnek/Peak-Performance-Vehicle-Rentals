@@ -34,12 +34,14 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         private string? username;
         private string? password;
+        private string? type;
         public string? Username { get { return username; } set { username = value; } }
         public string? Password { get { return password; } set { password = value; } }
+        public string? Type { get { return type; } set { type = value; } }
     }
     public interface ILoginRegister
     {
-        public string UserLogin(FilePathManager file);
+        public string[] UserLogin(FilePathManager file);
         public void UserRegister(FilePathManager file);
     }
 
@@ -73,7 +75,7 @@ namespace Peak_Performance_Vehicle_Rentals
     public interface IChoice
     {
         public int LoginRegisterChoice();
-        public int MainMenuChoice(string username);
+        public int MainMenuChoice(string username, string type);
         public int RentalChoice(FilePathManager file);
         public string ViewSearchedVehiclesChoice(string keyword, FilePathManager file);
         public int ViewAllVehiclesChoice(FilePathManager file);

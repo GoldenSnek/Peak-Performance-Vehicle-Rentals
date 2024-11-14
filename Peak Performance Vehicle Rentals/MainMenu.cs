@@ -607,7 +607,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
                 if (detailchoice == "Email Address")
                     newdetail = UserEmail();
-                if (detailchoice == "Date of Birth (MM/DD/YY)")
+                if (detailchoice == "Date of Birth (MM/DD/YYYY)")
                     newdetail = UserBirth();
                 if (detailchoice == "Home Address")
                     newdetail = UserAddress();
@@ -669,7 +669,7 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 do
                 {
-                    Prompt("Enter Month: ");
+                    Prompt("Enter Month (MM): ");
                     details[0] = Console.ReadLine();
                     success = int.TryParse(details[0], out tempDetails);
                     if (!success || tempDetails < 1 || tempDetails > 12)
@@ -677,7 +677,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 } while (!success || tempDetails < 1 || tempDetails > 12);
                 do
                 {
-                    Prompt("Enter Day: ");
+                    Prompt("Enter Day (DD): ");
                     details[1] = Console.ReadLine();
                     success = int.TryParse(details[1], out tempDetails);
                     if (!success || tempDetails < 1 || tempDetails > 31)
@@ -685,7 +685,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 } while (!success || tempDetails < 1 || tempDetails > 31);
                 do
                 {
-                    Prompt("Enter Year: ");
+                    Prompt("Enter Year (YYYY): ");
                     details[2] = Console.ReadLine();
                     success = int.TryParse(details[2], out tempDetails);
                     if (!success || tempDetails < 1 || tempDetails > 3000)
