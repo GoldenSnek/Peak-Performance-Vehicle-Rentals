@@ -137,6 +137,12 @@ namespace Peak_Performance_Vehicle_Rentals
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine($"{style[0]} {currentOption} {style[1]}");
+                /* //debugging
+                Console.WriteLine("Height " + Console.WindowHeight);
+                Console.WriteLine("Width " + Console.WindowWidth);
+                Console.WriteLine("Position " + position);
+                Console.WriteLine("Top " + Console.WindowTop);
+                */
             }
             //Console.WriteLine("\ndecription here chuchuchu");
             Console.WriteLine();
@@ -145,14 +151,12 @@ namespace Peak_Performance_Vehicle_Rentals
         private static void ClearAllRUI() //SUPPORTING METHOD, clear all lines without flicker
         {
             Console.CursorVisible = false;
-            int cursorTop = Console.CursorTop;
-            int cursorLeft = Console.CursorLeft;
-            for (int y = Console.WindowTop; y < Console.WindowTop + Console.WindowHeight; y++)
+            for (int y = Console.WindowTop; y < Console.WindowHeight; y++)
             {
                 Console.SetCursorPosition(Console.WindowLeft, y);
                 Console.Write(new string(' ', Console.WindowWidth));
             }
-            Console.SetCursorPosition(Console.WindowLeft, Console.WindowTop);
+            Console.SetCursorPosition(0, 0);
         }
         private static void ClearLineRUI(int ctr) //SUPPORTING METHOD, clear specific amount of lines
         {
@@ -197,10 +201,9 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         internal static void CenterTextMargin(int x, int y) //SUPPORTING and EXTRA METHOD, specify where to write text
         {
-            if (position == 0) //make sure system doesn't break
+            if (position + x > Console.WindowWidth) //make sure system doesn't break
             {
-                x = 0;
-                y = 0;
+                return;
             }
             try
             {
@@ -213,10 +216,9 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         internal static void WriteColoredText(int x, int y, string color, string text) //EXTRA METHOD, write a static colored text
         {
-            if (position == 0) //make sure system doesn't break
+            if (position + x > Console.WindowWidth) //make sure system doesn't break
             {
-                x = 0;
-                y = 0;
+                return;
             }
             try
             {
@@ -239,10 +241,9 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         internal static void WaitForKey(int x, int y, string text) //EXTRA METHOD, wait for any key to be pressed
         {
-            if (position == 0) //make sure system doesn't break
+            if (position + x > Console.WindowWidth) //make sure system doesn't break
             {
-                x = 0;
-                y = 0;
+                return;
             }
             try
             {

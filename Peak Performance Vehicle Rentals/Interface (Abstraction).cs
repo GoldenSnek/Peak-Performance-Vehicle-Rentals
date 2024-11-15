@@ -48,9 +48,10 @@ namespace Peak_Performance_Vehicle_Rentals
     //Main Menu
     public interface IVehicleManagement
     {
-        public void SearchRentalVehicles(string username, FilePathManager file);
-        public void ViewRentalVehicles(string username, FilePathManager file);
-        public void PendingVehicles(string username, FilePathManager file);
+        public void SearchRentalVehicles(string username, string details, FilePathManager file);
+        public void ViewRentalVehicles(string username, string details, FilePathManager file);
+        public void PendingVehiclesOwner(string username, FilePathManager file);
+        public void PendingVehiclesClient(string username, FilePathManager file);
         public void ApprovedVehicles(string username, FilePathManager file);
         public void CurrentlyRentingVehicle(string username, FilePathManager file);
         public void AddVehicle(string username);
@@ -83,7 +84,7 @@ namespace Peak_Performance_Vehicle_Rentals
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file);
         public int ViewPendingChoice(string username, FilePathManager file);
         public int RentalTimeChoice();
-        public int RentalDetailsChoice(string username, FilePathManager file);
+        public int RentalDetailsChoice(string username, string type, FilePathManager file);
         public int ApprovePendingChoice();
         public int CurrentlyRentingChoice(string username, FilePathManager file);
         public int ManageVehiclesChoice();
@@ -132,7 +133,7 @@ namespace Peak_Performance_Vehicle_Rentals
         public void TransferPendingFile(int choice, string[] rentDetails, string username, string search, string type);
         public void TransferApprovedFile(int choice, string username, FilePathManager file);
         public void TransferNonApprovedFile(int choice, string username, FilePathManager file);
-        public void DisplayPendingFile(int choice, string username, FilePathManager file);
+        public void DisplayPendingFile(int choice, string username, string type, FilePathManager file);
         public void DisplayRecieptFile(string username, FilePathManager file);
         public void TransferFinishRentFile(string username, FilePathManager file);
     }

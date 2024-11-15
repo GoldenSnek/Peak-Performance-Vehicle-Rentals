@@ -148,7 +148,7 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string directory = file.BaseDirectory + $"\\UserData\\{username}.txt";
 
-            string[] details = new string[4]; //identify details of user
+            string[] details = new string[5]; //identify details of user
             for (int i = 0; i < details.Length-1; i++)
             {
                 string line;
@@ -163,15 +163,14 @@ namespace Peak_Performance_Vehicle_Rentals
                     }
                 }
             }
-            details[3] = "Go back to Manage User Menu";
+            details[4] = "Go back to Manage User Menu";
             return details;
         }
         public string ViewPendingRentalClient(string username, FilePathManager file) //MAIN METHOD 5, view pending vehicle of client
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", $"*.txt");
-            string vehicle = "None";
+            string vehicleClient = "";
             string name = "";
-            string brand = "";
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -187,27 +186,14 @@ namespace Peak_Performance_Vehicle_Rentals
 
                             if (name == username)
                             {
-                                string fileName = Path.GetFileNameWithoutExtension(files[i]);
-                                string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
-                                string lineBrand;
-                                using (var readerBrand = new StreamReader(files[i]))
-                                {
-                                    while ((lineBrand = readerBrand.ReadLine()) != null)
-                                    {
-                                        if (lineBrand.StartsWith("Brand:"))
-                                        {
-                                            string[] brandParts = lineBrand.Split(": ");
-                                            brand = brandParts[1];
-                                        }
-                                    }
-                                    vehicle = $"{brand} {parts[0]}";
-                                }
+                                vehicleClient = name;
+                                break;
                             }
                         }
                     }
                 }
             }
-            return vehicle;
+            return vehicleClient;
         }
         public string[] ViewPendingRentalOwner(string username, FilePathManager file) //MAIN METHOD 6, view pending vehicles of user
         {
@@ -257,7 +243,7 @@ namespace Peak_Performance_Vehicle_Rentals
         public string[] ViewApprovedRental(string username, FilePathManager file) //MAIN METHOD 7, view all approved vehicles
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*{username}.txt");
-            string[] vehicles = new string[files.Length];
+            string[] vehicles = new string[files.Length+1];
             string brand = "";
             string client = "";
 
@@ -284,8 +270,9 @@ namespace Peak_Performance_Vehicle_Rentals
                         }
                     }
                 }
-                vehicles[i] = $"\"{brand} {parts[0]}\" is currently being rented by \"{client}\"";
+                vehicles[i] = $"{brand} {parts[0]}";
             }
+            vehicles[files.Length] = "Go back to Rental Details Menu";
             return vehicles;
         }
         public string ViewCurrentRental(string username, FilePathManager file) //MAIN METHOD 8: view current rental vehicle

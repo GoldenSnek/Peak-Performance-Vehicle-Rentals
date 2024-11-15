@@ -23,7 +23,7 @@ namespace Peak_Performance_Vehicle_Rentals
     internal class VehicleManager : VehicleDetailManager, IVehicleManagement
     {
         //Main Menu Case 0:
-        public void SearchRentalVehicles(string username, FilePathManager file) //MAIN METHOD 0 for searching a rentable vehicles
+        public void SearchRentalVehicles(string username, string type, FilePathManager file) //MAIN METHOD 0 for searching a rentable vehicles
         {
             string choice;
             int choiceRent;
@@ -45,58 +45,65 @@ namespace Peak_Performance_Vehicle_Rentals
                     string[] vehicleRentDetails = vehicle.DisplayVehicleFile(0, choice, "search");
 
                     //choose what to do with the vehicle
-                    choiceRent = choose.VehicleRentChoice(vehicleRentDetails[2], username);
-                    do
+                    if (type == "Client")
                     {
-                        switch (choiceRent)
+                        choiceRent = choose.VehicleRentChoice(vehicleRentDetails[2], username);
+                        do
                         {
-                            case 0:
+                            switch (choiceRent)
+                            {
+                                case 0:
 
-                                string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
-                                string currentVehicle = inventory.ViewCurrentRental(username, file);
-                                if (pendingVehicle == "None" && currentVehicle == "")
-                                {
-                                    string[] rentDetails = new string[3];
-                                    Choice chooseRent = new Choice();
-
-                                    //calculations for rent
-                                    int priceCalculation = chooseRent.RentalTimeChoice();
-
-                                    if (priceCalculation == 0)
+                                    string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
+                                    string currentVehicle = inventory.ViewCurrentRental(username, file);
+                                    if (pendingVehicle == "" && currentVehicle == "")
                                     {
-                                        string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
-                                        rentDetails[0] = tempDetails[0];
-                                        rentDetails[1] = tempDetails[1];
-                                    }
-                                    else if (priceCalculation == 1)
-                                    {
-                                        string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
-                                        rentDetails[0] = tempDetails[0];
-                                        rentDetails[1] = tempDetails[1];
-                                    }
-                                    //extra
-                                    rentDetails[2] = AddNote();
+                                        string[] rentDetails = new string[3];
+                                        Choice chooseRent = new Choice();
 
-                                    VehicleFile pending = new VehicleFile();
-                                    pending.TransferPendingFile(0, rentDetails, username, choice, "search");
-                                    choiceRent = 1;
-                                }
-                                else
-                                {
-                                    UserInterface.CenterTextMargin(3, 0);
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
-                                    UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
-                                    choiceRent = 1;
-                                }
-                                break;
-                        }
-                    } while (choiceRent != 1);
+                                        //calculations for rent
+                                        int priceCalculation = chooseRent.RentalTimeChoice();
+
+                                        if (priceCalculation == 0)
+                                        {
+                                            string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
+                                            rentDetails[0] = tempDetails[0];
+                                            rentDetails[1] = tempDetails[1];
+                                        }
+                                        else if (priceCalculation == 1)
+                                        {
+                                            string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
+                                            rentDetails[0] = tempDetails[0];
+                                            rentDetails[1] = tempDetails[1];
+                                        }
+                                        //extra
+                                        rentDetails[2] = AddNote();
+
+                                        VehicleFile pending = new VehicleFile();
+                                        pending.TransferPendingFile(0, rentDetails, username, choice, "search");
+                                        choiceRent = 1;
+                                    }
+                                    else
+                                    {
+                                        UserInterface.CenterTextMargin(3, 0);
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
+                                        UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
+                                        choiceRent = 1;
+                                    }
+                                    break;
+                            }
+                        } while (choiceRent != 1);
+                    }
+                    else
+                    {
+                        UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
+                    }
                 }
             } while (choice != "Go back to Available Rental Vehicles");
         }
 
-        public void ViewRentalVehicles (string username, FilePathManager file) //MAIN METHOD 1 for viewing all rentable vehicles
+        public void ViewRentalVehicles(string username, string type, FilePathManager file) //MAIN METHOD 1 for viewing all rentable vehicles
         {
             int choice;
             int choiceRent;
@@ -111,59 +118,85 @@ namespace Peak_Performance_Vehicle_Rentals
                     string[] vehicleRentDetails = vehicle.DisplayVehicleFile(choice, "N A", "all");
 
                     //choose what to do with the vehicle
-                    choiceRent = choose.VehicleRentChoice(vehicleRentDetails[2], username);
-                    do
+                    if (type == "Client")
                     {
-                        switch (choiceRent)
+                        choiceRent = choose.VehicleRentChoice(vehicleRentDetails[2], username);
+                        do
                         {
-                            case 0:
+                            switch (choiceRent)
+                            {
+                                case 0:
 
-                                string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
-                                string currentVehicle = inventory.ViewCurrentRental(username, file);
-                                if (pendingVehicle == "None" && currentVehicle == "")
-                                {
-                                    string[] rentDetails = new string[3];
-                                    Choice chooseRent = new Choice();
-
-                                    //calculations for rent
-                                    int priceCalculation = chooseRent.RentalTimeChoice();
-
-                                    if (priceCalculation == 0)
+                                    string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
+                                    string currentVehicle = inventory.ViewCurrentRental(username, file);
+                                    if (pendingVehicle == "" && currentVehicle == "")
                                     {
-                                        string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
-                                        rentDetails[0] = tempDetails[0];
-                                        rentDetails[1] = tempDetails[1];
-                                    }
-                                    else if (priceCalculation == 1)
-                                    {
-                                        string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
-                                        rentDetails[0] = tempDetails[0];
-                                        rentDetails[1] = tempDetails[1];
-                                    }
-                                    //extra
-                                    rentDetails[2] = AddNote();
+                                        string[] rentDetails = new string[3];
+                                        Choice chooseRent = new Choice();
 
-                                    VehicleFile pending = new VehicleFile();
-                                    pending.TransferPendingFile(choice, rentDetails, username, "N A", "all");
-                                    choiceRent = 1;
-                                }
-                                else
-                                {
-                                    UserInterface.CenterTextMargin(3, 0);
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
-                                    UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
-                                    choiceRent = 1;
-                                }
-                                break;
-                        }
-                    } while (choiceRent != 1);
+                                        //calculations for rent
+                                        int priceCalculation = chooseRent.RentalTimeChoice();
+
+                                        if (priceCalculation == 0)
+                                        {
+                                            string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
+                                            rentDetails[0] = tempDetails[0];
+                                            rentDetails[1] = tempDetails[1];
+                                        }
+                                        else if (priceCalculation == 1)
+                                        {
+                                            string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
+                                            rentDetails[0] = tempDetails[0];
+                                            rentDetails[1] = tempDetails[1];
+                                        }
+                                        //extra
+                                        rentDetails[2] = AddNote();
+
+                                        VehicleFile pending = new VehicleFile();
+                                        pending.TransferPendingFile(choice, rentDetails, username, "N A", "all");
+                                        choiceRent = 1;
+                                    }
+                                    else
+                                    {
+                                        UserInterface.CenterTextMargin(3, 0);
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
+                                        UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
+                                        choiceRent = 1;
+                                    }
+                                    break;
+                            }
+                        } while (choiceRent != 1);
+                    }
+                    else
+                    {
+                        UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
+                    }
                 }
             } while (choice != inventory.ViewVehicles(file).Length - 1);
         }
 
         //Main Menu Case 1:
-        public void PendingVehicles(string username, FilePathManager file) //MAIN METHOD 0 for viewing pending vehicles
+        public void PendingVehiclesClient(string username, FilePathManager file) //MAIN METHOD 0 for viewing pending vehicles client
+        {
+            Inventory inventory = new Inventory();
+            string vehicleClient = inventory.ViewPendingRentalClient(username, file);
+            if (vehicleClient != "")
+            {
+                VehicleFile vehicle = new VehicleFile();
+                vehicle.DisplayPendingFile(0, username, "Client", file);
+                UserInterface.WaitForKey(3, 0, "Press any key to go back to Rental Details Menu.");
+            }
+            else
+            {
+                UserInterface.CenterTextMargin(3, 0);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You currently do not have a pending application."); Thread.Sleep(1500);
+                Console.ResetColor();
+            }
+        }
+
+        public void PendingVehiclesOwner(string username, FilePathManager file) //MAIN METHOD 0 for viewing pending vehicles provider
         {
             Choice choose = new Choice();
             Inventory inventory = new Inventory();
@@ -171,12 +204,11 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 int choice = choose.ViewPendingChoice(username, file);
 
-
                 if (choice == inventory.ViewPendingRentalOwner(username, file).Length - 1)
                     return;
 
                 VehicleFile vehicle = new VehicleFile();
-                vehicle.DisplayPendingFile(choice, username, file);
+                vehicle.DisplayPendingFile(choice, username, "Vehicle Provider", file);
 
                 int approveChoice = choose.ApprovePendingChoice();
 
@@ -194,30 +226,21 @@ namespace Peak_Performance_Vehicle_Rentals
 
         }
 
+        
+
         public void ApprovedVehicles(string username, FilePathManager file) //MAIN METHOD 1 for viewing approved vehicles
         {
-
-            Console.Clear();
-            UserInterface.CenterVerbatimText(@"
-                                            ____ ___  ___  ____ ____ _  _ ____ ___     _  _ ____ _  _ _ ____ _    ____ ____ 
-                                            |__| |__] |__] |__/ |  | |  | |___ |  \    |  | |___ |__| | |    |    |___ [___ 
-                                            |  | |    |    |  \ |__|  \/  |___ |__/     \/  |___ |  | | |___ |___ |___ ___] 
-
-                                            Shown below are vehicles that you own which are currently being rented.");
-
+            Choice choose = new Choice();
             Inventory inventory = new Inventory();
-            string[] vehicles = inventory.ViewApprovedRental(username, file);
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            for (int i = 0; i < vehicles.Length; i++)
+            int choice;
+            do
             {
-                Console.WriteLine();
-                UserInterface.CenterTextMargin(0, 0);
-                Console.WriteLine(">> " + vehicles[i]);
-            }
-            Console.ResetColor();
+                choice = choose.ApprovedChoice(username, file);
 
-            UserInterface.WaitForKey(3, 1, "Press any key if you are done looking at the vehicles");
+                VehicleFile vehicle = new VehicleFile();
+                vehicle.DisplayVehicleFile(choice, "N A", "approved");
+
+            } while (choice != inventory.ViewApprovedRental(username, file).Length - 1);
 
         }
 
@@ -607,6 +630,8 @@ namespace Peak_Performance_Vehicle_Rentals
 
                 if (detailchoice == "Email Address")
                     newdetail = UserEmail();
+                if (detailchoice == "Contact Number")
+                    newdetail = UserContact();
                 if (detailchoice == "Date of Birth (MM/DD/YYYY)")
                     newdetail = UserBirth();
                 if (detailchoice == "Home Address")
@@ -623,23 +648,26 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             int choice;
             Choice choose = new Choice();
-            choice = choose.DeleteUserChoice(username, file);
-
-            if (choice == 0)
+            do
             {
-                UserFile user = new UserFile();
-                int deleteChoice = user.DeleteUserFile(username, file); //delete user file
-                if (deleteChoice == 0)
+
+                choice = choose.DeleteUserChoice(username, file);
+
+                if (choice == 0)
                 {
-                    return true;
+                    UserFile user = new UserFile();
+                    int deleteChoice = user.DeleteUserFile(username, file); //delete user file
+                    if (deleteChoice == 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-                return true;
+            } while (choice != 1);
+            return true;
         }
     }
 
@@ -658,6 +686,20 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (string.IsNullOrWhiteSpace(email));
             return email;
         }
+        private protected static string UserContact() //SUPPORTING METHOD 1 for manage user account
+        {
+            string contact;
+            do
+            {
+                UserInterface.CenterTextMargin(3, 0);
+                Prompt("Enter your contact number: ");
+                contact = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(contact))
+                    InvalidUserDetail(3, 0, "red", "Please do not leave the contact number empty!");
+            } while (string.IsNullOrWhiteSpace(contact));
+            return contact;
+        }
+
         private protected static string UserBirth() //SUPPORTING METHOD 2 for manage user account
         {
             string[] details = new string[3];
@@ -714,7 +756,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 Prompt("Enter your home address: ");
                 address = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(address))
-                    InvalidUserDetail(3, 0, "red", "Please do not leave the address empty!");
+                    InvalidUserDetail(3, 0, "red", "Please do not leave the home address empty!");
             } while (string.IsNullOrWhiteSpace(address));
             return address;
         }

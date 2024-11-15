@@ -42,7 +42,6 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (string.IsNullOrWhiteSpace(Password));
 
             //check if the credentials are valid
-            bool isValidUser = false;
             using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))
             {
                 string line;
@@ -53,7 +52,6 @@ namespace Peak_Performance_Vehicle_Rentals
                     {
                         details[0] = parts[0];
                         details[1] = parts[2];
-                        isValidUser = true;
                         break;
                     }
                 }

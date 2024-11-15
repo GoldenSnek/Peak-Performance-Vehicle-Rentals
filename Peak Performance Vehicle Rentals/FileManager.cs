@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 
 //To-Do List:
 //1. change filepath for different devices (fixed 10/19/24)
@@ -63,6 +64,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     {
                         writer.WriteLine($"Username: {username}");
                         writer.WriteLine($"Email Address: -no data-");
+                        writer.WriteLine($"Contact Number: -no data-");
                         writer.WriteLine($"Date of Birth (MM/DD/YYYY): -no data-");
                         writer.WriteLine($"Home Address: -no data-");
                         writer.WriteLine($"Account creation date: {creation[0]}");
@@ -125,10 +127,10 @@ namespace Peak_Performance_Vehicle_Rentals
                 string[] pending = inventory.ViewPendingRentalOwner(username, file);
                 string[] approved = inventory.ViewApprovedRental(username, file);
                 //client
-                string currentpending = inventory.ViewPendingRentalClient(username, file);
-                string currentapproved = inventory.ViewCurrentRental(username, file);
+                string currentPending = inventory.ViewPendingRentalClient(username, file);
+                string currentApproved = inventory.ViewCurrentRental(username, file);
 
-                if (pending.Length <= 1 && approved.Length < 1 && currentpending == "None" && currentapproved == "")
+                if (pending.Length <= 1 && approved.Length <= 1 && currentPending == "" && currentApproved == "")
                 {
                     //delete the user line from the main user file
                     using (StreamReader reader = new StreamReader(filePath))
@@ -162,13 +164,13 @@ namespace Peak_Performance_Vehicle_Rentals
                             File.Delete(files[i]);
                         }
                     }
-                    Console.WriteLine("User Account has been successfully deleted!"); Thread.Sleep(1000);
-                    Console.WriteLine("Returning to login screen..."); Thread.Sleep(3000);
+                    UserInterface.WriteColoredText(3, 0, "green", "User Account has been successfully deleted!");
+                    UserInterface.WriteColoredText(3, 1, "green", "Returning to login screen...");
                     return 1;
                 }
                 else
                 {
-                    Console.WriteLine("Make sure that there is no ongoing rental process before deleting your account"); Thread.Sleep(3000);
+                    UserInterface.WriteColoredText(3, 0, "red", "Make sure that there is no ongoing rental process before deleting your account!");
                     return 0;
                 }
             }
@@ -324,6 +326,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] parts = search.Split(" ");
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*.txt");
             string[] searchFiles = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"{parts[1]}*.txt");
+            string[] approvedFiles = Directory.GetFiles(BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
             string[] vehicleRentDetails = new string[3]; //0 is daily, 1 is hourly, 2 is owner
 
             try
@@ -462,6 +465,81 @@ namespace Peak_Performance_Vehicle_Rentals
                         }
                     }
                 }
+                else if (type == "approved")
+                {
+                    for (int i = 0; i < approvedFiles.Length; i++)
+                    {
+                        if (DVchoice == i)
+                        {
+                            Console.Clear();
+                            string content = File.ReadAllText(approvedFiles[i]);
+                            string[] lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                            string[] details = new string[2];
+
+                            using (StreamReader reader = new StreamReader(approvedFiles[i]))
+                            {
+                                string line;
+                                while ((line = reader.ReadLine()) != null)
+                                {
+                                    //pa chuy chuy
+                                    if (line.StartsWith("Brand"))
+                                    {
+                                        string[] lineParts = line.Split(": ");
+                                        details[0] = lineParts[1];
+                                    }
+                                    if (line.StartsWith("Model"))
+                                    {
+                                        string[] lineParts = line.Split(": ");
+                                        details[1] = lineParts[1];
+                                    }
+                                    if (line.StartsWith("Daily"))
+                                    {
+                                        string[] lineParts = line.Split(" ");
+                                        vehicleRentDetails[0] = lineParts[3];
+                                    }
+                                    if (line.StartsWith("Hourly"))
+                                    {
+                                        string[] lineParts = line.Split(" ");
+                                        vehicleRentDetails[1] = lineParts[3];
+                                    }
+                                }
+                            }
+
+                            string Prompt = @$"
+                                       ___  ____ ___ ____ _ _    ____ 
+                                       |  \ |___  |  |__| | |    [___
+                                       |__/ |___  |  |  | | |___ ___]
+
+                                       {details[0]} {details[1]}
+                                                                ";
+
+                            UserInterface.CenterVerbatimText(Prompt);
+
+                            UserInterface.CenterTextMargin(3, 0);
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Vehicle Details");
+                            Console.ResetColor();
+                            for (int j = 0; j < 14; j++)
+                            {
+                                UserInterface.CenterTextMargin(3, 0);
+                                Console.WriteLine(lines[j]);
+                            }
+
+                            //also display the client details
+                            UserInterface.CenterTextMargin(3, 1);
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Client Details");
+                            Console.ResetColor();
+                            for (int j = 24; j < 29; j++)
+                            {
+                                UserInterface.CenterTextMargin(3, 0);
+                                Console.WriteLine(lines[j]);
+                            }
+                            Console.WriteLine();
+                            UserInterface.WaitForKey(3, 0, "Press any key to go back to Rental Details Menu.");
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -474,6 +552,28 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] parts = search.Split(" ");
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*.txt");
             string[] searchFiles = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"{parts[1]}*.txt");
+
+            //find email for contact
+            string[] userFile = Directory.GetFiles(BaseDirectory + "\\UserData", $"{username}.txt");
+            string[] userDetails = new string[2];
+            using (StreamReader reader = new StreamReader(userFile[0])) // 'true' for append mode
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    //pa chuy chuy
+                    if (line.StartsWith("Email Address"))
+                    {
+                        string[] lineParts = line.Split(": ");
+                        userDetails[0] = lineParts[1];
+                    }
+                    if (line.StartsWith("Contact Number"))
+                    {
+                        string[] lineParts = line.Split(": ");
+                        userDetails[1] = lineParts[1];
+                    }
+                }
+            }
 
             try
             {
@@ -488,6 +588,8 @@ namespace Peak_Performance_Vehicle_Rentals
                             {
                                 writer.WriteLine("Details of the client");
                                 writer.WriteLine($"Name: {username}");
+                                writer.WriteLine($"Email Address: {userDetails[0]}");
+                                writer.WriteLine($"Contact Number: {userDetails[1]}");
                                 writer.WriteLine($"Number of days/hours the vehicle will be rented: {rentDetails[0]}");
                                 writer.WriteLine($"Total price: {rentDetails[1]}");
                                 writer.WriteLine($"Additional information: {rentDetails[2]}");
@@ -509,6 +611,8 @@ namespace Peak_Performance_Vehicle_Rentals
                             {
                                 writer.WriteLine("Details of the client");
                                 writer.WriteLine($"Name: {username}");
+                                writer.WriteLine($"Email Address: {userDetails[0]}");
+                                writer.WriteLine($"Contact Number: {userDetails[1]}");
                                 writer.WriteLine($"Number of days/hours the vehicle will be rented: {rentDetails[0]}");
                                 writer.WriteLine($"Total price: {rentDetails[1]}");
                                 writer.WriteLine($"Additional information: {rentDetails[2]}");
@@ -554,6 +658,8 @@ namespace Peak_Performance_Vehicle_Rentals
                         string dailyPrice = Inventory.ExtractValue(lines, "Daily Rental Price:");
                         string hourlyPrice = Inventory.ExtractValue(lines, "Hourly Rental Price:");
                         string clientName = Inventory.ExtractValue(lines, "Name:");
+                        string email = Inventory.ExtractValue(lines, "Email Address:");
+                        string contact = Inventory.ExtractValue(lines, "Contact Number:");
                         string rentalDuration = Inventory.ExtractValue(lines, "Number of days/hours the vehicle will be rented:");
                         string totalPrice = Inventory.ExtractValue(lines, "Total price:");
                         string additionalInfo = Inventory.ExtractValue(lines, "Additional information:");
@@ -578,6 +684,8 @@ namespace Peak_Performance_Vehicle_Rentals
                             writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
                             writer.WriteLine("            Client Information         ");
                             writer.WriteLine($"Name: {clientName}");
+                            writer.WriteLine($"Email Address: {email}");
+                            writer.WriteLine($"Name: {contact}");
                             writer.WriteLine($"Rental Duration: {rentalDuration}");
                             writer.WriteLine($"Total Price: {totalPrice}");
                             writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
@@ -622,38 +730,136 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void DisplayPendingFile(int choice, string username, FilePathManager file) //METHOD 8: display pending files
+        public void DisplayPendingFile(int choice, string username, string type, FilePathManager file) //METHOD 8: display pending files
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\RentalData\\PendingRental", $"*{username}.txt");
+            string[] filesClient = Directory.GetFiles(BaseDirectory + "\\RentalData\\PendingRental", $"*.txt");
             string[] lines = new string[20];
 
-            try
+            if (type == "Vehicle Provider")
             {
-                // Read all lines from the file
-                for (int i = 0; i < files.Length; i++)
+                try
                 {
-                    if (i == choice)
+                    // Read all lines from the file
+                    for (int i = 0; i < files.Length; i++)
                     {
-                        lines = File.ReadAllLines(files[i]);
+                        if (i == choice)
+                        {
+                            lines = File.ReadAllLines(files[i]);
+                        }
                     }
-                }
-                // Find the index of the line containing "Details of the client"
-                int detailsIndex = Array.IndexOf(lines, "Details of the client");
+                    // Find the index of the line containing "Details of the client"
+                    int detailsIndex = Array.IndexOf(lines, "Details of the client");
 
-                UserInterface.CenterTextMargin(3, 0);
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Details of the client");
-                Console.ResetColor();
-                for (int i = detailsIndex + 1; i < lines.Length; i++)
-                {
                     UserInterface.CenterTextMargin(3, 0);
-                    Console.WriteLine(lines[i]);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Details of the client");
+                    Console.ResetColor();
+                    for (int i = detailsIndex + 1; i < lines.Length; i++)
+                    {
+                        UserInterface.CenterTextMargin(3, 0);
+                        Console.WriteLine(lines[i]);
+                    }
+                    Console.WriteLine("");
                 }
-                Console.WriteLine("");
+                catch (Exception e)
+                {
+                    Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+                }
             }
-            catch (Exception e)
+            else if (type == "Client")
             {
-                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+                try
+                {
+                    // Read all lines from the file
+                    for (int i = 0; i < filesClient.Length; i++)
+                    {
+                        string line;
+                        using (var reader = new StreamReader(filesClient[i]))
+                        {
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                if (line.StartsWith("Name:"))
+                                {
+                                    string[] nameParts = line.Split(": ");
+                                    string name = nameParts[1];
+                                    if (name == username)
+                                    {
+                                        lines = File.ReadAllLines(filesClient[i]);
+                                        Console.Clear();
+
+                                        string content = File.ReadAllText(filesClient[i]);
+                                        string[] displayLines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                                        string[] details = new string[2];
+
+                                        string line2;
+                                        using (var lineReader = new StreamReader(filesClient[i]))
+                                        {
+                                            while ((line2 = lineReader.ReadLine()) != null)
+                                            {
+                                                //pa chuy chuy
+                                                if (line2.StartsWith("Brand"))
+                                                {
+                                                    string[] lineParts = line2.Split(": ");
+                                                    details[0] = lineParts[1];
+                                                }
+                                                if (line2.StartsWith("Model"))
+                                                {
+                                                    string[] lineParts = line2.Split(": ");
+                                                    details[1] = lineParts[1];
+                                                }
+                                            }
+                                        }
+
+                                        string Prompt = @$"
+                                       ___  ____ ___ ____ _ _    ____ 
+                                       |  \ |___  |  |__| | |    [___
+                                       |__/ |___  |  |  | | |___ ___]
+
+                                       {details[0]} {details[1]}
+                                                                ";
+
+                                        UserInterface.CenterVerbatimText(Prompt);
+
+                                        UserInterface.CenterTextMargin(3, 0);
+                                        Console.ForegroundColor = ConsoleColor.Yellow;
+                                        Console.WriteLine("Vehicle Details");
+                                        Console.ResetColor();
+                                        for (int j = 0; j < displayLines.Length; j++)
+                                        {
+                                            UserInterface.CenterTextMargin(3, 0);
+                                            Console.WriteLine(displayLines[j]);
+                                        }
+
+                                        //also display the owner details
+                                        string fileName = Path.GetFileNameWithoutExtension(filesClient[i]);
+                                        string[] ownerName = fileName.Split("-");
+                                        UserFile owner = new UserFile();
+                                        owner.DisplayUserFile("vehicle", ownerName[3]);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // Find the index of the line containing "Details of the client"
+                    int detailsIndex = Array.IndexOf(lines, "Details of the client");
+
+                    UserInterface.CenterTextMargin(3, 0);
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Details of the client");
+                    Console.ResetColor();
+                    for (int i = detailsIndex + 1; i < lines.Length; i++)
+                    {
+                        UserInterface.CenterTextMargin(3, 0);
+                        Console.WriteLine(lines[i]);
+                    }
+                    Console.WriteLine("");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+                }
             }
         }
 

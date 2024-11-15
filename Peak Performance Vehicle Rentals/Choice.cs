@@ -54,22 +54,31 @@ namespace Peak_Performance_Vehicle_Rentals
 
                     (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
 
-            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+            int choice = 0;
+            if (type == "Client")
+            {
 
-            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+                Options = new string[] { "View rentable vehicles", "View rental details", "Manage User Account", "Logout", "Exit Program" };
+                UserInterface MM = new UserInterface(Prompt, Options);
+                choice = MM.RunUserInterface("all");
+                if (choice >= 2) //change the choice so that it automatically matches the "skeleton" in the program.cs file
+                    choice++;
+            }
+            else if (type == "Vehicle Provider")
+            {
+                Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
+                UserInterface MM = new UserInterface(Prompt, Options);
+                choice = MM.RunUserInterface("all");
 
-            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
+            }
+            /*else if (type == "ADMIN")
+            {
+                Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
+                UserInterface MM = new UserInterface(Prompt, Options);
+                choice = MM.RunUserInterface("all");
+            }*/
 
-            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
 
-            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
-
-            //DO TOMORROW, DIFFERENT OUTPUTS DEPENDING ON TYPE LIKE CLIENT, PROVIDER, ADMIN.
-
-            Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
-
-            UserInterface MM = new UserInterface(Prompt, Options);
-            int choice = MM.RunUserInterface("all");
             return choice;
         }
         public int RentalChoice(FilePathManager file) //CHOICE METHOD 3: view rental vehicles
@@ -187,24 +196,55 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = RD.RunUserInterface("rent");
             return choice;
         }
-        public int RentalDetailsChoice(string username, FilePathManager file) //CHOICE METHOD 10: rental details
+        public int RentalDetailsChoice(string username, string type, FilePathManager file) //CHOICE METHOD 10: rental details
         {
             Inventory inventory = new Inventory();
-            string vehicle = inventory.ViewPendingRentalClient(username, file);
             Prompt = @$"
                     ____ ____ _  _ ___ ____ _       ___  ____ ___ ____ _ _    ____ 
                     |__/ |___ |\ |  |  |__| |       |  \ |___  |  |__| | |    [___
                     |  \ |___ | \|  |  |  | |___    |__/ |___  |  |  | | |___ ___]
 
-                    Vehicle that you plan on renting currently waiting for approval: {vehicle}
-
                     (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
-            Options = new string[] { "View pending rental applications", "View approved rental applications", "Manage the vehicle you are currently renting", "Go back to Main Menu" };
 
-            UserInterface RD = new UserInterface(Prompt, Options);
-            int choice = RD.RunUserInterface("all");
+            int choice = 0;
+            if (type == "Client")
+            {
+                Options = new string[] { "View pending rental applications", "Manage the vehicle you are currently renting", "Go back to Main Menu" };
+                UserInterface RD = new UserInterface(Prompt, Options);
+                choice = RD.RunUserInterface("all");
+                if (choice >= 1) //change the choice so that it automatically matches the "skeleton" in the program.cs file
+                    choice += 2;
+
+            }
+            else if (type == "Vehicle Provider")
+            {
+                Options = new string[] { "View pending rental applications", "View approved rental applications", "Go back to Main Menu" };
+                UserInterface RD = new UserInterface(Prompt, Options);
+                choice = RD.RunUserInterface("all");
+                if (choice <= 1) //change the choice so that it automatically matches the "skeleton" in the program.cs file
+                    choice++;
+                else if (choice == 2)
+                    choice += 2;
+            }
             return choice;
         }
+
+        public int ApprovedChoice(string username, FilePathManager file) //CHOICE METHOD ??
+        {
+            Inventory inventory = new Inventory();
+            Prompt = @"
+                    ____ ___  ___  ____ ____ _  _ ____ ___     _  _ ____ _  _ _ ____ _    ____ ____ 
+                    |__| |__] |__] |__/ |  | |  | |___ |  \    |  | |___ |__| | |    |    |___ [___ 
+                    |  | |    |    |  \ |__|  \/  |___ |__/     \/  |___ |  | | |___ |___ |___ ___] 
+
+                    Shown below are vehicles that you own which are currently being rented.";
+            Options = inventory.ViewApprovedRental(username, file);
+
+            UserInterface VAV = new UserInterface(Prompt, Options);
+            int choice = VAV.RunUserInterface("all");
+            return choice;
+        }
+
         public int ApprovePendingChoice() //CHOICE METHOD 11: approve pending vehicles
         {
             UserInterface.CenterTextMargin(3, 0);
@@ -234,8 +274,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
                             What would you like to do your current rental vehicle?
 
-                            (use the UP or DOWN arrow keys to navigate, press ENTER to select)
-                            ";
+                            (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
                 Options = new string[] { "View reciept", "Finish renting the vehicle", "Go back to Main Menu" };
                 UserInterface RD = new UserInterface(Prompt, Options);
                 choice = RD.RunUserInterface("all");

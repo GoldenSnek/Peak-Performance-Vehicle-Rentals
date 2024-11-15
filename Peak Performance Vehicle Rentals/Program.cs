@@ -125,11 +125,11 @@ namespace Peak_Performance_Vehicle_Rentals
                                     switch (Rchoice)
                                     {
                                         case 0:
-                                            MV.SearchRentalVehicles(details[0], file);
+                                            MV.SearchRentalVehicles(details[0], details[1], file);
                                             break;
 
                                         case 1:
-                                            MV.ViewRentalVehicles(details[0], file);
+                                            MV.ViewRentalVehicles(details[0], details[1], file);
                                             break;
 
                                         case 2:
@@ -143,22 +143,26 @@ namespace Peak_Performance_Vehicle_Rentals
                                 bool VRrunning = true;
                                 do
                                 {
-                                    int VRchoice = choice.RentalDetailsChoice(details[0], file);
+                                    int VRchoice = choice.RentalDetailsChoice(details[0], details[1], file);
                                     switch (VRchoice)
                                     {
                                         case 0:
-                                            MV.PendingVehicles(details[0], file);
+                                            MV.PendingVehiclesClient(details[0], file);
                                             break;
 
                                         case 1:
-                                            MV.ApprovedVehicles(details[0], file);
+                                            MV.PendingVehiclesOwner(details[0], file);
                                             break;
 
                                         case 2:
-                                            MV.CurrentlyRentingVehicle(details[0], file);
+                                            MV.ApprovedVehicles(details[0], file);
                                             break;
 
                                         case 3:
+                                            MV.CurrentlyRentingVehicle(details[0], file);
+                                            break;
+
+                                        case 4:
                                             VRrunning = false;
                                             break;
 
