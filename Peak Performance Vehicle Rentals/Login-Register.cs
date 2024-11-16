@@ -67,17 +67,11 @@ namespace Peak_Performance_Vehicle_Rentals
             Choice choose = new Choice();
             int choice = choose.RegisterTypeChoice();
             if (choice == 0)
-            {
                 Type = "Client";
-            }
             else if (choice == 1)
-            {
                 Type = "Vehicle Provider";
-            }
             else
-            {
                 return;
-            }
 
             Console.CursorVisible = true;
             do

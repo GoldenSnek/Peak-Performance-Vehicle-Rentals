@@ -69,14 +69,17 @@ namespace Peak_Performance_Vehicle_Rentals
                 Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
                 UserInterface MM = new UserInterface(Prompt, Options);
                 choice = MM.RunUserInterface("all");
-
             }
-            /*else if (type == "ADMIN")
+            else if (type == "Admin")
             {
-                Options = new string[] { "View rentable vehicles", "View rental details", "Manage vehicles", "Manage User Account", "Logout", "Exit Program" };
+                Options = new string[] { "View and manage ALL VEHICLES", "View and manage ALL USERS",  "Logout", "Exit Program" };
                 UserInterface MM = new UserInterface(Prompt, Options);
                 choice = MM.RunUserInterface("all");
-            }*/
+                if (choice <= 1) //change the choice so that it automatically matches the "skeleton" in the program.cs file
+                    choice += 6;
+                else if (choice >= 2)
+                    choice += 2;
+            }
 
 
             return choice;
@@ -113,7 +116,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string choice = VAV.RunUserInterfaceString("all");
             return choice;
         }
-        public int ViewAllVehiclesChoice(FilePathManager file) //CHOICE METHOD 5: view all vehicles
+        public int ViewAllVehiclesChoice(string type, FilePathManager file) //CHOICE METHOD 5: view all vehicles
         {
             Inventory inventory = new Inventory();
             Prompt = @"
@@ -124,7 +127,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     Shown below are the vehicles available for rent. Please select a vehicle to view its details.
 
                     (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
-            Options = inventory.ViewVehicles(file);
+            Options = inventory.ViewAllVehicles(type, file);
 
             UserInterface VAV = new UserInterface(Prompt, Options);
             int choice = VAV.RunUserInterface("all");
@@ -162,7 +165,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     Only vehicles owned by {username} are displayed.
 
                     (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
-            Options = inventory.ViewVehicles(username, file);
+            Options = inventory.ViewOwnedVehicles(username, file);
 
             UserInterface VOV = new UserInterface(Prompt, Options);
             int choice = VOV.RunUserInterface("all");
@@ -420,5 +423,39 @@ namespace Peak_Performance_Vehicle_Rentals
             int choice = DU.RunUserInterface("all");
             return choice;
         }
+        public int DeleteAdminVehicleChoice() //CHOICE METHOD 19: delete user
+        {
+            Prompt = "Do you want to remove this vehicle from the system?";
+            Options = new string[] { "DELETE THIS VEHICLE", "Go back to viewing other vehicles" };
+            UserInterface DU = new UserInterface(Prompt, Options);
+            int choice = DU.RunUserInterface("delete");
+            return choice;
+        }
+
+        public string ViewAdminUserChoice(FilePathManager file) //CHOICE METHOD 19: delete user
+        {
+            Inventory inventory = new Inventory();
+            Prompt = @"
+                    ____ ____ _    ____ ____ ___    ____    _  _ ____ ____ ____ 
+                    [__  |___ |    |___ |     |     |__|    |  | [__  |___ |__/ 
+                    ___] |___ |___ |___ |___  |     |  |    |__| ___] |___ |  \ 
+                              
+                    Shown below are the list of all the users.
+
+                    (use the UP or DOWN arrow keys to navigate, press ENTER to select)";
+            Options = inventory.ViewUsers(file);
+            UserInterface DU = new UserInterface(Prompt, Options);
+            string choice = DU.RunUserInterfaceString("all");
+            return choice;
+        }
+        public int DeleteAdminUserChoice() //CHOICE METHOD 19: delete user
+        {
+            Prompt = "Do you want to remove this user account from the system?";
+            Options = new string[] { "DELETE THIS ACCOUNT", "Go back to viewing other users" };
+            UserInterface DU = new UserInterface(Prompt, Options);
+            int choice = DU.RunUserInterface("delete");
+            return choice;
+        }
+
     }
 }

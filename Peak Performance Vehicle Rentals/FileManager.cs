@@ -165,7 +165,6 @@ namespace Peak_Performance_Vehicle_Rentals
                         }
                     }
                     UserInterface.WriteColoredText(3, 0, "green", "User Account has been successfully deleted!");
-                    UserInterface.WriteColoredText(3, 1, "green", "Returning to login screen...");
                     return 1;
                 }
                 else
@@ -182,8 +181,8 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         public void DisplayUserFile(string type, string username) //METHOD 4: for displaying info inside the user file
         {
-            string[] files = Directory.GetFiles(BaseDirectory + "\\UserData", $"{username}.txt");
-            string content = File.ReadAllText(files[0]);
+            string file = BaseDirectory + $"\\UserData\\{username}.txt";
+            string content = File.ReadAllText(file);
             string[] lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
             try
@@ -297,27 +296,52 @@ namespace Peak_Performance_Vehicle_Rentals
             }
         }
 
-        public void DeleteVehicleFile(string username, FilePathManager file, int choice) //METHOD 3: for deleting vehicle file
+        public void DeleteVehicleFile(string username, int choice, string type, FilePathManager file) //METHOD 3: for deleting vehicle file
         {
             string[] files = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*{username}.txt");
+            string[] adminFiles = Directory.GetFiles(BaseDirectory + "\\VehicleData", $"*.txt");
 
-            try
+            if (type == "Admin")
             {
-                //delete the file
-                for (int i = 0; i < files.Length; i++)
+                try
                 {
-                    if (choice == i)
-                        if (File.Exists(files[i]))
-                        {
-                            File.Delete(files[i]);
-                            UserInterface.WriteColoredText(3, 0, "green", "Vehicle has been successfully deleted from the inventory!");
-                            break;
-                        }
+                    //delete the file
+                    for (int i = 0; i < adminFiles.Length; i++)
+                    {
+                        if (choice == i)
+                            if (File.Exists(adminFiles[i]))
+                            {
+                                File.Delete(adminFiles[i]);
+                                UserInterface.WriteColoredText(3, 0, "green", "Vehicle has been successfully deleted from the inventory!");
+                                break;
+                            }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
                 }
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+                try
+                {
+                    //delete the file
+                    for (int i = 0; i < files.Length; i++)
+                    {
+                        if (choice == i)
+                            if (File.Exists(files[i]))
+                            {
+                                File.Delete(files[i]);
+                                UserInterface.WriteColoredText(3, 0, "green", "Vehicle has been successfully deleted from the inventory!");
+                                break;
+                            }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+                }
             }
         }
 

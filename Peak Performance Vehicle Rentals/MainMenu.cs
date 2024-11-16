@@ -39,7 +39,7 @@ namespace Peak_Performance_Vehicle_Rentals
             do
             {
                 choice = choose.ViewSearchedVehiclesChoice(keyword, file);
-                if (choice != "Go back to Available Rental Vehicles")
+                if (choice != "Go back to Rental Vehicles Menu")
                 {
                     VehicleFile vehicle = new VehicleFile();
                     string[] vehicleRentDetails = vehicle.DisplayVehicleFile(0, choice, "search");
@@ -100,19 +100,20 @@ namespace Peak_Performance_Vehicle_Rentals
                         UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
                     }
                 }
-            } while (choice != "Go back to Available Rental Vehicles");
+            } while (choice != "Go back to Rental Vehicles Menu");
         }
 
         public void ViewRentalVehicles(string username, string type, FilePathManager file) //MAIN METHOD 1 for viewing all rentable vehicles
         {
             int choice;
             int choiceRent;
+            int choiceDelete;
             Choice choose = new Choice();
             Inventory inventory = new Inventory();
             do
             {
-                choice = choose.ViewAllVehiclesChoice(file);
-                if (choice != inventory.ViewVehicles(file).Length - 1)
+                choice = choose.ViewAllVehiclesChoice(type, file);
+                if (choice != inventory.ViewAllVehicles(type, file).Length - 1)
                 {
                     VehicleFile vehicle = new VehicleFile();
                     string[] vehicleRentDetails = vehicle.DisplayVehicleFile(choice, "N A", "all");
@@ -168,12 +169,23 @@ namespace Peak_Performance_Vehicle_Rentals
                             }
                         } while (choiceRent != 1);
                     }
+                    else if (type == "Admin")
+                    {
+                        choiceDelete = choose.DeleteAdminVehicleChoice();
+                        switch (choiceDelete)
+                        {
+                            case 0:
+                                VehicleFile allVehicle = new VehicleFile();
+                                allVehicle.DeleteVehicleFile(username, choice, "Admin", file);
+                                break;
+                        }
+                    }
                     else
                     {
                         UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
                     }
                 }
-            } while (choice != inventory.ViewVehicles(file).Length - 1);
+            } while (choice != inventory.ViewAllVehicles(type, file).Length - 1);
         }
 
         //Main Menu Case 1:
@@ -225,8 +237,6 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (true);
 
         }
-
-        
 
         public void ApprovedVehicles(string username, FilePathManager file) //MAIN METHOD 1 for viewing approved vehicles
         {
@@ -333,7 +343,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 choice = choose.ViewOwnedVehiclesChoice(username, file);
                 do
                 {
-                    if (choice != inventory.ViewVehicles(username, file).Length - 1)
+                    if (choice != inventory.ViewOwnedVehicles(username, file).Length - 1)
                     {
                         detailchoice = choose.UpdateVehicleDetailsChoice(username, file, choice);
 
@@ -362,7 +372,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         }
                     }
                 } while (detailchoice != "");
-            } while (choice != inventory.ViewVehicles(username, file).Length - 1);
+            } while (choice != inventory.ViewOwnedVehicles(username, file).Length - 1);
         }
         
         public void DeleteVehicle(string username, FilePathManager file) //MAIN METHOD 2 for deleting vehicles
@@ -374,10 +384,9 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 choice = choose.ViewOwnedVehiclesChoice(username, file);
                 VehicleFile vehicle = new VehicleFile();
-                vehicle.DeleteVehicleFile(username, file, choice); //Delete vehicle file
-            } while (choice != inventory.ViewVehicles(username, file).Length - 1);
+                vehicle.DeleteVehicleFile(username, choice, "", file); //Delete vehicle file
+            } while (choice != inventory.ViewOwnedVehicles(username, file).Length - 1);
         }
-
     }
 
     internal class VehicleDetailManager //SUPPORTING CLASS for manage vehicles
@@ -644,29 +653,63 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (detailchoice != "");
         }
 
-        public bool DeleteUser(string username, FilePathManager file) //MAIN METHOD 2 for deleting user account
+        public bool DeleteUser(string username, string type, FilePathManager file) //MAIN METHOD 2 for deleting user account
         {
-            int choice;
+            string choice;
+            int option;
             Choice choose = new Choice();
-            do
+
+            if (type == "Admin")
             {
-
-                choice = choose.DeleteUserChoice(username, file);
-
-                if (choice == 0)
+                do
                 {
-                    UserFile user = new UserFile();
-                    int deleteChoice = user.DeleteUserFile(username, file); //delete user file
-                    if (deleteChoice == 0)
+                    choice = choose.ViewAdminUserChoice(file);
+                    if (choice != "Go back to Main Menu")
                     {
-                        return true;
+                        string[] details = choice.Split(" | "); //index 0 is username
+
+                        UserFile user = new UserFile();
+                        user.DisplayUserFile("user", details[0]);
+
+                        option = choose.DeleteAdminUserChoice();
+                        if (option == 0)
+                        {
+                            int deleteChoice = user.DeleteUserFile(details[0], file); //delete user file
+                            if (deleteChoice == 0)
+                            {
+                                return true;
+
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
                     }
-                    else
+                } while (choice != "Go back to Main Menu");
+            }
+
+            else
+            {
+                do
+                {
+                    option = choose.DeleteUserChoice(username, file);
+
+                    if (option == 0)
                     {
-                        return false;
+                        UserFile user = new UserFile();
+                        int deleteChoice = user.DeleteUserFile(username, file); //delete user file
+                        if (deleteChoice == 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
-                }
-            } while (choice != 1);
+                } while (option != 1);
+            }
             return true;
         }
     }

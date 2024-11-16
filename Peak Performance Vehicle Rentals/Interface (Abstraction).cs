@@ -62,7 +62,7 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         public void ViewUserDetails(string username, FilePathManager file);
         public void UpdateUser(string username, FilePathManager file);
-        public bool DeleteUser(string username, FilePathManager file);
+        public bool DeleteUser(string username, string type, FilePathManager file);
     }
 
     //Choice
@@ -79,7 +79,7 @@ namespace Peak_Performance_Vehicle_Rentals
         public int MainMenuChoice(string username, string type);
         public int RentalChoice(FilePathManager file);
         public string ViewSearchedVehiclesChoice(string keyword, FilePathManager file);
-        public int ViewAllVehiclesChoice(FilePathManager file);
+        public int ViewAllVehiclesChoice(string type, FilePathManager file);
         public int VehicleRentChoice(string vehicleOwner, string username);
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file);
         public int ViewPendingChoice(string username, FilePathManager file);
@@ -99,7 +99,8 @@ namespace Peak_Performance_Vehicle_Rentals
     //Inventory
     public interface IInventoryManagement
     {
-        public string[] ViewVehicles(FilePathManager file);
+        public string[] ViewAllVehicles(string type, FilePathManager file);
+        public string[] ViewOwnedVehicles(string username, FilePathManager file);
         public string[] ViewSearchedVehicles(string keyword, FilePathManager file);
         public string[] ViewVehicleDetails(string username, FilePathManager file, int choice);
         public string[] ViewUserDetails(string username, FilePathManager file);
@@ -128,7 +129,7 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         public void CreateVehicleFile(string username, string[] details);
         public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail);
-        public void DeleteVehicleFile(string username, FilePathManager file, int choice);
+        public void DeleteVehicleFile(string username, int choice, string type, FilePathManager file);
         public string[] DisplayVehicleFile(int DVchoice, string search, string type);
         public void TransferPendingFile(int choice, string[] rentDetails, string username, string search, string type);
         public void TransferApprovedFile(int choice, string username, FilePathManager file);

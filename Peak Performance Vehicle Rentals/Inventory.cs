@@ -8,7 +8,7 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class Inventory : IInventoryManagement
     {
-        public string[] ViewVehicles(FilePathManager file) //MAIN METHOD 1 (overload 1), view all vehicles
+        public string[] ViewAllVehicles(string type, FilePathManager file) //MAIN METHOD 1 (overload 1), view all vehicles
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", "*.txt");
             string[] vehicles = new string[files.Length + 1];
@@ -35,10 +35,13 @@ namespace Peak_Performance_Vehicle_Rentals
                 vehicles[i] = $"{brand} {parts[0]}";
             }
 
-            vehicles[files.Length] = "Go back to Rental Vehicles Menu";
+            if (type == "Admin")
+                vehicles[files.Length] = "Go back to Main  Menu";
+            else
+                vehicles[files.Length] = "Go back to Rental Vehicles Menu";
             return vehicles;
         }
-        public string[] ViewVehicles(string username, FilePathManager file) //MAIN METHOD 1 (overload 2), view owned vehicles
+        public string[] ViewOwnedVehicles(string username, FilePathManager file) //MAIN METHOD 1 (overload 2), view owned vehicles
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*{username}.txt");
             string brand = "";
@@ -101,7 +104,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     }
                 }
             }
-            vehicles.Add("Go back to Available Rental Vehicles");
+            vehicles.Add("Go back to Rental Vehicles Menu");
 
             return vehicles.ToArray();
 
@@ -312,7 +315,28 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return vehicle;
         }
-        
+
+        public string[] ViewUsers(FilePathManager file) //
+        {
+            List<string> users = new List<string>();
+            string[] details = new string[3];
+
+            string line;
+            using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt")) //find the brand to be included in the display
+            {
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (!line.StartsWith("ADMIN"))
+                    {
+                        details = line.Split(",");
+                        users.Add($"{details[0]} | {details[2]}");
+                    }
+                }
+            }
+            users.Add("Go back to Main Menu");
+            return users.ToArray();
+        }
+
         internal static string ExtractValue(string[] lines, string key) //SUPPORTING and EXTRA METHOD, extracts the data from each line
         {
             foreach (string line in lines)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -30,7 +31,7 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 if (type == "all") //clear all
                     ClearAllRUI();
-                else if (type == "rent")
+                else if (type == "rent" || type == "delete")
                 {
                     if (ctr == 0)
                         CenterTextMargin(3 , 6);
@@ -179,7 +180,7 @@ namespace Peak_Performance_Vehicle_Rentals
             var lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             int windowWidth = Console.WindowWidth;
             int position = 0;
-
+            int ctr = 0;
             try
             {
                 foreach (var line in lines)
@@ -190,8 +191,15 @@ namespace Peak_Performance_Vehicle_Rentals
                     if (position < 0) position = 0; //ensure we don't go out of bounds
 
                     Console.SetCursorPosition(position, Console.CursorTop);
+
+                    if (ctr < 4) Console.ForegroundColor = ConsoleColor.DarkYellow;
+
                     Console.WriteLine(trimmedLine);
+                    ctr++;
+
+                    if (ctr >= 4) Console.ForegroundColor = ConsoleColor.Gray;
                 }
+                Console.ResetColor();
             }
             catch (Exception e)
             {

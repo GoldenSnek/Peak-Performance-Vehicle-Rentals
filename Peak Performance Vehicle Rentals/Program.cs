@@ -75,12 +75,13 @@ namespace Peak_Performance_Vehicle_Rentals
                             break;
 
                         case 2:
-                            string text = @$"This is my Final Project for CPE261 - H2!
+                            string text = @$"This is my Final Project for CPE261 (OOP 1) - H2!
                                             Program created by: John Michael A. Nave
+                                            Version 1 (November 19, 2024)
 
-                                            Special thanks:
+                                            Special Thanks:
                                             Mga barkada sa CPE
-                                            Sources (YouTube, GitHub, ChatGPT, Microsoft C# tutorial, etc.)
+                                            Online Sources (YouTube, GitHub, etc.)
                                             Engr. Julian N. Semblante
 
                                             Links:
@@ -117,6 +118,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         int MMchoice = choice.MainMenuChoice(details[0], details[1]);
                         switch (MMchoice)
                         {
+                            //client and provider cases
                             case 0:
                                 int Rchoice;
                                 do
@@ -219,9 +221,12 @@ namespace Peak_Performance_Vehicle_Rentals
                                             break;
 
                                         case 2:
-                                            MUrunning = UR.DeleteUser(details[0], file);
+                                            MUrunning = UR.DeleteUser(details[0], details[1], file);
                                             if (MUrunning == false)
+                                            {
+                                                UserInterface.WriteColoredText(3, 1, "green", "Returning to login screen...");
                                                 MMrunning = false;
+                                            }
                                             break;
 
                                         case 3:
@@ -237,12 +242,23 @@ namespace Peak_Performance_Vehicle_Rentals
                             case 4:
                                 MMrunning = false;
                                 break;
+
                             case 5:
                                 Console.Clear();
                                 Console.WriteLine("Thank you for using the program!");
                                 Console.WriteLine("Now exiting program...");
                                 System.Environment.Exit(0);
                                 break;
+
+                            //admin cases
+                            case 6:
+                                MV.ViewRentalVehicles(details[0], details[1], file);
+                                break;
+
+                            case 7:
+                                UR.DeleteUser(details[0], details[1], file);
+                                break;
+
                             default:
                                 break;
                         }
