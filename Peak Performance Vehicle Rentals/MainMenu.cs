@@ -25,7 +25,7 @@ namespace Peak_Performance_Vehicle_Rentals
         //Main Menu Case 0:
         public void SearchRentalVehicles(string username, string type, FilePathManager file) //MAIN METHOD 0 for searching a rentable vehicles
         {
-            string choice;
+            int choice;
             int choiceRent;
             Choice choose = new Choice();
             Inventory inventory = new Inventory();
@@ -39,10 +39,10 @@ namespace Peak_Performance_Vehicle_Rentals
             do
             {
                 choice = choose.ViewSearchedVehiclesChoice(keyword, file);
-                if (choice != "Go back to Rental Vehicles Menu")
+                if (choice != inventory.ViewSearchedVehicles(keyword, "search", file).Length-1)
                 {
                     VehicleFile vehicle = new VehicleFile();
-                    string[] vehicleRentDetails = vehicle.DisplayVehicleFile(0, choice, "search");
+                    string[] vehicleRentDetails = vehicle.DisplayVehicleFile(choice, keyword, "search", file);
 
                     //choose what to do with the vehicle
                     if (type == "Client")
@@ -53,44 +53,7 @@ namespace Peak_Performance_Vehicle_Rentals
                             switch (choiceRent)
                             {
                                 case 0:
-
-                                    string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
-                                    string currentVehicle = inventory.ViewCurrentRental(username, file);
-                                    if (pendingVehicle == "" && currentVehicle == "")
-                                    {
-                                        string[] rentDetails = new string[3];
-                                        Choice chooseRent = new Choice();
-
-                                        //calculations for rent
-                                        int priceCalculation = chooseRent.RentalTimeChoice();
-
-                                        if (priceCalculation == 0)
-                                        {
-                                            string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
-                                            rentDetails[0] = tempDetails[0];
-                                            rentDetails[1] = tempDetails[1];
-                                        }
-                                        else if (priceCalculation == 1)
-                                        {
-                                            string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
-                                            rentDetails[0] = tempDetails[0];
-                                            rentDetails[1] = tempDetails[1];
-                                        }
-                                        //extra
-                                        rentDetails[2] = AddNote();
-
-                                        VehicleFile pending = new VehicleFile();
-                                        pending.TransferPendingFile(0, rentDetails, username, choice, "search");
-                                        choiceRent = 1;
-                                    }
-                                    else
-                                    {
-                                        UserInterface.CenterTextMargin(3, 0);
-                                        Console.ForegroundColor = ConsoleColor.Red;
-                                        Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
-                                        UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
-                                        choiceRent = 1;
-                                    }
+                                    choiceRent = SearchViewDetails(username, vehicleRentDetails, choice, keyword, "search", file); //shortened code using a method
                                     break;
                             }
                         } while (choiceRent != 1);
@@ -100,7 +63,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
                     }
                 }
-            } while (choice != "Go back to Rental Vehicles Menu");
+            } while (choice != inventory.ViewSearchedVehicles(keyword, "search", file).Length - 1);
         }
 
         public void ViewRentalVehicles(string username, string type, FilePathManager file) //MAIN METHOD 1 for viewing all rentable vehicles
@@ -116,7 +79,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 if (choice != inventory.ViewAllVehicles(type, file).Length - 1)
                 {
                     VehicleFile vehicle = new VehicleFile();
-                    string[] vehicleRentDetails = vehicle.DisplayVehicleFile(choice, "N A", "all");
+                    string[] vehicleRentDetails = vehicle.DisplayVehicleFile(choice, "N A", "all", file);
 
                     //choose what to do with the vehicle
                     if (type == "Client")
@@ -127,44 +90,7 @@ namespace Peak_Performance_Vehicle_Rentals
                             switch (choiceRent)
                             {
                                 case 0:
-
-                                    string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
-                                    string currentVehicle = inventory.ViewCurrentRental(username, file);
-                                    if (pendingVehicle == "" && currentVehicle == "")
-                                    {
-                                        string[] rentDetails = new string[3];
-                                        Choice chooseRent = new Choice();
-
-                                        //calculations for rent
-                                        int priceCalculation = chooseRent.RentalTimeChoice();
-
-                                        if (priceCalculation == 0)
-                                        {
-                                            string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
-                                            rentDetails[0] = tempDetails[0];
-                                            rentDetails[1] = tempDetails[1];
-                                        }
-                                        else if (priceCalculation == 1)
-                                        {
-                                            string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
-                                            rentDetails[0] = tempDetails[0];
-                                            rentDetails[1] = tempDetails[1];
-                                        }
-                                        //extra
-                                        rentDetails[2] = AddNote();
-
-                                        VehicleFile pending = new VehicleFile();
-                                        pending.TransferPendingFile(choice, rentDetails, username, "N A", "all");
-                                        choiceRent = 1;
-                                    }
-                                    else
-                                    {
-                                        UserInterface.CenterTextMargin(3, 0);
-                                        Console.ForegroundColor = ConsoleColor.Red;
-                                        Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
-                                        UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
-                                        choiceRent = 1;
-                                    }
+                                    choiceRent = SearchViewDetails(username, vehicleRentDetails, choice, "N A", "all", file); //shortened code using a method
                                     break;
                             }
                         } while (choiceRent != 1);
@@ -186,6 +112,47 @@ namespace Peak_Performance_Vehicle_Rentals
                     }
                 }
             } while (choice != inventory.ViewAllVehicles(type, file).Length - 1);
+        }
+        private int SearchViewDetails(string username, string[] vehicleRentDetails, int choice, string search, string type, FilePathManager file) //SUPPORTING METHOD for Search/View
+        {
+            Inventory inventory = new Inventory();
+            string pendingVehicle = inventory.ViewPendingRentalClient(username, file);
+            string currentVehicle = inventory.ViewCurrentRental(username, file);
+            if (pendingVehicle == "" && currentVehicle == "")
+            {
+                string[] rentDetails = new string[3];
+                Choice chooseRent = new Choice();
+
+                //calculations for rent
+                int priceCalculation = chooseRent.RentalTimeChoice();
+
+                if (priceCalculation == 0)
+                {
+                    string[] tempDetails = CalculatePrice(0, double.Parse(vehicleRentDetails[0]));
+                    rentDetails[0] = tempDetails[0];
+                    rentDetails[1] = tempDetails[1];
+                }
+                else if (priceCalculation == 1)
+                {
+                    string[] tempDetails = CalculatePrice(1, double.Parse(vehicleRentDetails[1]));
+                    rentDetails[0] = tempDetails[0];
+                    rentDetails[1] = tempDetails[1];
+                }
+                //extra
+                rentDetails[2] = AddNote();
+
+                VehicleFile pending = new VehicleFile();
+                pending.TransferPendingFile(choice, rentDetails, username, search, type, file);
+                return 1;
+            }
+            else
+            {
+                UserInterface.CenterTextMargin(3, 0);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
+                UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
+                return 1;
+            }
         }
 
         //Main Menu Case 1:
@@ -248,7 +215,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 choice = choose.ApprovedChoice(username, file);
 
                 VehicleFile vehicle = new VehicleFile();
-                vehicle.DisplayVehicleFile(choice, "N A", "approved");
+                vehicle.DisplayVehicleFile(choice, "N A", "approved", file);
 
             } while (choice != inventory.ViewApprovedRental(username, file).Length - 1);
 
@@ -264,7 +231,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 if (choice == 0)
                 {
                     VehicleFile vehicle = new VehicleFile();
-                    vehicle.DisplayRecieptFile(username, file);
+                    vehicle.DisplayReceiptFile(username, file);
                     UserInterface.WaitForKey(3, 0, "Press any key if you are done looking at the receipt");
                 }
                 else if (choice == 1)
@@ -592,7 +559,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
             return priceDetails;
         }
-        private protected static string AddNote()
+        private protected static string AddNote() //SUPPORTING METHOD 12 for manage vehicles
         {
             string note = "";
             Prompt("Additional notes: ");
@@ -652,11 +619,11 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             } while (detailchoice != "");
         }
-
         public bool DeleteUser(string username, string type, FilePathManager file) //MAIN METHOD 2 for deleting user account
         {
             string choice;
             int option;
+            bool result = true;
             Choice choose = new Choice();
 
             if (type == "Admin")
@@ -677,18 +644,17 @@ namespace Peak_Performance_Vehicle_Rentals
                             int deleteChoice = user.DeleteUserFile(details[0], file); //delete user file
                             if (deleteChoice == 0)
                             {
-                                return true;
+                                result = true;
 
                             }
                             else
                             {
-                                return false;
+                                result = false;
                             }
                         }
                     }
                 } while (choice != "Go back to Main Menu");
             }
-
             else
             {
                 do
@@ -701,16 +667,16 @@ namespace Peak_Performance_Vehicle_Rentals
                         int deleteChoice = user.DeleteUserFile(username, file); //delete user file
                         if (deleteChoice == 0)
                         {
-                            return true;
+                            result = true;
                         }
                         else
                         {
-                            return false;
+                            result = false;
                         }
                     }
                 } while (option != 1);
             }
-            return true;
+            return result;
         }
     }
 
@@ -729,7 +695,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (string.IsNullOrWhiteSpace(email));
             return email;
         }
-        private protected static string UserContact() //SUPPORTING METHOD 1 for manage user account
+        private protected static string UserContact() //SUPPORTING METHOD 2 for manage user account
         {
             string contact;
             do
@@ -743,7 +709,7 @@ namespace Peak_Performance_Vehicle_Rentals
             return contact;
         }
 
-        private protected static string UserBirth() //SUPPORTING METHOD 2 for manage user account
+        private protected static string UserBirth() //SUPPORTING METHOD 3 for manage user account
         {
             string[] details = new string[3];
             int tempDetails;
@@ -791,7 +757,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
             return $"{details[0]}/{details[1]}/{details[2]}";
         }
-        private protected static string UserAddress() //SUPPORTING METHOD 3 for manage user account
+        private protected static string UserAddress() //SUPPORTING METHOD 4 for manage user account
         {
             string address;
             do

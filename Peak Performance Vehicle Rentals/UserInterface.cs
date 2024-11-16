@@ -138,14 +138,8 @@ namespace Peak_Performance_Vehicle_Rentals
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 Console.WriteLine($"{style[0]} {currentOption} {style[1]}");
-                /* //debugging
-                Console.WriteLine("Height " + Console.WindowHeight);
-                Console.WriteLine("Width " + Console.WindowWidth);
-                Console.WriteLine("Position " + position);
-                Console.WriteLine("Top " + Console.WindowTop);
-                */
             }
-            //Console.WriteLine("\ndecription here chuchuchu");
+            //Console.WriteLine("\ndecription here chuchuchu"); //Version 2 puhon
             Console.WriteLine();
             Console.ResetColor();
         }
@@ -188,7 +182,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     string trimmedLine = line.Trim();
                     position = (windowWidth - trimmedLine.Length) / 2;
 
-                    if (position < 0) position = 0; //ensure we don't go out of bounds
+                    if (position < 0 || position >= Console.WindowWidth) position = 0; //ensure we don't go out of bounds
 
                     Console.SetCursorPosition(position, Console.CursorTop);
 
@@ -210,9 +204,7 @@ namespace Peak_Performance_Vehicle_Rentals
         internal static void CenterTextMargin(int x, int y) //SUPPORTING and EXTRA METHOD, specify where to write text
         {
             if (position + x > Console.WindowWidth) //make sure system doesn't break
-            {
                 return;
-            }
             try
             {
                 Console.SetCursorPosition(position + x, Console.CursorTop + y);
@@ -225,9 +217,7 @@ namespace Peak_Performance_Vehicle_Rentals
         internal static void WriteColoredText(int x, int y, string color, string text) //EXTRA METHOD, write a static colored text
         {
             if (position + x > Console.WindowWidth) //make sure system doesn't break
-            {
                 return;
-            }
             try
             {
                 Console.CursorVisible = false;
@@ -250,9 +240,7 @@ namespace Peak_Performance_Vehicle_Rentals
         internal static void WaitForKey(int x, int y, string text) //EXTRA METHOD, wait for any key to be pressed
         {
             if (position + x > Console.WindowWidth) //make sure system doesn't break
-            {
                 return;
-            }
             try
             {
                 CenterTextMargin(x, y);

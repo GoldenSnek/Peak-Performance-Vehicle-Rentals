@@ -66,7 +66,7 @@ namespace Peak_Performance_Vehicle_Rentals
     }
 
     //Choice
-    public abstract class AbstractChoice
+    public abstract class ChoiceBase
     {
         private string? prompt;
         private string[]? options;
@@ -76,15 +76,17 @@ namespace Peak_Performance_Vehicle_Rentals
     public interface IChoice
     {
         public int LoginRegisterChoice();
+        public int RegisterTypeChoice();
         public int MainMenuChoice(string username, string type);
         public int RentalChoice(FilePathManager file);
-        public string ViewSearchedVehiclesChoice(string keyword, FilePathManager file);
+        public int ViewSearchedVehiclesChoice(string keyword, FilePathManager file);
         public int ViewAllVehiclesChoice(string type, FilePathManager file);
         public int VehicleRentChoice(string vehicleOwner, string username);
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file);
         public int ViewPendingChoice(string username, FilePathManager file);
         public int RentalTimeChoice();
         public int RentalDetailsChoice(string username, string type, FilePathManager file);
+        public int ApprovedChoice(string username, FilePathManager file);
         public int ApprovePendingChoice();
         public int CurrentlyRentingChoice(string username, FilePathManager file);
         public int ManageVehiclesChoice();
@@ -94,6 +96,9 @@ namespace Peak_Performance_Vehicle_Rentals
         public int ManageUserChoice();
         public string UpdateUserDetailsChoice(string username, FilePathManager file);
         public int DeleteUserChoice(string username, FilePathManager file);
+        public int DeleteAdminVehicleChoice();
+        public string ViewAdminUserChoice(FilePathManager file);
+        public int DeleteAdminUserChoice();
     }
 
     //Inventory
@@ -101,14 +106,14 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         public string[] ViewAllVehicles(string type, FilePathManager file);
         public string[] ViewOwnedVehicles(string username, FilePathManager file);
-        public string[] ViewSearchedVehicles(string keyword, FilePathManager file);
+        public string[] ViewSearchedVehicles(string keyword, string type, FilePathManager file);
         public string[] ViewVehicleDetails(string username, FilePathManager file, int choice);
         public string[] ViewUserDetails(string username, FilePathManager file);
         public string ViewPendingRentalClient(string username, FilePathManager file);
         public string[] ViewPendingRentalOwner(string username, FilePathManager file);
         public string[] ViewApprovedRental(string username, FilePathManager file);
         public string ViewCurrentRental(string username, FilePathManager file);
-
+        public string[] ViewUsers(FilePathManager file);
 
     }
 
@@ -130,12 +135,12 @@ namespace Peak_Performance_Vehicle_Rentals
         public void CreateVehicleFile(string username, string[] details);
         public void UpdateVehicleFile(string username, int choice, string detailchoice, string newdetail);
         public void DeleteVehicleFile(string username, int choice, string type, FilePathManager file);
-        public string[] DisplayVehicleFile(int DVchoice, string search, string type);
-        public void TransferPendingFile(int choice, string[] rentDetails, string username, string search, string type);
+        public string[] DisplayVehicleFile(int DVchoice, string search, string type, FilePathManager file);
+        public void TransferPendingFile(int choice, string[] rentDetails, string username, string search, string type, FilePathManager file);
         public void TransferApprovedFile(int choice, string username, FilePathManager file);
         public void TransferNonApprovedFile(int choice, string username, FilePathManager file);
         public void DisplayPendingFile(int choice, string username, string type, FilePathManager file);
-        public void DisplayRecieptFile(string username, FilePathManager file);
+        public void DisplayReceiptFile(string username, FilePathManager file);
         public void TransferFinishRentFile(string username, FilePathManager file);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.ConstrainedExecution;
@@ -18,8 +19,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] details = {"", ""};
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter username: ");
+                Prompt("Enter username: ");
                 Username = Console.ReadLine();
 
                 if (string.IsNullOrWhiteSpace(Username))
@@ -34,8 +34,7 @@ namespace Peak_Performance_Vehicle_Rentals
             } while (string.IsNullOrWhiteSpace(Username) || Username.Length >= 20);
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter password: ");
+                Prompt("Enter password: ");
                 Password = ReadPassword();
                 if (string.IsNullOrWhiteSpace(Password))
                     UserInterface.WriteColoredText(3, 1, "red", "Please do not leave the password empty");
@@ -76,8 +75,7 @@ namespace Peak_Performance_Vehicle_Rentals
             Console.CursorVisible = true;
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter username: ");
+                Prompt("Enter username: ");
                 Username = Console.ReadLine();
                 DuplicateUser = UserExists(Username, file);
                 if (string.IsNullOrWhiteSpace(Username))
@@ -100,8 +98,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
             do
             {
-                UserInterface.CenterTextMargin(3, 0);
-                Console.Write("Enter password: ");
+                Prompt("Enter password: ");
                 Password = ReadPassword();
                 if (string.IsNullOrWhiteSpace(Password))
                     UserInterface.WriteColoredText(3, 1, "red", "Please do not leave the password empty");
@@ -166,6 +163,13 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
             }
             return password;
+        }
+        private static void Prompt(string text) //SUPPORTING METHOD, writes a prompt
+        {
+            UserInterface.CenterTextMargin(3, 0);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write(text);
+            Console.ResetColor();
         }
     }
 }

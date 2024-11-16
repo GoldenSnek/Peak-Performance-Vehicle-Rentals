@@ -6,6 +6,8 @@ using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
+//VERSION 1
+
 //Notes for self:
 //Date Started: 10/18/24
 //1. User Data file path may vary depending on device used (fixed 10/19/24)
@@ -89,17 +91,12 @@ namespace Peak_Performance_Vehicle_Rentals
                                             Car Art: https://www.asciiart.eu/vehicles/cars
                             ";
                             UserInterface.CenterVerbatimText(text);
-                            Console.ForegroundColor = ConsoleColor.Cyan;
                             UserInterface.CenterVerbatimText("Press any key to return to the Login and Register screen");
-                            Console.ResetColor();
                             UserInterface.WaitForKey(0, 0, "");
                             break;
 
                         case 3:
-                            Console.Clear();
-                            Console.WriteLine("Thank you for using the program!");
-                            Console.WriteLine("Now exiting program...");
-                            System.Environment.Exit(0);
+                            ExitProgram();
                             break;
 
                         default:
@@ -118,7 +115,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         int MMchoice = choice.MainMenuChoice(details[0], details[1]);
                         switch (MMchoice)
                         {
-                            //client and provider cases
+                            //client and vehicle provider cases
                             case 0:
                                 int Rchoice;
                                 do
@@ -172,7 +169,6 @@ namespace Peak_Performance_Vehicle_Rentals
                                             break;
                                     }
                                 } while (VRrunning);
-
                                 break;
 
                             case 2:
@@ -244,10 +240,7 @@ namespace Peak_Performance_Vehicle_Rentals
                                 break;
 
                             case 5:
-                                Console.Clear();
-                                Console.WriteLine("Thank you for using the program!");
-                                Console.WriteLine("Now exiting program...");
-                                System.Environment.Exit(0);
+                                ExitProgram();
                                 break;
 
                             //admin cases
@@ -265,6 +258,33 @@ namespace Peak_Performance_Vehicle_Rentals
                     } while (MMrunning);
                 }
             } while (true);
+        }
+
+        static void ExitProgram()
+        {
+            Console.Clear();
+            string text = @"
+                            ╔═╗┌─┐┌─┐  ┬ ┬┌─┐┬ ┬  ┌─┐┌─┐┌─┐┬┌┐┌
+                            ╚═╗├┤ ├┤   └┬┘│ ││ │  ├─┤│ ┬├─┤││││
+                            ╚═╝└─┘└─┘   ┴ └─┘└─┘  ┴ ┴└─┘┴ ┴┴┘└┘
+              -                            _____       _____                         -
+              -               .........   {     }     {     }                        -
+              -              (>>\zzzzzz [======================]                     -
+              -              ( <<<\lllll_\\ _        _____    \\                     -
+              -             _,`-,\<   __#:\\::_    __#:::_:__  \\                    -
+              -            /    . `--,#::::\\:::___#::::/__+_\ _\\                   -
+              -           /  _  .`-    `--,/_~~~~~~~~~~~~~~~~~~~~  -,_               -
+              -          :,// \ .         .  '--,____________   ______`-,            -
+              -          :: o |.         .  ___ \_____||____\+/     ||~ \            -
+              -           :;   ;-,_       . ,' _`,~~~~~~~~~~~~~~~~~~~~~~~~\          -
+              -           \ \_/ _ :`-,_   . ; / \\ ====================== /          -
+              -            \__/~ /     `-,.; ; o |\___[~~~]________[~~~]__:          -
+              -               ~~~          ; :   ;~ ;  ~~~         ;~~~::;           -
+              -                             \ \_/ ~/               ::::::;           -
+              -                              \_/~~/                 \:::/            -
+              -                                ~~~                   ~~~             -";
+            UserInterface.CenterVerbatimText(text);
+            System.Environment.Exit(0);
         }
     }
 }

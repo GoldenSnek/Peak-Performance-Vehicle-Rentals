@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace Peak_Performance_Vehicle_Rentals
 {
     internal class Inventory : IInventoryManagement
     {
-        public string[] ViewAllVehicles(string type, FilePathManager file) //MAIN METHOD 1 (overload 1), view all vehicles
+        public string[] ViewAllVehicles(string type, FilePathManager file) //MAIN METHOD 1, view all
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", "*.txt");
             string[] vehicles = new string[files.Length + 1];
@@ -41,7 +42,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 vehicles[files.Length] = "Go back to Rental Vehicles Menu";
             return vehicles;
         }
-        public string[] ViewOwnedVehicles(string username, FilePathManager file) //MAIN METHOD 1 (overload 2), view owned vehicles
+        public string[] ViewOwnedVehicles(string username, FilePathManager file) //MAIN METHOD 2, view owned
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*{username}.txt");
             string brand = "";
@@ -69,10 +70,10 @@ namespace Peak_Performance_Vehicle_Rentals
             vehicles[files.Length] = "Go back to Manage Vehicles Menu";
             return vehicles;
         }
-        public string[] ViewSearchedVehicles(string keyword, FilePathManager file) //MAIN METHOD 2, OP search method
+        public string[] ViewSearchedVehicles(string keyword, string type, FilePathManager file) //MAIN METHOD 3, OP search method
         {
             List<string> vehicles = new List<string>();
-            string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*.txt");
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", "*.txt");
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -97,21 +98,34 @@ namespace Peak_Performance_Vehicle_Rentals
 
                 for (int j = 0; j < details.Length; j++)
                 {
-                    if (details[j].ToLower() == keyword.ToLower()) //to lower para di mo matter ang capitalization
+                    if (type == "search")
                     {
-                        vehicles.Add($"{details[2]} {details[3]}");
-                        break;
+                        if (details[j].ToLower() == keyword.ToLower()) //to lower para di mo matter ang capitalization
+                        {
+                            vehicles.Add($"{details[2]} {details[3]}");
+                            break;
+                        }
+                    }
+                    if (type == "path")
+                    {
+                        if (details[j].ToLower() == keyword.ToLower()) //to lower para di mo matter ang capitalization
+                        {
+                            vehicles.Add(Path.GetFileName(files[i]));
+                            break;
+                        }
                     }
                 }
             }
-            vehicles.Add("Go back to Rental Vehicles Menu");
+
+            if (type == "search")
+                vehicles.Add("Go back to Rental Vehicles Menu");
 
             return vehicles.ToArray();
-
         }
-        public string[] ViewVehicleDetails(string username, FilePathManager file, int choice) //MAIN METHOD 3, view vehicle details
+
+        public string[] ViewVehicleDetails(string username, FilePathManager file, int choice) //MAIN METHOD 4, view vehicle details
         {
-            string[] files = Directory.GetFiles(file.BaseDirectory + $"\\VehicleData", $"*{username}.txt");
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", $"*{username}.txt");
             int index = 0;
 
             for (int i = 0; i < files.Length; i++)
@@ -126,7 +140,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] details = new string[10]; //identify details of specific vehicle
             if (index < files.Length)
             {
-                for (int i = 0; i < details.Length; i++) //start at 4 to skip changing the important details
+                for (int i = 0; i < details.Length; i++) //start at 4 to skip to the important details
                 {
                     string line;
                     using (var reader = new StreamReader(files[index]))
@@ -147,7 +161,7 @@ namespace Peak_Performance_Vehicle_Rentals
             return details;
         }
 
-        public string[] ViewUserDetails(string username, FilePathManager file) //MAIN METHOD 4, view user details
+        public string[] ViewUserDetails(string username, FilePathManager file) //MAIN METHOD 5, view user details
         {
             string directory = file.BaseDirectory + $"\\UserData\\{username}.txt";
 
@@ -169,9 +183,9 @@ namespace Peak_Performance_Vehicle_Rentals
             details[4] = "Go back to Manage User Menu";
             return details;
         }
-        public string ViewPendingRentalClient(string username, FilePathManager file) //MAIN METHOD 5, view pending vehicle of client
+        public string ViewPendingRentalClient(string username, FilePathManager file) //MAIN METHOD 6, view pending vehicle of client
         {
-            string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", $"*.txt");
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", "*.txt");
             string vehicleClient = "";
             string name = "";
 
@@ -198,9 +212,9 @@ namespace Peak_Performance_Vehicle_Rentals
             }
             return vehicleClient;
         }
-        public string[] ViewPendingRentalOwner(string username, FilePathManager file) //MAIN METHOD 6, view pending vehicles of user
+        public string[] ViewPendingRentalOwner(string username, FilePathManager file) //MAIN METHOD 7, view pending vehicles of user
         {
-            string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", $"*.txt");
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", "*.txt");
             List<string> vehicles = new List<string>(); //identify vehicles
             string name = "";
             string brand = "";
@@ -243,7 +257,7 @@ namespace Peak_Performance_Vehicle_Rentals
             return vehicles.ToArray();
         }
 
-        public string[] ViewApprovedRental(string username, FilePathManager file) //MAIN METHOD 7, view all approved vehicles
+        public string[] ViewApprovedRental(string username, FilePathManager file) //MAIN METHOD 8, view all approved vehicles
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*{username}.txt");
             string[] vehicles = new string[files.Length+1];
@@ -278,9 +292,9 @@ namespace Peak_Performance_Vehicle_Rentals
             vehicles[files.Length] = "Go back to Rental Details Menu";
             return vehicles;
         }
-        public string ViewCurrentRental(string username, FilePathManager file) //MAIN METHOD 8: view current rental vehicle
+        public string ViewCurrentRental(string username, FilePathManager file) //MAIN METHOD 9: view current rental vehicle
         {
-            string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
+            string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", "*.txt");
             string vehicle = "";
             string brand = "";
             string client = "";
@@ -316,13 +330,13 @@ namespace Peak_Performance_Vehicle_Rentals
             return vehicle;
         }
 
-        public string[] ViewUsers(FilePathManager file) //
+        public string[] ViewUsers(FilePathManager file) //MAIN METHOD 10: view all users
         {
             List<string> users = new List<string>();
             string[] details = new string[3];
 
             string line;
-            using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt")) //find the brand to be included in the display
+            using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))
             {
                 while ((line = reader.ReadLine()) != null)
                 {
