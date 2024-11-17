@@ -15,12 +15,10 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] vehicles = new string[files.Length + 1];
             string brand = "";
 
-            //display the names of the text files
-            for (int i = 0; i < files.Length; i++)
+            for (int i = 0; i < files.Length; i++) //display the names of the text files
             {
                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
                 string[] parts = fileName.Split('-'); //split the name and get the vehicle name (first part a.k.a. index 0)
-
                 string line;
                 using (var reader = new StreamReader(files[i])) //find the brand to be included in the display
                 {
@@ -35,9 +33,8 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
                 vehicles[i] = $"{brand} {parts[0]}";
             }
-
             if (type == "Admin")
-                vehicles[files.Length] = "Go back to Main  Menu";
+                vehicles[files.Length] = "Go back to Main Menu";
             else
                 vehicles[files.Length] = "Go back to Rental Vehicles Menu";
             return vehicles;
@@ -74,13 +71,11 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             List<string> vehicles = new List<string>();
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\VehicleData", "*.txt");
+            string[] details = new string[13];
 
             for (int i = 0; i < files.Length; i++)
             {
                 string[] lines = File.ReadAllLines(files[i]);
-
-                string[] details = new string[13];
-
                 //store values for searching
                 details[0] = ExtractValue(lines, "Owner:");
                 details[1] = ExtractValue(lines, "Vehicle Type:");
@@ -102,24 +97,20 @@ namespace Peak_Performance_Vehicle_Rentals
                     {
                         if (details[j].ToLower() == keyword.ToLower()) //to lower para di mo matter ang capitalization
                         {
-                            vehicles.Add($"{details[2]} {details[3]}");
-                            break;
+                            vehicles.Add($"{details[2]} {details[3]}"); break;
                         }
                     }
                     if (type == "path")
                     {
                         if (details[j].ToLower() == keyword.ToLower()) //to lower para di mo matter ang capitalization
                         {
-                            vehicles.Add(Path.GetFileName(files[i]));
-                            break;
+                            vehicles.Add(Path.GetFileName(files[i])); break;
                         }
                     }
                 }
             }
-
             if (type == "search")
                 vehicles.Add("Go back to Rental Vehicles Menu");
-
             return vehicles.ToArray();
         }
 
@@ -132,8 +123,7 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 if (i == choice)
                 {
-                    index = i;
-                    break;
+                    index = i; break;
                 }
             }
 
@@ -164,7 +154,6 @@ namespace Peak_Performance_Vehicle_Rentals
         public string[] ViewUserDetails(string username, FilePathManager file) //MAIN METHOD 5, view user details
         {
             string directory = file.BaseDirectory + $"\\UserData\\{username}.txt";
-
             string[] details = new string[5]; //identify details of user
             for (int i = 0; i < details.Length-1; i++)
             {
@@ -187,7 +176,7 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", "*.txt");
             string vehicleClient = "";
-            string name = "";
+            string name;
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -203,8 +192,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
                             if (name == username)
                             {
-                                vehicleClient = name;
-                                break;
+                                vehicleClient = name; break;
                             }
                         }
                     }
@@ -216,7 +204,7 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\PendingRental", "*.txt");
             List<string> vehicles = new List<string>(); //identify vehicles
-            string name = "";
+            string name;
             string brand = "";
 
             for (int i = 0; i < files.Length; i++)
@@ -230,7 +218,6 @@ namespace Peak_Performance_Vehicle_Rentals
                         {
                             string[] nameParts = line.Split(": ");
                             name = nameParts[1];
-
                             if (name == username)
                             {
                                 string fileName = Path.GetFileNameWithoutExtension(files[i]);
@@ -297,7 +284,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", "*.txt");
             string vehicle = "";
             string brand = "";
-            string client = "";
+            string client;
 
             //display the names of the text files
             for (int i = 0; i < files.Length; i++)
@@ -320,9 +307,7 @@ namespace Peak_Performance_Vehicle_Rentals
                             string[] clientParts = line.Split(": ");
                             client = clientParts[1];
                             if (client == username) //car is owned by user a.k.a. me
-                            {
                                 vehicle = $"{brand} {parts[0]}";
-                            }
                         }
                     }
                 }
@@ -356,9 +341,7 @@ namespace Peak_Performance_Vehicle_Rentals
             foreach (string line in lines)
             {
                 if (line.StartsWith(key))
-                {
                     return line.Substring(key.Length).Trim();
-                }
             }
             return string.Empty; //nothing
         }

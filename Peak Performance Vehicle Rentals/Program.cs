@@ -42,11 +42,12 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         static void Main(string[] args)
         {
+            FilePathManager file = new FilePathManager();
             Console.CursorVisible = false;
+            
             do //entire program
             {
                 //variable declarations
-                FilePathManager file = new FilePathManager();
                 Choice choice = new Choice();
                 string[] details = {"", ""};
 
@@ -64,12 +65,9 @@ namespace Peak_Performance_Vehicle_Rentals
                             {
                                 UserInterface.WriteColoredText(3, 2, "green", "Login Successful!");
                                 LRrunning = false;
+                                continue; //proceed to main menu
                             }
-                            else
-                            {
-                                UserInterface.WriteColoredText(3, 2, "red", "Invalid Credentials!");
-                                LRrunning = true;
-                            }
+                            UserInterface.WriteColoredText(3, 2, "red", "Invalid Credentials!");
                             break;
 
                         case 1:
@@ -77,20 +75,25 @@ namespace Peak_Performance_Vehicle_Rentals
                             break;
 
                         case 2:
-                            string text = @$"This is my Final Project for CPE261 (OOP 1) - H2!
-                                            Program created by: John Michael A. Nave
-                                            Version 1 (November 19, 2024)
+                            Console.Clear();
+                            UserInterface.CenterVerbatimText(@$"
+                                                            ┌─┐┌┐ ┌─┐┬ ┬┌┬┐  ┌┬┐┬ ┬┌─┐  ┌─┐┬─┐┌─┐┌─┐┬─┐┌─┐┌┬┐
+                                                            ├─┤├┴┐│ ││ │ │    │ ├─┤├┤   ├─┘├┬┘│ ││ ┬├┬┘├─┤│││
+                                                            ┴ ┴└─┘└─┘└─┘ ┴    ┴ ┴ ┴└─┘  ┴  ┴└─└─┘└─┘┴└─┴ ┴┴ ┴
 
-                                            Special Thanks:
-                                            Mga barkada sa CPE
-                                            Online Sources (YouTube, GitHub, etc.)
-                                            Engr. Julian N. Semblante
+                                                            This is my Final Project for CPE261 (OOP 1) - H2!
+                                                            Program created by: John Michael A. Nave
+                                                            Version 1 (November 19, 2024)
 
-                                            Links:
-                                            Text Art: https://patorjk.com/software/taag/#p=display&f=Graffiti&t=
-                                            Car Art: https://www.asciiart.eu/vehicles/cars
-                            ";
-                            UserInterface.CenterVerbatimText(text);
+                                                            Special Thanks:
+                                                            Mga barkada sa CPE
+                                                            Online Sources (YouTube, GitHub, Stack Overflow, etc.)
+                                                            Engr. Julian N. Semblante
+
+                                                            Links:
+                                                            Text Art: https://patorjk.com/software/taag/#p=display&f=Graffiti&t=
+                                                            Car Art: https://www.asciiart.eu/vehicles/cars
+                                                            ");
                             UserInterface.CenterVerbatimText("Press any key to return to the Login and Register screen");
                             UserInterface.WaitForKey(0, 0, "");
                             break;
@@ -98,168 +101,129 @@ namespace Peak_Performance_Vehicle_Rentals
                         case 3:
                             ExitProgram();
                             break;
-
-                        default:
-                            break;
                     }
                 } while (LRrunning);
 
                 //Main Menu
-                if (details[0] != "")
+                int MMchoice;
+                do
                 {
-                    bool MMrunning = true;
-                    do
+                    VehicleManager MV = new VehicleManager();
+                    UserManager UR = new UserManager();
+                    MMchoice = choice.MainMenuChoice(details[0], details[1]);
+                    switch (MMchoice)
                     {
-                        VehicleManager MV = new VehicleManager();
-                        UserManager UR = new UserManager();
-                        int MMchoice = choice.MainMenuChoice(details[0], details[1]);
-                        switch (MMchoice)
-                        {
-                            //client and vehicle provider cases
-                            case 0:
-                                int Rchoice;
-                                do
+                        //client and vehicle provider cases
+                        case 0:
+                            int Rchoice;
+                            do
+                            {
+                                Rchoice = choice.RentalChoice(file);
+                                switch (Rchoice)
                                 {
-                                    Rchoice = choice.RentalChoice(file);
-                                    switch (Rchoice)
-                                    {
-                                        case 0:
-                                            MV.SearchRentalVehicles(details[0], details[1], file);
-                                            break;
+                                    case 0:
+                                        MV.SearchRentalVehicles(details[0], details[1], file);
+                                        break;
 
-                                        case 1:
-                                            MV.ViewRentalVehicles(details[0], details[1], file);
-                                            break;
-
-                                        case 2:
-                                            break;
-
-                                    }
-                                } while (Rchoice != 2);
-                                break;
+                                    case 1:
+                                        MV.ViewRentalVehicles(details[0], details[1], file);
+                                        break;
+                                }
+                            } while (Rchoice != 2);
+                            break;
                                 
-                            case 1:
-                                bool VRrunning = true;
-                                do
+                        case 1:
+                            int VRchoice;
+                            do
+                            {
+                                VRchoice = choice.RentalDetailsChoice(details[0], details[1], file);
+                                switch (VRchoice)
                                 {
-                                    int VRchoice = choice.RentalDetailsChoice(details[0], details[1], file);
-                                    switch (VRchoice)
-                                    {
-                                        case 0:
-                                            MV.PendingVehiclesClient(details[0], file);
-                                            break;
+                                    case 0:
+                                        MV.PendingVehiclesClient(details[0], file);
+                                        break;
 
-                                        case 1:
-                                            MV.PendingVehiclesOwner(details[0], file);
-                                            break;
+                                    case 1:
+                                        MV.PendingVehiclesOwner(details[0], file);
+                                        break;
 
-                                        case 2:
-                                            MV.ApprovedVehicles(details[0], file);
-                                            break;
+                                    case 2:
+                                        MV.ApprovedVehicles(details[0], file);
+                                        break;
 
-                                        case 3:
-                                            MV.CurrentlyRentingVehicle(details[0], file);
-                                            break;
+                                    case 3:
+                                        MV.CurrentlyRentingVehicle(details[0], file);
+                                        break;
+                                }
+                            } while (VRchoice !=4);
+                            break;
 
-                                        case 4:
-                                            VRrunning = false;
-                                            break;
-
-                                        default:
-                                            break;
-                                    }
-                                } while (VRrunning);
-                                break;
-
-                            case 2:
-                                bool MVrunning = true;
-                                do
+                        case 2:
+                            int MVchoice;
+                            do
+                            {
+                                MVchoice = choice.ManageVehiclesChoice();
+                                switch (MVchoice)
                                 {
-                                    int MVchoice = choice.ManageVehiclesChoice();
-                                    switch (MVchoice)
-                                    {
-                                        case 0:
-                                            MV.AddVehicle(details[0]);
-                                            break;
+                                    case 0:
+                                        MV.AddVehicle(details[0]);
+                                        break;
 
-                                        case 1:
-                                            MV.UpdateVehicle(details[0], file);
-                                            break;
+                                    case 1:
+                                        MV.UpdateVehicle(details[0], file);
+                                        break;
 
-                                        case 2:
-                                            MV.DeleteVehicle(details[0], file);
-                                            break;
+                                    case 2:
+                                        MV.DeleteVehicle(details[0], file);
+                                        break;
+                                }
+                            } while (MVchoice != 3);
+                            break;
 
-                                        case 3:
-                                            MVrunning = false;
-                                            break;
-
-                                        default:
-                                            break;
-                                    }
-                                } while (MVrunning);
-
-                                break;
-
-                            case 3:
-                                bool MUrunning = true;
-                                do
+                        case 3:
+                            int MUchoice;
+                            do
+                            {
+                                MUchoice = choice.ManageUserChoice();
+                                switch (MUchoice)
                                 {
-                                    int MUchoice = choice.ManageUserChoice();
-                                    switch (MUchoice)
-                                    {
-                                        case 0:
-                                            UR.ViewUserDetails(details[0], file);
-                                            break;
+                                    case 0:
+                                        UR.ViewUserDetails(details[0], file);
+                                        break;
 
-                                        case 1:
-                                            UR.UpdateUser(details[0], file);
-                                            break;
+                                    case 1:
+                                        UR.UpdateUser(details[0], file);
+                                        break;
 
-                                        case 2:
-                                            MUrunning = UR.DeleteUser(details[0], details[1], file);
-                                            if (MUrunning == false)
-                                            {
-                                                UserInterface.WriteColoredText(3, 1, "green", "Returning to login screen...");
-                                                MMrunning = false;
-                                            }
-                                            break;
+                                    case 2:
+                                        MUchoice = UR.DeleteUser(details[0], details[1], file);
+                                        if (MUchoice == 3)
+                                        {
+                                            UserInterface.WriteColoredText(3, 1, "green", "Returning to login screen...");
+                                            MMchoice = 4;
+                                        }
+                                        break;
+                                }
+                            } while (MUchoice != 3);
+                            break;
 
-                                        case 3:
-                                            MUrunning = false;
-                                            break;
+                        //case 4 is basically log out
+                        case 5:
+                            ExitProgram();
+                            break;
 
-                                        default:
-                                            break;
-                                    }
-                                } while (MUrunning);
-                                break;
+                        //admin cases
+                        case 6:
+                            MV.ViewRentalVehicles(details[0], details[1], file);
+                            break;
 
-                            case 4:
-                                MMrunning = false;
-                                break;
-
-                            case 5:
-                                ExitProgram();
-                                break;
-
-                            //admin cases
-                            case 6:
-                                MV.ViewRentalVehicles(details[0], details[1], file);
-                                break;
-
-                            case 7:
-                                UR.DeleteUser(details[0], details[1], file);
-                                break;
-
-                            default:
-                                break;
-                        }
-                    } while (MMrunning);
-                }
+                        case 7:
+                            UR.DeleteUser(details[0], details[1], file);
+                            break;
+                    }
+                } while (MMchoice != 4);
             } while (true);
         }
-
         static void ExitProgram()
         {
             Console.Clear();
@@ -267,6 +231,7 @@ namespace Peak_Performance_Vehicle_Rentals
                             ╔═╗┌─┐┌─┐  ┬ ┬┌─┐┬ ┬  ┌─┐┌─┐┌─┐┬┌┐┌
                             ╚═╗├┤ ├┤   └┬┘│ ││ │  ├─┤│ ┬├─┤││││
                             ╚═╝└─┘└─┘   ┴ └─┘└─┘  ┴ ┴└─┘┴ ┴┴┘└┘
+
               -                            _____       _____                         -
               -               .........   {     }     {     }                        -
               -              (>>\zzzzzz [======================]                     -

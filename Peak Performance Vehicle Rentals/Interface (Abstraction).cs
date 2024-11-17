@@ -62,7 +62,7 @@ namespace Peak_Performance_Vehicle_Rentals
     {
         public void ViewUserDetails(string username, FilePathManager file);
         public void UpdateUser(string username, FilePathManager file);
-        public bool DeleteUser(string username, string type, FilePathManager file);
+        public int DeleteUser(string username, string type, FilePathManager file);
     }
 
     //Choice
@@ -76,12 +76,12 @@ namespace Peak_Performance_Vehicle_Rentals
     public interface IChoice
     {
         public int LoginRegisterChoice();
-        public int RegisterTypeChoice();
+        public string RegisterTypeChoice();
         public int MainMenuChoice(string username, string type);
         public int RentalChoice(FilePathManager file);
         public int ViewSearchedVehiclesChoice(string keyword, FilePathManager file);
         public int ViewAllVehiclesChoice(string type, FilePathManager file);
-        public int VehicleRentChoice(string vehicleOwner, string username);
+        public int VehicleRentChoice();
         public int ViewOwnedVehiclesChoice(string username, FilePathManager file);
         public int ViewPendingChoice(string username, FilePathManager file);
         public int RentalTimeChoice();

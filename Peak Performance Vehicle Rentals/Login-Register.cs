@@ -46,7 +46,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    string[] parts = line.Split(','); //parts[0] is username, parts[1] is password, [2] is type
+                    string[] parts = line.Split(','); //parts[0] is username, [1] is password, [2] is type
                     if (parts[0] == Username && parts[1] == Password)
                     {
                         details[0] = parts[0];
@@ -55,8 +55,6 @@ namespace Peak_Performance_Vehicle_Rentals
                     }
                 }
             }
-            Console.CursorVisible = false;
-
             return details;
         }
 
@@ -64,12 +62,8 @@ namespace Peak_Performance_Vehicle_Rentals
         {
             bool DuplicateUser = true;
             Choice choose = new Choice();
-            int choice = choose.RegisterTypeChoice();
-            if (choice == 0)
-                Type = "Client";
-            else if (choice == 1)
-                Type = "Vehicle Provider";
-            else
+            Type = choose.RegisterTypeChoice();
+            if (Type == "Go back to Menu")
                 return;
 
             Console.CursorVisible = true;
@@ -116,7 +110,6 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         private static bool UserExists(string Username, FilePathManager file) //SUPPORTING METHOD for UserRegister, check for duplicate user
         {
-            bool DuplicateUser = false;
             using (StreamReader reader = new StreamReader(file.BaseDirectory + "\\Users.txt"))
             {
                 string line;
@@ -125,12 +118,11 @@ namespace Peak_Performance_Vehicle_Rentals
                     string[] parts = line.Split(','); //parts[0] is username
                     if (parts[0] == Username)
                     {
-                        DuplicateUser = true;
-                        break;
+                        return true;
                     }
                 }
             }
-            return DuplicateUser;
+            return false;
         }
         private static string ReadPassword() //SUPPORTING METHOD, hide password with asterisks
         {
@@ -140,14 +132,12 @@ namespace Peak_Performance_Vehicle_Rentals
                 var keyInfo = Console.ReadKey(true);
 
                 if (keyInfo.Key == ConsoleKey.Enter)
-                {
                     break;
-                }
                 else if (keyInfo.Key == ConsoleKey.Backspace)
                 {
                     if (password.Length > 0)
                     {
-                        password = password[0..^1];
+                        password = password[0..^1]; //C# 8.0 syntax, technically removes the last letter
                         Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
                         Console.Write(" ");
                         Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
@@ -155,7 +145,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 }
                 else if (char.IsLetterOrDigit(keyInfo.KeyChar))
                 {
-                    if (password.Length < 20) // maximum password is 20 characters
+                    if (password.Length < 20) //maximum password is 20 characters
                     {
                         password += keyInfo.KeyChar;
                         Console.Write("*");

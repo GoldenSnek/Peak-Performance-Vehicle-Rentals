@@ -35,7 +35,6 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     if (ctr == 0)
                         CenterTextMargin(3 , 6);
-                    ctr++;
                     ClearLineRUI(5);
                     verbatim = false;
                 }
@@ -43,7 +42,6 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     if (ctr == 0)
                         CenterTextMargin(3, 8);
-                    ctr++;
                     ClearLineRUI(7);
                     verbatim = false;
                 }
@@ -51,7 +49,6 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     if (ctr == 0)
                         CenterTextMargin(3, 22);
-                    ctr++;
                     ClearLineRUI(21);
                     verbatim = false;
                 }
@@ -59,7 +56,6 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     if (ctr == 0)
                         CenterTextMargin(3, 18);
-                    ctr++;
                     ClearLineRUI(17);
                     verbatim = false;
                 }
@@ -67,7 +63,6 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     if (ctr == 0)
                         CenterTextMargin(3, 12);
-                    ctr++;
                     ClearLineRUI(11);
                     verbatim = false;
                 }
@@ -75,10 +70,9 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     if (ctr == 0)
                         CenterTextMargin(3, 8);
-                    ctr++;
                     ClearLineRUI(7);
-                    verbatim = true;
                 }
+                ctr++;
 
                 DisplayOptions(verbatim);
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
@@ -127,21 +121,18 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     style[0] = "<<";
                     style[1] = ">>";
-                    Console.SetCursorPosition(position, Console.CursorTop);
                     Console.ForegroundColor = ConsoleColor.Cyan;
                 }
                 else
                 {
                     style[0] = "  ";
                     style[1] = "  ";
-                    Console.SetCursorPosition(position, Console.CursorTop);
                     Console.ForegroundColor = ConsoleColor.White;
                 }
+                Console.SetCursorPosition(position, Console.CursorTop);
                 Console.WriteLine($"{style[0]} {currentOption} {style[1]}");
             }
-            //Console.WriteLine("\ndecription here chuchuchu"); //Version 2 puhon
-            Console.WriteLine();
-            Console.ResetColor();
+            Console.WriteLine(); Console.ResetColor();
         }
         private static void ClearAllRUI() //SUPPORTING METHOD, clear all lines without flicker
         {
@@ -161,7 +152,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
                 for (int i = 0; i < ctr; i++)
                 {
-                    Console.Write(new string(' ', Console.BufferWidth));
+                    Console.Write(new string(' ', Console.WindowWidth));
                     Console.SetCursorPosition(0, Console.CursorTop - 1);
                 }
             }
@@ -174,24 +165,18 @@ namespace Peak_Performance_Vehicle_Rentals
             var lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             int windowWidth = Console.WindowWidth;
             int position = 0;
-            int ctr = 0;
             try
             {
-                foreach (var line in lines)
+                Console.ForegroundColor = ConsoleColor.DarkYellow; //colored text arts
+                for (int i = 0; i < lines.Length; i++)
                 {
-                    string trimmedLine = line.Trim();
+                    if (i >= 4) Console.ForegroundColor = ConsoleColor.Gray;
+                    string trimmedLine = lines[i].Trim();
                     position = (windowWidth - trimmedLine.Length) / 2;
-
                     if (position < 0 || position >= Console.WindowWidth) position = 0; //ensure we don't go out of bounds
 
                     Console.SetCursorPosition(position, Console.CursorTop);
-
-                    if (ctr < 4) Console.ForegroundColor = ConsoleColor.DarkYellow;
-
                     Console.WriteLine(trimmedLine);
-                    ctr++;
-
-                    if (ctr >= 4) Console.ForegroundColor = ConsoleColor.Gray;
                 }
                 Console.ResetColor();
             }
@@ -203,8 +188,7 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         internal static void CenterTextMargin(int x, int y) //SUPPORTING and EXTRA METHOD, specify where to write text
         {
-            if (position + x > Console.WindowWidth) //make sure system doesn't break
-                return;
+            if (position + x > Console.WindowWidth) return; //make sure system doesn't break
             try
             {
                 Console.SetCursorPosition(position + x, Console.CursorTop + y);
@@ -216,16 +200,13 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         internal static void WriteColoredText(int x, int y, string color, string text) //EXTRA METHOD, write a static colored text
         {
-            if (position + x > Console.WindowWidth) //make sure system doesn't break
-                return;
+            if (position + x > Console.WindowWidth) return; //make sure system doesn't break
             try
             {
                 Console.CursorVisible = false;
                 UserInterface.CenterTextMargin(x, y);
-                if (color == "red")
-                    Console.ForegroundColor = ConsoleColor.Red;
-                if (color == "green")
-                    Console.ForegroundColor = ConsoleColor.Green;
+                if (color == "red") Console.ForegroundColor = ConsoleColor.Red;
+                if (color == "green") Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(text);
                 Console.ResetColor();
                 Thread.Sleep(1500);
@@ -239,8 +220,7 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         internal static void WaitForKey(int x, int y, string text) //EXTRA METHOD, wait for any key to be pressed
         {
-            if (position + x > Console.WindowWidth) //make sure system doesn't break
-                return;
+            if (position + x > Console.WindowWidth) return; //make sure system doesn't break
             try
             {
                 CenterTextMargin(x, y);

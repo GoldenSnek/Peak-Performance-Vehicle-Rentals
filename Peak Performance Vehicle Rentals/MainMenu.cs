@@ -47,21 +47,12 @@ namespace Peak_Performance_Vehicle_Rentals
                     //choose what to do with the vehicle
                     if (type == "Client")
                     {
-                        choiceRent = choose.VehicleRentChoice(vehicleRentDetails[2], username);
-                        do
-                        {
-                            switch (choiceRent)
-                            {
-                                case 0:
-                                    choiceRent = SearchViewDetails(username, vehicleRentDetails, choice, keyword, "search", file); //shortened code using a method
-                                    break;
-                            }
-                        } while (choiceRent != 1);
+                        choiceRent = choose.VehicleRentChoice();
+                        while (choiceRent != 1)
+                            choiceRent = SearchViewDetails(username, vehicleRentDetails, choice, keyword, "search", file); //shortened code using a method
                     }
                     else
-                    {
                         UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
-                    }
                 }
             } while (choice != inventory.ViewSearchedVehicles(keyword, "search", file).Length - 1);
         }
@@ -84,32 +75,21 @@ namespace Peak_Performance_Vehicle_Rentals
                     //choose what to do with the vehicle
                     if (type == "Client")
                     {
-                        choiceRent = choose.VehicleRentChoice(vehicleRentDetails[2], username);
-                        do
-                        {
-                            switch (choiceRent)
-                            {
-                                case 0:
-                                    choiceRent = SearchViewDetails(username, vehicleRentDetails, choice, "N A", "all", file); //shortened code using a method
-                                    break;
-                            }
-                        } while (choiceRent != 1);
+                        choiceRent = choose.VehicleRentChoice();
+                        while (choiceRent != 1)
+                            choiceRent = SearchViewDetails(username, vehicleRentDetails, choice, "N A", "all", file); //shortened code using a method
                     }
                     else if (type == "Admin")
                     {
                         choiceDelete = choose.DeleteAdminVehicleChoice();
-                        switch (choiceDelete)
-                        {
-                            case 0:
-                                VehicleFile allVehicle = new VehicleFile();
-                                allVehicle.DeleteVehicleFile(username, choice, "Admin", file);
-                                break;
+                        if (choiceDelete == 0) {
+                            VehicleFile allVehicle = new VehicleFile();
+                            allVehicle.DeleteVehicleFile(username, choice, "Admin", file);
+                            break;
                         }
                     }
                     else
-                    {
                         UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
-                    }
                 }
             } while (choice != inventory.ViewAllVehicles(type, file).Length - 1);
         }
@@ -143,7 +123,6 @@ namespace Peak_Performance_Vehicle_Rentals
 
                 VehicleFile pending = new VehicleFile();
                 pending.TransferPendingFile(choice, rentDetails, username, search, type, file);
-                return 1;
             }
             else
             {
@@ -151,8 +130,8 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
                 UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
-                return 1;
             }
+            return 1;
         }
 
         //Main Menu Case 1:
@@ -202,7 +181,6 @@ namespace Peak_Performance_Vehicle_Rentals
                     UserInterface.WriteColoredText(3, 0, "red", "The vehicle rental application is not approved!");
                 }
             } while (true);
-
         }
 
         public void ApprovedVehicles(string username, FilePathManager file) //MAIN METHOD 1 for viewing approved vehicles
@@ -213,12 +191,9 @@ namespace Peak_Performance_Vehicle_Rentals
             do
             {
                 choice = choose.ApprovedChoice(username, file);
-
                 VehicleFile vehicle = new VehicleFile();
                 vehicle.DisplayVehicleFile(choice, "N A", "approved", file);
-
             } while (choice != inventory.ViewApprovedRental(username, file).Length - 1);
-
         }
 
         public void CurrentlyRentingVehicle(string username, FilePathManager file) //MAIN METHOD 2 for viewing currently rented vehicle
@@ -306,6 +281,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string newdetail = "";
             Choice choose = new Choice();
             Inventory inventory = new Inventory();
+            VehicleFile vehicle = new VehicleFile();
             do {
                 choice = choose.ViewOwnedVehiclesChoice(username, file);
                 do
@@ -333,10 +309,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         if (detailchoice == "Hourly Rental Price")
                             newdetail = VehiclePriceHour();
                         if (detailchoice != "")
-                        {
-                            VehicleFile vehicle = new VehicleFile();
                             vehicle.UpdateVehicleFile(username, choice, detailchoice, newdetail);
-                        }
                     }
                 } while (detailchoice != "");
             } while (choice != inventory.ViewOwnedVehicles(username, file).Length - 1);
@@ -489,9 +462,7 @@ namespace Peak_Performance_Vehicle_Rentals
             do
             {
                 Prompt("Enter the DAILY rental rate of the vehicle in PHP/day: ");
-
                 price = Console.ReadLine();
-
                 success = double.TryParse(price, out tempPrice);
                 if (!success || tempPrice < 100 || tempPrice > 100000)
                     InvalidVehicleDetail(3, 0, "red", "Minimum should be 100 Php/day and max 100,000 Php/day");
@@ -561,10 +532,9 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         private protected static string AddNote() //SUPPORTING METHOD 12 for manage vehicles
         {
-            string note = "";
+            string note;
             Prompt("Additional notes: ");
             note = Console.ReadLine();
-
             if (string.IsNullOrWhiteSpace(note))
                 return "N/A";
             else
@@ -580,9 +550,17 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         private static void InvalidVehicleDetail(int x, int y, string color, string text) //SUPPORTING METHOD for vehicle detail, prints out a message
         {
-            UserInterface.WriteColoredText(x, y, color, text);
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write(new string(' ', Console.BufferWidth));
+            if (x > Console.WindowWidth) return; //make sure system doesn't break
+            try
+            {
+                UserInterface.WriteColoredText(x, y, color, text);
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write(new string(' ', Console.BufferWidth));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
+            }
         }
     }
 
@@ -600,6 +578,7 @@ namespace Peak_Performance_Vehicle_Rentals
             string detailchoice = "";
             string newdetail = "";
             Choice choose = new Choice();
+            UserFile user = new UserFile();
             do
             {
                 detailchoice = choose.UpdateUserDetailsChoice(username, file);
@@ -613,17 +592,14 @@ namespace Peak_Performance_Vehicle_Rentals
                 if (detailchoice == "Home Address")
                     newdetail = UserAddress();
                 if (detailchoice != "")
-                {
-                    UserFile user = new UserFile();
                     user.UpdateUserFile(username, detailchoice, newdetail); //update user file
-                }
             } while (detailchoice != "");
         }
-        public bool DeleteUser(string username, string type, FilePathManager file) //MAIN METHOD 2 for deleting user account
+        public int DeleteUser(string username, string type, FilePathManager file) //MAIN METHOD 2 for deleting user account
         {
             string choice;
             int option;
-            bool result = true;
+            int result = 0;
             Choice choose = new Choice();
 
             if (type == "Admin")
@@ -640,18 +616,7 @@ namespace Peak_Performance_Vehicle_Rentals
 
                         option = choose.DeleteAdminUserChoice();
                         if (option == 0)
-                        {
-                            int deleteChoice = user.DeleteUserFile(details[0], file); //delete user file
-                            if (deleteChoice == 0)
-                            {
-                                result = true;
-
-                            }
-                            else
-                            {
-                                result = false;
-                            }
-                        }
+                            user.DeleteUserFile(details[0], file); //delete user file
                     }
                 } while (choice != "Go back to Main Menu");
             }
@@ -665,14 +630,8 @@ namespace Peak_Performance_Vehicle_Rentals
                     {
                         UserFile user = new UserFile();
                         int deleteChoice = user.DeleteUserFile(username, file); //delete user file
-                        if (deleteChoice == 0)
-                        {
-                            result = true;
-                        }
-                        else
-                        {
-                            result = false;
-                        }
+                        if (deleteChoice == 1)
+                            return 3;
                     }
                 } while (option != 1);
             }
@@ -752,9 +711,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     Console.SetCursorPosition(0, Console.CursorTop);
                     Console.Write(new string(' ', Console.BufferWidth));
                 }
-
             } while (!dateSuccess);
-
             return $"{details[0]}/{details[1]}/{details[2]}";
         }
         private protected static string UserAddress() //SUPPORTING METHOD 4 for manage user account
@@ -788,17 +745,12 @@ namespace Peak_Performance_Vehicle_Rentals
                 int tempDay = int.Parse(d[1]);
                 int tempYear = int.Parse(d[2]);
                 if (tempYear % 4 == 0) //is leap year
-                {
                     if (tempDay > 29)
                         return false;
-                }
                 else
-                {
                     if (tempDay > 28)
                         return false;
-                }
             }
-
             return true;
         }
         private static void Prompt(string text) //SUPPORTING METHOD, prints out a prompt
@@ -811,21 +763,28 @@ namespace Peak_Performance_Vehicle_Rentals
         }
         private static void InvalidUserDetail(int x, int y, string color, string text) //SUPPORTING METHOD, prints out a message
         {
-            if (color == "red year")
+            try
             {
-                color = "red";
-                UserInterface.WriteColoredText(x, y, color, text);
-                for (int i = 0; i < 2; i++)
+                if (color == "red year")
                 {
+                    color = "red";
+                    UserInterface.WriteColoredText(x, y, color, text);
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Console.Write(new string(' ', Console.BufferWidth));
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                    }
+                }
+                else
+                {
+                    UserInterface.WriteColoredText(x, y, color, text);
+                    Console.SetCursorPosition(0, Console.CursorTop);
                     Console.Write(new string(' ', Console.BufferWidth));
-                    Console.SetCursorPosition(0, Console.CursorTop - 1);
                 }
             }
-            else
+            catch (Exception e)
             {
-                UserInterface.WriteColoredText(x, y, color, text);
-                Console.SetCursorPosition(0, Console.CursorTop);
-                Console.Write(new string(' ', Console.BufferWidth));
+                Console.WriteLine("There is an unexpected error in the program. Please try again.\nError message: " + e);
             }
         }
     }

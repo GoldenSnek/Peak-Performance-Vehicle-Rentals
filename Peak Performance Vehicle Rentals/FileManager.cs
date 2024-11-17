@@ -33,7 +33,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 {
                     using (StreamWriter writer = new StreamWriter(BaseDirectory + "\\Users.txt")) {
                         writer.WriteLine("ADMIN,01312005,Admin"); //create admin account
-                    };
+                    }
                 }
             }
             catch (Exception e) 
@@ -90,20 +90,15 @@ namespace Peak_Performance_Vehicle_Rentals
                     {
                         // Check if the current line starts with the search line
                         if (line.StartsWith(detailchoice))
-                        {
                             writer.WriteLine($"{detailchoice}: {newdetail}"); // Write the new line to the temp file
-                        }
                         else
-                        {
                             writer.WriteLine(line); // Write the original line to the temp file
-                        }
                     }
                 }
                 //replace the original file with the updated temp file
                 File.Delete(filePath); //delete the original file
                 File.Move(tempPath, filePath);
                 File.Delete(tempPath);
-
                 UserInterface.WriteColoredText(3, 1, "green", "User details has been successfuly updated!");
             }
             catch (Exception e)
@@ -139,9 +134,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         {
                             // Check if the current line starts with the search line
                             if (!line.StartsWith(username))
-                            {
                                 writer.WriteLine(line); // Write the original line to the temp file
-                            }
                         }
                     }
 
@@ -151,16 +144,12 @@ namespace Peak_Performance_Vehicle_Rentals
                     File.Delete(tempPath);
                     //delete the actual user file and details
                     if (File.Exists(GetUserFilePath(username)))
-                    {
                         File.Delete(GetUserFilePath(username));
-                    }
                     //delete all the vehicles of the user
                     for (int i = 0; i < files.Length; i++)
                     {
                         if (File.Exists(files[i]))
-                        {
                             File.Delete(files[i]);
-                        }
                     }
                     UserInterface.WriteColoredText(3, 0, "green", "User Account has been successfully deleted!");
                     return 1;
@@ -212,10 +201,8 @@ namespace Peak_Performance_Vehicle_Rentals
             string vehicleFilePath = BaseDirectory + $"\\VehicleData\\{details[2]}-{details[0]}-{username}.txt";
             string pendingFilePath = BaseDirectory + $"\\RentalData\\PendingRental\\{details[2]}-{details[0]}-{username}.txt";
             string approvedFilePath = BaseDirectory + $"\\RentalData\\ApprovedRental\\{details[2]}-{details[0]}-{username}.txt";
-
             string[] type = details[0].Split("-");
-
-            // Check if the file already exists
+            
             try
             {
                 if (!File.Exists(vehicleFilePath) && !File.Exists(pendingFilePath) && !File.Exists(approvedFilePath))
@@ -271,13 +258,9 @@ namespace Peak_Performance_Vehicle_Rentals
                     {
                         //check if the current line starts with the search line
                         if (line.StartsWith(detailchoice))
-                        {
                             writer.WriteLine($"{detailchoice}: {newdetail}"); //write the new line to the temp file
-                        }
                         else
-                        {
                             writer.WriteLine(line); //write the original line to the temp file
-                        }
                     }
                 }
                 //replace the original file with the updated temp file
@@ -301,8 +284,7 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 try
                 {
-                    //delete the file
-                    for (int i = 0; i < adminFiles.Length; i++)
+                    for (int i = 0; i < adminFiles.Length; i++) //delete the file
                     {
                         if (choice == i)
                             if (File.Exists(adminFiles[i]))
@@ -322,8 +304,7 @@ namespace Peak_Performance_Vehicle_Rentals
             {
                 try
                 {
-                    //delete the file
-                    for (int i = 0; i < files.Length; i++)
+                    for (int i = 0; i < files.Length; i++) //delete the file
                     {
                         if (choice == i)
                             if (File.Exists(files[i]))
@@ -421,7 +402,7 @@ namespace Peak_Performance_Vehicle_Rentals
                             Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Client Details");
                             Console.ResetColor();
-                            for (int j = 24; j < 29; j++)
+                            for (int j = 25; j < 30; j++)
                             {
                                 UserInterface.CenterTextMargin(3, 0);
                                 Console.WriteLine(lines[j]);
@@ -581,26 +562,26 @@ namespace Peak_Performance_Vehicle_Rentals
                         //create a receipt
                         string[] lines = File.ReadAllLines(files[i]);
 
-                        // Assuming we already have the details in the lines variable
+                        //extract info
                         string owner = Inventory.ExtractValue(lines, "Owner:");
                         string vehicleType = Inventory.ExtractValue(lines, "Vehicle Type:");
                         string brand = Inventory.ExtractValue(lines, "Brand:");
                         string model = Inventory.ExtractValue(lines, "Model:");
                         string year = Inventory.ExtractValue(lines, "Manufacture Year:");
                         string licensePlate = Inventory.ExtractValue(lines, "License Plate:");
-                        string color = Inventory.ExtractValue(lines, "Color:");
-                        string fuelType = Inventory.ExtractValue(lines, "Fuel Type:");
-                        string seatingCapacity = Inventory.ExtractValue(lines, "Seating Capacity:");
-                        string mileage = Inventory.ExtractValue(lines, "Mileage:");
+                        string color = Inventory.ExtractValue(lines, "Color:"); //
+                        string fuelType = Inventory.ExtractValue(lines, "Fuel Type:"); //
+                        string seatingCapacity = Inventory.ExtractValue(lines, "Seating Capacity:"); //
+                        string mileage = Inventory.ExtractValue(lines, "Mileage:"); //
                         string location = Inventory.ExtractValue(lines, "Pickup and Return Location:");
-                        string dailyPrice = Inventory.ExtractValue(lines, "Daily Rental Price:");
-                        string hourlyPrice = Inventory.ExtractValue(lines, "Hourly Rental Price:");
+                        string dailyPrice = Inventory.ExtractValue(lines, "Daily Rental Price:"); //
+                        string hourlyPrice = Inventory.ExtractValue(lines, "Hourly Rental Price:"); //
                         string clientName = Inventory.ExtractValue(lines, "Name:");
                         string email = Inventory.ExtractValue(lines, "Email Address:");
                         string contact = Inventory.ExtractValue(lines, "Contact Number:");
                         string rentalDuration = Inventory.ExtractValue(lines, "Number of days/hours the vehicle will be rented:");
                         string totalPrice = Inventory.ExtractValue(lines, "Total price:");
-                        string additionalInfo = Inventory.ExtractValue(lines, "Additional information:");
+                        string additionalInfo = Inventory.ExtractValue(lines, "Additional information:"); //
 
                         //delete details of the client
                         int detailsIndex = Array.IndexOf(lines, "Details of the client");
@@ -612,7 +593,8 @@ namespace Peak_Performance_Vehicle_Rentals
                         using (StreamWriter writer = new StreamWriter(files[i], true)) //write a receipt
                         {
                             writer.WriteLine("Receipt");
-                            writer.WriteLine("   PEAK PERFORMANCE VEHICLE RENTALS    ");
+                            writer.WriteLine("  PEAK PERFORMANCE | VEHICLE RENTALS   ");
+                            writer.WriteLine("         \"Rent, Ride, Repeat\"        ");
                             writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
                             writer.WriteLine("          Vehicle Information          ");
                             writer.WriteLine($"Vehicle Owner: {owner}");
@@ -626,6 +608,9 @@ namespace Peak_Performance_Vehicle_Rentals
                             writer.WriteLine($"Contact Number: {contact}");
                             writer.WriteLine($"Rental Duration: {rentalDuration}");
                             writer.WriteLine($"Total Price: {totalPrice}");
+                            writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+                            writer.WriteLine("Pickup and Return Location:");
+                            writer.WriteLine($"{location}");
                             writer.WriteLine("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
                             writer.WriteLine("   Show the receipt when you pickup    ");
                             writer.WriteLine("  or return the vehicle to the owner   ");
@@ -679,9 +664,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     for (int i = 0; i < files.Length; i++)
                     {
                         if (i == choice)
-                        {
                             lines = File.ReadAllLines(files[i]);
-                        }
                     }
                     // Find the index of the line containing "Details of the client"
                     int detailsIndex = Array.IndexOf(lines, "Details of the client");
@@ -777,7 +760,7 @@ namespace Peak_Performance_Vehicle_Rentals
                             }
                         }
                     }
-                    // Find the index of the line containing "Details of the client"
+                    //find the index of the line containing "Details of the client"
                     int detailsIndex = Array.IndexOf(lines, "Details of the client");
 
                     UserInterface.CenterTextMargin(3, 0);
@@ -800,7 +783,7 @@ namespace Peak_Performance_Vehicle_Rentals
         public void DisplayReceiptFile(string username, FilePathManager file) //METHOD 9: display receipt
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
-            string client = "";
+            string client;
 
             try
             {
@@ -851,7 +834,7 @@ namespace Peak_Performance_Vehicle_Rentals
         public void TransferFinishRentFile(string username, FilePathManager file) //METHOD 10: finish rental
         {
             string[] files = Directory.GetFiles(file.BaseDirectory + "\\RentalData\\ApprovedRental", $"*.txt");
-            string client = "";
+            string client;
             int index = 0;
 
             try
