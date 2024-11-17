@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Comment CommentText="INTERFACES:">
-    <Position X="16.524" Y="0.706" Height="0.31" Width="1.031" />
+    <Position X="16.512" Y="0.787" Height="0.31" Width="0.996" />
   </Comment>
   <Comment CommentText="CLASSES:">
-    <Position X="5.942" Y="2.545" Height="0.31" Width="0.844" />
+    <Position X="6.046" Y="2.453" Height="0.31" Width="0.763" />
   </Comment>
   <Class Name="Peak_Performance_Vehicle_Rentals.LoginRegister">
     <Position X="2.5" Y="3.5" Width="1.5" />
@@ -22,7 +22,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.UserFile">
-    <Position X="10.25" Y="8" Width="1.5" />
+    <Position X="10.5" Y="7.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAgAAAAACAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>FileManager.cs</FileName>
@@ -38,7 +38,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.VehicleFile">
-    <Position X="12.5" Y="8" Width="1.5" />
+    <Position X="12.5" Y="7.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -49,7 +49,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.VehicleManager">
-    <Position X="4.5" Y="3" Width="1.5" />
+    <Position X="4.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAQAAAAGAAAAABAAAAAAAAkIABABAAQA=</HashCode>
       <FileName>MainMenu.cs</FileName>
@@ -57,7 +57,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.ChoiceBase">
-    <Position X="8.5" Y="3.5" Width="1.5" />
+    <Position X="8.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEAAAAAAAAAAAAAAIAAAACAAAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>Interface (Abstraction).cs</FileName>
@@ -65,14 +65,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.FilePathManager">
-    <Position X="12.5" Y="2.5" Width="1.5" />
+    <Position X="12.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>FileManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.Inventory">
-    <Position X="10.5" Y="2.5" Width="1.5" />
+    <Position X="10.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAECYAAAAAABAAAAAAAQAAAAAAgQAEACAAAAAABAA=</HashCode>
       <FileName>Inventory.cs</FileName>
@@ -94,7 +94,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.VehicleDetailManager">
-    <Position X="4.25" Y="7.5" Width="1.5" />
+    <Position X="4.5" Y="7" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAAQAAgAARAAAAEAAAQACAAAAAAAAIAQAAEBIAIAAA=</HashCode>
       <FileName>MainMenu.cs</FileName>
@@ -109,11 +109,19 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Peak_Performance_Vehicle_Rentals.UserDetailManager">
-    <Position X="6.5" Y="6" Width="1.5" />
+    <Position X="6.5" Y="7" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAQAAAEAACAAAAAAAAEAAAAACQAAAAA=</HashCode>
       <FileName>MainMenu.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Peak_Performance_Vehicle_Rentals.Choice">
+    <Position X="8.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wABAAAEAAIwAgABQJEEggAABAAAQAAASAAhAACAIAgA=</HashCode>
+      <FileName>Choice.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Interface Name="Peak_Performance_Vehicle_Rentals.IUserInterface">
     <Position X="14.5" Y="1.25" Width="1.5" />
@@ -130,14 +138,14 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Peak_Performance_Vehicle_Rentals.IVehicleManagement">
-    <Position X="14.5" Y="5" Width="1.5" />
+    <Position X="14.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAQAAAAEAAAAABAAAAAAAAkIABABAAQA=</HashCode>
       <FileName>Interface (Abstraction).cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Peak_Performance_Vehicle_Rentals.IUserManagement">
-    <Position X="16.25" Y="5" Width="1.5" />
+    <Position X="14.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAABAEAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Interface (Abstraction).cs</FileName>
@@ -158,14 +166,14 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Peak_Performance_Vehicle_Rentals.IUserFileManagement">
-    <Position X="18" Y="4.75" Width="1.5" />
+    <Position X="18" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAgAAAAACAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>Interface (Abstraction).cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Peak_Performance_Vehicle_Rentals.IVehicleFileManagement">
-    <Position X="18" Y="7" Width="1.5" />
+    <Position X="18" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACEAAAAAAAAAAAABAAAIAAAQAAAAAiAAAIACAgAAA=</HashCode>
       <FileName>Interface (Abstraction).cs</FileName>
