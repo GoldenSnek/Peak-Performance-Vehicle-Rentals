@@ -88,11 +88,11 @@ namespace Peak_Performance_Vehicle_Rentals
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        // Check if the current line starts with the search line
+                        //check if the current line starts with the search line
                         if (line.StartsWith(detailchoice))
-                            writer.WriteLine($"{detailchoice}: {newdetail}"); // Write the new line to the temp file
+                            writer.WriteLine($"{detailchoice}: {newdetail}"); //write the new line to the temp file
                         else
-                            writer.WriteLine(line); // Write the original line to the temp file
+                            writer.WriteLine(line); //write the original line to the temp file
                     }
                 }
                 //replace the original file with the updated temp file
@@ -132,9 +132,9 @@ namespace Peak_Performance_Vehicle_Rentals
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            // Check if the current line starts with the search line
+                            //check if the current line starts with the search line
                             if (!line.StartsWith(username))
-                                writer.WriteLine(line); // Write the original line to the temp file
+                                writer.WriteLine(line); //write the original line to the temp file
                         }
                     }
 
@@ -801,13 +801,13 @@ namespace Peak_Performance_Vehicle_Rentals
                             {
                                 string[] clientParts = line.Split(": ");
                                 client = clientParts[1];
-                                if (client == username) //car is owned by user a.k.a. me
+                                if (client == username) //car is rented by user a.k.a. me
                                 {
                                     string[] lines = new string[20];
 
                                     lines = File.ReadAllLines(files[i]);
 
-                                    // Find the index of the line containing "Details of the client"
+                                    //find the index of the line containing "Details of the client"
                                     int detailsIndex = Array.IndexOf(lines, "Receipt");
 
                                     UserInterface.CenterTextMargin(3, 0);

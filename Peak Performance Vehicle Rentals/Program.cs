@@ -29,7 +29,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 //7. Rent a vehicle and the vehicle rented will be removed from the "view all rental vehicles" and be moved to "rental details"
 
 //Sir Semblante suggestions
-//1. Reciept
+//1. Receipt
 //2. Include User details in vehicle display
 //3. Improve UI
 //4. Rental rates should be per hour, days, weeks
@@ -65,13 +65,16 @@ namespace Peak_Performance_Vehicle_Rentals
                             {
                                 UserInterface.WriteColoredText(3, 2, "green", "Login Successful!");
                                 LRrunning = false;
+                                Console.Clear();
                                 continue; //proceed to main menu
                             }
                             UserInterface.WriteColoredText(3, 2, "red", "Invalid Credentials!");
+                            Console.Clear();
                             break;
 
                         case 1:
                             LR.UserRegister(file);
+                            Console.Clear();
                             break;
 
                         case 2:

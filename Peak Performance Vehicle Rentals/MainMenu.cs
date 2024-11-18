@@ -54,6 +54,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     else
                         UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
                 }
+                Console.Clear();
             } while (choice != inventory.ViewSearchedVehicles(keyword, "search", file).Length - 1);
         }
 
@@ -91,6 +92,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     else
                         UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
                 }
+                Console.Clear();
             } while (choice != inventory.ViewAllVehicles(type, file).Length - 1);
         }
         private int SearchViewDetails(string username, string[] vehicleRentDetails, int choice, string search, string type, FilePathManager file) //SUPPORTING METHOD for Search/View
@@ -131,6 +133,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.WriteLine("You can only rent one vehicle at a time!"); Thread.Sleep(1000);
                 UserInterface.WaitForKey(3, 0, "Press any key to select another vehicle.");
             }
+            Console.Clear();
             return 1;
         }
 
@@ -152,6 +155,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 Console.WriteLine("You currently do not have a pending application."); Thread.Sleep(1500);
                 Console.ResetColor();
             }
+            Console.Clear();
         }
 
         public void PendingVehiclesOwner(string username, FilePathManager file) //MAIN METHOD 0 for viewing pending vehicles provider
@@ -180,7 +184,9 @@ namespace Peak_Performance_Vehicle_Rentals
                     vehicle.TransferNonApprovedFile(choice, username, file);
                     UserInterface.WriteColoredText(3, 0, "red", "The vehicle rental application is not approved!");
                 }
+                Console.Clear();
             } while (true);
+
         }
 
         public void ApprovedVehicles(string username, FilePathManager file) //MAIN METHOD 1 for viewing approved vehicles
@@ -193,6 +199,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 choice = choose.ApprovedChoice(username, file);
                 VehicleFile vehicle = new VehicleFile();
                 vehicle.DisplayVehicleFile(choice, "N A", "approved", file);
+                Console.Clear();
             } while (choice != inventory.ViewApprovedRental(username, file).Length - 1);
         }
 
@@ -240,38 +247,25 @@ namespace Peak_Performance_Vehicle_Rentals
 
             string[] details = new string[12];
             Choice choose = new Choice();
-
-            //type
-            details[0] = choose.VehicleTypeChoice();
-            if (details[0] == "")
-                return;
-            //brand
-            details[1] = VehicleName();
-            //model
-            details[2] = VehicleModel();
-            //year
-            details[3] = VehicleYear();
-            //license plate
-            details[4] = VehicleLicensePlate();
-            //color
-            details[5] = VehicleColor();
-            //fuel
+            details[0] = choose.VehicleTypeChoice(); //type
+            if (details[0] == "") return;
+            details[1] = VehicleName(); //brand
+            details[2] = VehicleModel(); //model
+            details[3] = VehicleYear(); //year
+            details[4] = VehicleLicensePlate(); //license plate
+            details[5] = VehicleColor(); //color
             Console.WriteLine();
-            details[6] = choose.VehicleFuelChoice();
-            //seating capacity
-            details[7] = VehicleSeatingCapacity();
-            //mileage
-            details[8] = VehicleMileage();
-            //location
-            details[9] = VehicleLocation();
-            //rental price
-            details[10] = VehiclePriceDay();
-            //rental price
-            details[11] = VehiclePriceHour();
+            details[6] = choose.VehicleFuelChoice(); //fuel
+            details[7] = VehicleSeatingCapacity(); //seating capacity
+            details[8] = VehicleMileage(); //mileage
+            details[9] = VehicleLocation(); //location
+            details[10] = VehiclePriceDay(); //rental price
+            details[11] = VehiclePriceHour(); //rental price
 
             //create a new vehicle file
             VehicleFile vehicle = new VehicleFile();
             vehicle.CreateVehicleFile(username, details);
+            Console.Clear();
         }
         public void UpdateVehicle(string username, FilePathManager file) //MAIN METHOD 1 for updating vehicles
         {
@@ -311,7 +305,9 @@ namespace Peak_Performance_Vehicle_Rentals
                         if (detailchoice != "")
                             vehicle.UpdateVehicleFile(username, choice, detailchoice, newdetail);
                     }
+                    Console.Clear();
                 } while (detailchoice != "");
+                Console.Clear();
             } while (choice != inventory.ViewOwnedVehicles(username, file).Length - 1);
         }
         
@@ -326,6 +322,7 @@ namespace Peak_Performance_Vehicle_Rentals
                 VehicleFile vehicle = new VehicleFile();
                 vehicle.DeleteVehicleFile(username, choice, "", file); //Delete vehicle file
             } while (choice != inventory.ViewOwnedVehicles(username, file).Length - 1);
+            Console.Clear();
         }
     }
 
@@ -370,9 +367,9 @@ namespace Peak_Performance_Vehicle_Rentals
                 Prompt("Enter the manufacture year of the vehicle: ");
                 year = Console.ReadLine();
                 success = int.TryParse(year, out tempyear);
-                if (!success || tempyear < 0 || tempyear > 3000)
+                if (!success || tempyear < 0 || tempyear > 2024)
                     InvalidVehicleDetail(3, 0, "red", "Please enter a proper year!");
-            } while (!success || tempyear < 0 || tempyear > 3000);
+            } while (!success || tempyear < 0 || tempyear > 2024);
             return year;
         }
         private protected static string VehicleLicensePlate() //SUPPORTING METHOD 4 for manage vehicles
@@ -572,6 +569,7 @@ namespace Peak_Performance_Vehicle_Rentals
             UserFile user = new UserFile();
             user.DisplayUserFile("user", username);
             UserInterface.WaitForKey(3, 0, "Press any key if you are done reading the details");
+            Console.Clear();
         }
         public void UpdateUser(string username, FilePathManager file) //MAIN METHOD 1 for updating user account
         {
@@ -593,6 +591,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     newdetail = UserAddress();
                 if (detailchoice != "")
                     user.UpdateUserFile(username, detailchoice, newdetail); //update user file
+                Console.Clear();
             } while (detailchoice != "");
         }
         public int DeleteUser(string username, string type, FilePathManager file) //MAIN METHOD 2 for deleting user account
@@ -618,6 +617,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         if (option == 0)
                             user.DeleteUserFile(details[0], file); //delete user file
                     }
+                    Console.Clear();
                 } while (choice != "Go back to Main Menu");
             }
             else
@@ -633,6 +633,7 @@ namespace Peak_Performance_Vehicle_Rentals
                         if (deleteChoice == 1)
                             return 3;
                     }
+                    Console.Clear();
                 } while (option != 1);
             }
             return result;

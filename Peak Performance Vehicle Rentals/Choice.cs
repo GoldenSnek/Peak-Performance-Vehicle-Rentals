@@ -86,7 +86,7 @@ namespace Peak_Performance_Vehicle_Rentals
                     |__/ |___ |\ |  |  |__| |       |  | |___ |__| | |    |    |___ [___
                     |  \ |___ | \|  |  |  | |___     \/  |___ |  | | |___ |___ |___ ___] 
 
-                    Search for specefic vehicles or view all vehicles in the system.";
+                    Search for specific vehicles or view all vehicles in the system.";
             Options = new string[] { "Search for a specific vehicle", "View all available vehicles", "Go back to Main Menu" };
 
             UserInterface RC = new UserInterface(Prompt, Options);
@@ -99,7 +99,8 @@ namespace Peak_Performance_Vehicle_Rentals
                     [__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
                     ___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
 
-                    Shown below are the vehicles that matches the search. Select a vehicle to view its details.";
+                    Shown below are the vehicles that matches the search.
+                    Please select a vehicle to view its details.";
             Options = inventory.ViewSearchedVehicles(keyword, "search", file);
 
             UserInterface VSV = new UserInterface(Prompt, Options);
@@ -113,7 +114,8 @@ namespace Peak_Performance_Vehicle_Rentals
                     [__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
                     ___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
 
-                    Shown below are the vehicles available for rent. Please select a vehicle to view its details.";
+                    Shown below are the vehicles available for rent.
+                    Please select a vehicle to view its details.";
             Options = inventory.ViewAllVehicles(type, file);
 
             UserInterface VAV = new UserInterface(Prompt, Options);
@@ -147,7 +149,8 @@ namespace Peak_Performance_Vehicle_Rentals
                     [__  |___ |    |___ |     |     |__|    |  | |___ |__| | |    |    |___
                     ___] |___ |___ |___ |___  |     |  |     \/  |___ |  | | |___ |___ |___
 
-                    Shown below are the pending vehicles waiting for your approval. Select to view client details.";
+                    Shown below are the pending vehicles waiting for your approval.
+                    Please select to view client details.";
             Options = inventory.ViewPendingRentalOwner(username, file);
 
             UserInterface VAV = new UserInterface(Prompt, Options);
