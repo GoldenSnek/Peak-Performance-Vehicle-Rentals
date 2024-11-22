@@ -87,6 +87,7 @@ namespace Peak_Performance_Vehicle_Rentals
                                                             This is my Final Project for CPE261 (OOP 1) - H2!
                                                             Program created by: John Michael A. Nave
                                                             Version 1 (November 19, 2024)
+                                                            Version 2 (Soon)
 
                                                             Special Thanks:
                                                             Mga barkada sa CPE
